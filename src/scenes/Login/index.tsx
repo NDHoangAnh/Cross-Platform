@@ -5,11 +5,11 @@ import {Text, View, TextInput, TouchableOpacity} from 'react-native';
 import styles from './index.style';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    console.log(username, password);
+    console.log(email, password);
   };
 
   const handleSignUp = () => {
@@ -25,10 +25,10 @@ const Login = () => {
       <View style={styles.textbox}>
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Email"
           placeholderTextColor="gray"
-          onChangeText={setUsername}
-          value={username}
+          onChangeText={setEmail}
+          value={email}
         />
         <TextInput
           style={styles.input}
