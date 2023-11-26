@@ -5,7 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './src/scenes/Home';
 import Settings from './src/scenes/Settings';
 import Login from './src/scenes/Login';
-import ForumStackScreen from './src/scenes/Forum/Forum';
+import ForumStackScreen from './src/scenes/Forum/index';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

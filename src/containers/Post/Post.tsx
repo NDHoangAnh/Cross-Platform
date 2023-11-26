@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Image, Text, View, TouchableOpacity, Modal, Button} from 'react-native';
+import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './Post.style';
+import Modal from 'react-native-modal';
 
 function Post({user, avatar, createdAt, content, like, comment}) {
   const [likeCount, setLikeCount] = useState(like);
@@ -19,6 +20,18 @@ function Post({user, avatar, createdAt, content, like, comment}) {
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+
+  const handleEdit = () => {
+    toggleModal();
+  };
+
+  const handleDelete = () => {
+    toggleModal();
+  };
+
+  const handleReport = () => {
+    toggleModal();
   };
 
   return (
@@ -57,14 +70,17 @@ function Post({user, avatar, createdAt, content, like, comment}) {
       </View>
 
       {/* Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={toggleModal}>
+      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
         <View style={styles.modalContainer}>
-          <Text>Modal Content</Text>
-          <Button title="Close" onPress={toggleModal} />
+          <TouchableOpacity onPress={handleEdit} style={styles.modalButton}>
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete} style={styles.modalButton}>
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleReport} style={styles.modalButton}>
+            <Text style={styles.buttonText}>Report</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>

@@ -1,29 +1,9 @@
 import {ScrollView} from 'react-native';
-import {
-  NativeStackNavigationProp,
-  createNativeStackNavigator,
-} from '@react-navigation/native-stack';
-
 import {posts} from '../../data/post';
 import Post from '../../containers/Post/Post';
 import styles from './Forum.style';
 import Navbar from '../../components/Navbar';
-import AddPostScreen from './AddPostScreen';
-
-const ForumStack = createNativeStackNavigator();
-
-function ForumStackScreen() {
-  return (
-    <ForumStack.Navigator screenOptions={{headerShown: false}}>
-      <ForumStack.Screen name="Forum" component={Forum} />
-      <ForumStack.Screen name="AddPostScreen" component={AddPostScreen} />
-    </ForumStack.Navigator>
-  );
-}
-
-type ForumProps = {
-  navigation: NativeStackNavigationProp<any, 'ForumStack'>;
-};
+import {ForumProps} from '../../navigate';
 
 function Forum({navigation}: ForumProps) {
   const showScreenAddPost = () => {
@@ -48,4 +28,4 @@ function Forum({navigation}: ForumProps) {
   );
 }
 
-export default ForumStackScreen;
+export default Forum;
