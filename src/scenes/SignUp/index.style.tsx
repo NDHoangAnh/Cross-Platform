@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
-
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +21,7 @@ const styles = StyleSheet.create({
     marginLeft: '10%',
   },
   textbox: {
-    marginTop: '25%',
+    marginTop: '15%',
     alignItems: 'center',
   },
   input: {
@@ -76,4 +74,3 @@ const styles = StyleSheet.create({
 });
 
 export default styles;
-

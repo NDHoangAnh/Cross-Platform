@@ -1,29 +1,33 @@
 /* eslint-disable prettier/prettier */
-
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
+    justifyContent: 'center',
   },
   scrollContainer: {
     flexGrow: 1,
   },
+  otpArea: {
+    width: '80%',
+    height: 200,
+  },
   title: {
     fontWeight: 'bold',
-    fontSize: 40,
+    fontSize: 30,
     color: 'black',
-    marginTop: '45%',
+    marginTop: '50%',
     marginLeft: '10%',
   },
   note: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'gray',
     marginLeft: '10%',
   },
   textbox: {
-    marginTop: '25%',
+    marginTop: '20%',
     alignItems: 'center',
   },
   input: {
@@ -33,7 +37,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 0,
     padding: 10,
-    marginBottom: '5%',
+    marginBottom: '2%',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -48,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#87CEFA',
     padding: 10,
     borderRadius: 5,
-    width: '30%',
+    width: '50%',
     alignItems: 'center',
     marginTop: 10,
   },
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   register: {
-    marginTop: '5%',
+    marginTop: '3%',
     color: 'gray',
   },
   link: {
@@ -73,7 +77,26 @@ const styles = StyleSheet.create({
     top: -300,
     zIndex: -1,
   },
+  borderStyleBase: {
+    width: 30,
+    height: 45,
+  },
+
+  borderStyleHighLighted: {
+    borderColor: '#03DAC6',
+  },
+
+  underlineStyleBase: {
+    width: 30,
+    height: 45,
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: '#87CEFA',
+  },
 });
 
 export default styles;
-
