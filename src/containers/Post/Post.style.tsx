@@ -41,6 +41,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     ...commonStyles,
   },
+  imagePost: {
+    width: '100%',
+
+    borderRadius: 8,
+    marginBottom: 10,
+    aspectRatio: 135 / 76,
+  },
   actionsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

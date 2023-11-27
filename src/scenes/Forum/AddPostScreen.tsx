@@ -18,7 +18,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
   const [selectedImage, setSelectedImage] = useState<null | Asset[]>(null);
   const [isShowModalAddPost, setIsShowModalAddPost] = useState(false);
 
-  const toggleModal = () => {
+  const toggleModalAddPost = () => {
     setIsShowModalAddPost(!isShowModalAddPost);
   };
 
@@ -55,7 +55,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
 
   return (
     <ScrollView style={{backgroundColor: 'white'}} stickyHeaderIndices={[0]}>
-      <Navbar action={toggleModal} actionName={'POST'} />
+      <Navbar action={toggleModalAddPost} actionName={'POST'} />
       <View style={styles.container}>
         {/* Header Section */}
         <View style={styles.header}>
@@ -102,13 +102,15 @@ const AddPostScreen = ({navigation}: ForumProps) => {
           )}
 
         {isShowModalAddPost && (
-          <Modal isVisible={isShowModalAddPost} onBackdropPress={toggleModal}>
+          <Modal
+            isVisible={isShowModalAddPost}
+            onBackdropPress={toggleModalAddPost}>
             <View style={styles.modalContainer}>
               <Text style={styles.modalTitle}>
                 Are you sure to publish this post to forum?
               </Text>
               <View style={styles.modalAction}>
-                <TouchableOpacity onPress={toggleModal}>
+                <TouchableOpacity onPress={toggleModalAddPost}>
                   <Text style={styles.disagreeAction}>No</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={addPost}>

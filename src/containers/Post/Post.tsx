@@ -1,14 +1,31 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import styles from './Post.style';
 import Modal from 'react-native-modal';
+import styles from './Post.style';
 
-function Post({user, avatar, createdAt, content, like, comment}) {
+function Post({
+  postId,
+  user,
+  avatar,
+  createdAt,
+  content,
+  like,
+  comment,
+  image,
+  showScreenListComment,
+}) {
   const [likeCount, setLikeCount] = useState(like);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isImageModalVisible, setImageModalVisible] = useState(false);
 
+  // image modal
+  const toggleImageModal = () => {
+    setImageModalVisible(!isImageModalVisible);
+  };
+
+  // action
   const toggleLike = () => {
     if (liked) {
       setLikeCount(likeCount - 1);
@@ -18,6 +35,7 @@ function Post({user, avatar, createdAt, content, like, comment}) {
     setLiked(!liked);
   };
 
+  // additional modal
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -33,6 +51,7 @@ function Post({user, avatar, createdAt, content, like, comment}) {
   const handleReport = () => {
     toggleModal();
   };
+  //
 
   return (
     <View style={styles.postContainer}>
@@ -47,7 +66,19 @@ function Post({user, avatar, createdAt, content, like, comment}) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.content}>{content}</Text>
+      <View>
+        {image && (
+          <TouchableOpacity onPress={toggleImageModal}>
+            <Image
+              resizeMode="cover"
+              resizeMethod="auto"
+              source={{uri: image}}
+              style={styles.imagePost}
+            />
+          </TouchableOpacity>
+        )}
+        <Text style={styles.content}>{content}</Text>
+      </View>
 
       <View style={styles.actionsContainer}>
         <TouchableOpacity onPress={toggleLike} style={styles.actionContainer}>
@@ -59,10 +90,12 @@ function Post({user, avatar, createdAt, content, like, comment}) {
             {likeCount} Like
           </Text>
         </TouchableOpacity>
-        <View style={styles.actionContainer}>
+        <TouchableOpacity
+          style={styles.actionContainer}
+          onPress={() => showScreenListComment(postId)}>
           <Icon name="comment" style={styles.icon} />
           <Text style={styles.actionText}>{comment} Comment</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.actionContainer}>
           <Icon name="share" style={styles.icon} />
           <Text style={styles.actionText}>Share</Text>
@@ -81,6 +114,23 @@ function Post({user, avatar, createdAt, content, like, comment}) {
           <TouchableOpacity onPress={handleReport} style={styles.modalButton}>
             <Text style={styles.buttonText}>Report</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Modal image */}
+      <Modal isVisible={isImageModalVisible} onBackdropPress={toggleImageModal}>
+        <View
+          style={{
+            // flex: 1,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            resizeMode="contain"
+            source={{uri: image}}
+            style={{width: '100%', height: '70%'}}
+          />
         </View>
       </Modal>
     </View>
