@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -10,10 +9,10 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import styles from './index.style';
-import api from '../../apis';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './index.style';
+import api from '../../apis';
 
 const Login = ({navigation, route, setIsLoggedIn}) => {
   const {verify} = route.params || 'none';
@@ -38,10 +37,8 @@ const Login = ({navigation, route, setIsLoggedIn}) => {
   }, [verify]);
 
   const handleLogin = async () => {
-    console.log(email, password);
     const response = await api.auth.login({email, password});
-    console.log(response?.data);
-    // Do some async storage here
+
     if (response?.data?.errMsg !== undefined) {
       Toast.show({
         type: 'error',
