@@ -9,11 +9,13 @@ import SignUp from './src/scenes/SignUp';
 import VerifyOTP from './src/scenes/VerifyOTP';
 import ForgotPassword from './src/scenes/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ForumStackScreen from './src/scenes/Forum/index';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const App = () => {
+export default function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   // Function to check if AsyncStorage is empty
@@ -49,6 +51,9 @@ const App = () => {
           <Tab.Screen name="Settings">
             {props => <Settings {...props} setIsLoggedIn={setIsLoggedIn} />}
           </Tab.Screen>
+
+          <Tab.Screen name="Settings" component={Settings} />
+          <Tab.Screen name="Forum" component={ForumStackScreen} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator
