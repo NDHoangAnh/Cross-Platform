@@ -1,8 +1,14 @@
 import {View, TouchableOpacity, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
-
-const Navbar = ({showBackButton = true, action, actionName}) => {
+type Props = {
+  showBackButton?: boolean
+  listAction: {
+    onPress: (e?: any) => void
+    name: string
+  }[]
+}
+const Navbar = ({showBackButton = true, listAction}: Props) => {
   const navigation = useNavigation();
 
   const handleGoBack = () => {
@@ -16,11 +22,15 @@ const Navbar = ({showBackButton = true, action, actionName}) => {
           <Text style={styles.backButton}>Back</Text>
         </TouchableOpacity>
       )}
-      {action && (
-        <TouchableOpacity onPress={action}>
-          <Text style={styles.addButton}>{actionName}</Text>
-        </TouchableOpacity>
-      )}
+      <View style={styles.listAction}>
+        {listAction && listAction.map((action, index: number) => {
+          return (
+            <TouchableOpacity key={index} onPress={action.onPress}>
+              <Text style={styles.addButton}>{action.name}</Text>
+            </TouchableOpacity>
+          )
+        })}
+      </View>
     </View>
   );
 };
@@ -42,6 +52,11 @@ const styles = StyleSheet.create({
   addButton: {
     fontSize: 16,
     color: 'white',
+  },
+  listAction: {
+    display: 'flex',
+    gap: 10,
+    flexDirection: 'row',
   },
 });
 
