@@ -8,7 +8,7 @@
 import React from 'react';
 import {StyleSheet, View, TouchableHighlight} from 'react-native';
 import {Agenda} from 'react-native-calendars';
-import ScheduleItem from '../components/ScheduleItem';
+import ScheduleItem from '../../components/schedule/ScheduleItem';
 import { addDays, format } from 'date-fns';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { useNavigation } from '@react-navigation/native';
