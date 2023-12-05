@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginLeft: '10%',
   },
   textbox: {
-    marginTop: '25%',
+    marginTop: '15%',
     alignItems: 'center',
   },
   input: {
