@@ -1,9 +1,9 @@
-/* eslint-disable prettier/prettier */
 import axios from 'axios';
 
 // NOTE: Dùng máy ảo không dùng localhost được mà phải 10.0.2.2
 // đoạn này chưa bt xử lí nnao với chưa cho .env
-const baseUrl = 'http://192.168.0.106:8089';
+const baseUrl = 'http://192.168.0.104:8089';
+// nếu dùng máy thật, vào terminal, gõ ipconfig, thay 10.0.2.2 thành địa chỉ IPv4
 
 const login = async data => {
   try {

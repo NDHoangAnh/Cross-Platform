@@ -10,6 +10,7 @@ import VerifyOTP from './src/scenes/VerifyOTP';
 import ForgotPassword from './src/scenes/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumStackScreen from './src/scenes/Forum/index';
+import TargetScreen from "./src/scenes/Target";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,7 +37,7 @@ export default function App() {
   React.useEffect(() => {
     const checkAsyncStorage = async () => {
       const empty = await isAsyncStorageEmpty();
-      setIsLoggedIn(!empty);
+      setIsLoggedIn(true);
     };
 
     checkAsyncStorage();
@@ -50,6 +51,7 @@ export default function App() {
           <Tab.Screen name="Settings">
             {props => <Settings {...props} setIsLoggedIn={setIsLoggedIn} />}
           </Tab.Screen>
+          <Tab.Screen name="Target" component={TargetScreen} />
           <Tab.Screen name="Forum" component={ForumStackScreen} />
         </Tab.Navigator>
       ) : (
