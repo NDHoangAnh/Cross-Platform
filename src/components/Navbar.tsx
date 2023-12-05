@@ -2,12 +2,12 @@ import {View, TouchableOpacity, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 type Props = {
-  showBackButton?: boolean
+  showBackButton?: boolean;
   listAction: {
-    onPress: (e?: any) => void
-    name: string
-  }[]
-}
+    onPress: (e?: any) => void;
+    name: string;
+  }[];
+};
 const Navbar = ({showBackButton = true, listAction}: Props) => {
   const navigation = useNavigation();
 
@@ -23,13 +23,14 @@ const Navbar = ({showBackButton = true, listAction}: Props) => {
         </TouchableOpacity>
       )}
       <View style={styles.listAction}>
-        {listAction && listAction.map((action, index: number) => {
-          return (
-            <TouchableOpacity key={index} onPress={action.onPress}>
-              <Text style={styles.addButton}>{action.name}</Text>
-            </TouchableOpacity>
-          )
-        })}
+        {listAction &&
+          listAction.map((action, index: number) => {
+            return (
+              <TouchableOpacity key={index} onPress={action.onPress}>
+                <Text style={styles.addButton}>{action.name}</Text>
+              </TouchableOpacity>
+            );
+          })}
       </View>
     </View>
   );
