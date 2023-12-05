@@ -41,6 +41,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     ...commonStyles,
   },
+  imagePost: {
+    width: '100%',
+
+    borderRadius: 8,
+    marginBottom: 10,
+    aspectRatio: 135 / 76,
+  },
   actionsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -62,11 +69,24 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   modalContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
     padding: 20,
+  },
+  modalButton: {
+    marginBottom: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+    padding: 10,
+    borderTopWidth: 0.2,
+    borderBottomWidth: 0.2,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

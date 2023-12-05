@@ -1,13 +1,31 @@
-import React, {useState} from 'react';
-import {Image, Text, View, TouchableOpacity, Modal, Button} from 'react-native';
+import {useState} from 'react';
+import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-modal';
 import styles from './Post.style';
 
-function Post({user, avatar, createdAt, content, like, comment}) {
+function Post({
+  postId,
+  user,
+  avatar,
+  createdAt,
+  content,
+  like,
+  comment,
+  image,
+  showScreenListComment,
+}) {
   const [likeCount, setLikeCount] = useState(like);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isImageModalVisible, setImageModalVisible] = useState(false);
 
+  // image modal
+  const toggleImageModal = () => {
+    setImageModalVisible(!isImageModalVisible);
+  };
+
+  // action
   const toggleLike = () => {
     if (liked) {
       setLikeCount(likeCount - 1);
@@ -17,9 +35,23 @@ function Post({user, avatar, createdAt, content, like, comment}) {
     setLiked(!liked);
   };
 
+  // additional modal
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+
+  const handleEdit = () => {
+    toggleModal();
+  };
+
+  const handleDelete = () => {
+    toggleModal();
+  };
+
+  const handleReport = () => {
+    toggleModal();
+  };
+  //
 
   return (
     <View style={styles.postContainer}>
@@ -34,7 +66,19 @@ function Post({user, avatar, createdAt, content, like, comment}) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.content}>{content}</Text>
+      <View>
+        {image && (
+          <TouchableOpacity onPress={toggleImageModal}>
+            <Image
+              resizeMode="cover"
+              resizeMethod="auto"
+              source={{uri: image}}
+              style={styles.imagePost}
+            />
+          </TouchableOpacity>
+        )}
+        <Text style={styles.content}>{content}</Text>
+      </View>
 
       <View style={styles.actionsContainer}>
         <TouchableOpacity onPress={toggleLike} style={styles.actionContainer}>
@@ -46,10 +90,12 @@ function Post({user, avatar, createdAt, content, like, comment}) {
             {likeCount} Like
           </Text>
         </TouchableOpacity>
-        <View style={styles.actionContainer}>
+        <TouchableOpacity
+          style={styles.actionContainer}
+          onPress={() => showScreenListComment(postId)}>
           <Icon name="comment" style={styles.icon} />
           <Text style={styles.actionText}>{comment} Comment</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.actionContainer}>
           <Icon name="share" style={styles.icon} />
           <Text style={styles.actionText}>Share</Text>
@@ -57,14 +103,34 @@ function Post({user, avatar, createdAt, content, like, comment}) {
       </View>
 
       {/* Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={toggleModal}>
+      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
         <View style={styles.modalContainer}>
-          <Text>Modal Content</Text>
-          <Button title="Close" onPress={toggleModal} />
+          <TouchableOpacity onPress={handleEdit} style={styles.modalButton}>
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete} style={styles.modalButton}>
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleReport} style={styles.modalButton}>
+            <Text style={styles.buttonText}>Report</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Modal image */}
+      <Modal isVisible={isImageModalVisible} onBackdropPress={toggleImageModal}>
+        <View
+          style={{
+            // flex: 1,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            resizeMode="contain"
+            source={{uri: image}}
+            style={{width: '100%', height: '70%'}}
+          />
         </View>
       </Modal>
     </View>

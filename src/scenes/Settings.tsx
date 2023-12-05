@@ -1,8 +1,16 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/react-in-jsx-scope */
-import {Text, View} from 'react-native';
+import React from 'react';
+import {Text, View, Button} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function Settings() {
+function Settings({setIsLoggedIn}) {
+  const handleSignOut = async () => {
+    // Clear AsyncStorage data
+    await AsyncStorage.clear();
+
+    // Navigate to the Login screen (you may need to replace 'Login' with your actual login screen name)
+    setIsLoggedIn(false);
+  };
+
   return (
     <View
       style={{
@@ -11,7 +19,8 @@ function Settings() {
         alignItems: 'center',
         backgroundColor: 'black',
       }}>
-      <Text>Settings test</Text>
+      <Text style={{color: 'white'}}>Settings test</Text>
+      <Button title="Sign Out" onPress={handleSignOut} />
     </View>
   );
 }
