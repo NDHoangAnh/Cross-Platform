@@ -55,7 +55,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
 
   return (
     <ScrollView style={{backgroundColor: 'white'}} stickyHeaderIndices={[0]}>
-      <Navbar action={toggleModalAddPost} actionName={'POST'} />
+      <Navbar listAction={[{onPress: toggleModalAddPost, name:'POST' }]} />
       <View style={styles.container}>
         {/* Header Section */}
         <View style={styles.header}>

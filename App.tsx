@@ -11,6 +11,7 @@ import ForgotPassword from './src/scenes/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumStackScreen from './src/scenes/Forum/index';
 import ProfileStackScreen from './src/scenes/ProfilePage';
+import TargetScreen from "./src/scenes/Target";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,7 +33,7 @@ export default function App() {
   useEffect(() => {
     const checkAsyncStorage = async () => {
       const empty = await isAsyncStorageEmpty();
-      setIsLoggedIn(!empty);
+      setIsLoggedIn(true);
     };
 
     checkAsyncStorage();
@@ -47,6 +48,7 @@ export default function App() {
             {/* Pass this function if that page have the logout button */}
             {props => <Settings {...props} setIsLoggedIn={setIsLoggedIn} />}
           </Tab.Screen>
+          <Tab.Screen name="Target" component={TargetScreen} />
           <Tab.Screen name="Forum" component={ForumStackScreen} />
           <Tab.Screen name="Profile" component={ProfileStackScreen} />
         </Tab.Navigator>
