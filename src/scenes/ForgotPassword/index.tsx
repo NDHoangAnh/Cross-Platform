@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
+import {useForm, Controller} from 'react-hook-form';
 import {
   Text,
   View,
@@ -15,13 +16,22 @@ import api from '../../apis';
 import Toast from 'react-native-toast-message';
 
 const ForgotPassword = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [showOtpInput, setShowOtpInput] = useState(false); // State to control OTP input view
+  // State to control OTP input view
+  const [showOtpInput, setShowOtpInput] = useState(false);
 
-  const handleForgotPassword = async () => {
-    console.log(email);
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+    getValues,
+  } = useForm({
+    defaultValues: {
+      email: '',
+    },
+  });
 
-    const response = await api.auth.reqChangePassword({email});
+  const onSubmit = async data => {
+    const response = await api.auth.reqChangePassword(data);
     // console.log(response?.data);
     if (response?.data?.errMsg !== undefined) {
       Toast.show({
@@ -40,7 +50,7 @@ const ForgotPassword = ({navigation}) => {
 
   const handleVerify = async code => {
     const data = {
-      email,
+      email: getValues('email'),
       otp: Number(code),
     };
     console.log(data);
@@ -80,16 +90,33 @@ const ForgotPassword = ({navigation}) => {
         <View style={styles.textbox}>
           {!showOtpInput ? (
             <>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="gray"
-                onChangeText={setEmail}
-                value={email}
+              <Text style={styles.errors}>
+                {errors.email ? errors.email.message : ''}
+              </Text>
+              <Controller
+                control={control}
+                rules={{
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, // Email regex
+                    message: 'Invalid email address',
+                  },
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    placeholderTextColor="gray"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                  />
+                )}
+                name="email"
               />
               <TouchableOpacity
                 style={styles.button}
-                onPress={handleForgotPassword}>
+                onPress={handleSubmit(onSubmit)}>
                 <Text style={styles.buttonText}>Submit</Text>
               </TouchableOpacity>
             </>
@@ -107,8 +134,8 @@ const ForgotPassword = ({navigation}) => {
           )}
           <TouchableOpacity onPress={handleGoBack}>
             <Text style={styles.register}>
-              {showOtpInput ? 'Remember your password? ' : ''}
-              <Text style={styles.link}>{showOtpInput ? 'Login' : ''}</Text>
+              Remember your password?
+              <Text style={styles.link}>Login</Text>
             </Text>
           </TouchableOpacity>
         </View>
