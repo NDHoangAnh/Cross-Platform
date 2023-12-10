@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 40,
     color: 'black',
-    marginTop: '45%',
+    marginTop: '30%',
     marginLeft: '10%',
   },
   note: {
@@ -70,6 +70,12 @@ const styles = StyleSheet.create({
     right: -200,
     top: -300,
     zIndex: -1,
+  },
+  errors: {
+    color: '#FF7F7F',
+    alignSelf: 'baseline',
+    marginLeft: '11%',
+    fontSize: 12,
   },
 });
 

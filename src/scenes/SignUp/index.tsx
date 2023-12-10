@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useForm, Controller} from 'react-hook-form';
 import {
   Text,
   View,
@@ -14,25 +14,35 @@ import api from '../../apis';
 import Toast from 'react-native-toast-message';
 
 const SignUp = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [cPassword, setCPassword] = useState('');
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+    getValues,
+  } = useForm({
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      cPassword: '',
+    },
+  });
 
-  const handleSignUp = async () => {
-    // console.log(username, email, password, cPassword);
-    if (cPassword === password) {
-      const response = await api.auth.register({username, email, password});
-      // console.log(response?.data, response?.status);
-      if (response?.data?.errMsg !== undefined) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: `${response?.data?.errMsg}`,
-        });
-      } else {
-        navigation.navigate('VerifyOTP', {email});
-      }
+  const onSubmit = async data => {
+    const params = {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    };
+    const response = await api.auth.register(params);
+    if (response?.data?.errMsg !== undefined) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: `${response?.data?.errMsg}`,
+      });
+    } else {
+      navigation.navigate('VerifyOTP', {email: data.email});
     }
   };
 
@@ -51,37 +61,101 @@ const SignUp = ({navigation}) => {
           <Text style={styles.note}>Create new account</Text>
         </View>
         <View style={styles.textbox}>
-          <TextInput
-            style={styles.input}
-            placeholder="Name"
-            placeholderTextColor="gray"
-            onChangeText={setUsername}
-            value={username}
+          <Text style={styles.errors}>
+            {errors.username ? errors.username.message : ''}
+          </Text>
+          <Controller
+            control={control}
+            rules={{
+              required: 'User name is required',
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Name"
+                placeholderTextColor="gray"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="username"
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="gray"
-            onChangeText={setEmail}
-            value={email}
+
+          <Text style={styles.errors}>
+            {errors.email ? errors.email.message : ''}
+          </Text>
+          <Controller
+            control={control}
+            rules={{
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, // Email regex
+                message: 'Invalid email address',
+              },
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="gray"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="email"
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="gray"
-            secureTextEntry={true}
-            onChangeText={setPassword}
-            value={password}
+
+          <Text style={styles.errors}>
+            {errors.password ? errors.password.message : ''}
+          </Text>
+          <Controller
+            control={control}
+            rules={{
+              required: 'Password is required',
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="gray"
+                secureTextEntry={true}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+              />
+            )}
+            name="password"
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            placeholderTextColor="gray"
-            secureTextEntry={true}
-            onChangeText={setCPassword}
-            value={cPassword}
+
+          <Text style={styles.errors}>
+            {errors.cPassword ? errors.cPassword.message : ''}
+          </Text>
+          <Controller
+            control={control}
+            rules={{
+              required: 'Confirm password is required',
+              validate: value =>
+                value === getValues('password') || 'Passwords do not match',
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm Password"
+                placeholderTextColor="gray"
+                secureTextEntry={true}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+              />
+            )}
+            name="cPassword"
           />
-          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSubmit(onSubmit)}>
             <Text style={styles.buttonText}>Sign up</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleLogin}>

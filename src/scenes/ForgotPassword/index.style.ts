@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -81,11 +80,9 @@ const styles = StyleSheet.create({
     width: 30,
     height: 45,
   },
-
   borderStyleHighLighted: {
     borderColor: '#03DAC6',
   },
-
   underlineStyleBase: {
     width: 30,
     height: 45,
@@ -93,9 +90,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: 'black',
   },
-
   underlineStyleHighLighted: {
     borderColor: '#87CEFA',
+  },
+  errors: {
+    color: '#FF7F7F',
+    alignSelf: 'baseline',
+    marginLeft: '11%',
+    fontSize: 12,
   },
 });
 

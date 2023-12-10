@@ -50,4 +50,4 @@ const resetPass = async data => {
   }
 };
 
-export {login, register, verifyOTP, reqChangePassword, resetPass};
+export { login, register, verifyOTP, reqChangePassword, resetPass };
