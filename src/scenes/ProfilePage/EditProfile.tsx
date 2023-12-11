@@ -10,6 +10,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {launchImageLibrary, Asset} from 'react-native-image-picker';
 import styles from './EditProfile.style';
+import api from '../../apis';
 
 const EditProfile = () => {
   const [editedName, setEditedName] = useState('John Doe');
@@ -20,20 +21,23 @@ const EditProfile = () => {
 
   const navigation = useNavigation();
 
-  const handleSaveProfile = () => {
-    console.log('Profile saved:', {
-      editedName,
-      editedEmail,
-      editedMajor,
-      editedPhoneNumber,
-      selectedImage,
-    });
+  const handleSaveProfile = async () => {
+    // console.log('Profile saved:', {
+    //   editedName,
+    //   editedEmail,
+    //   editedMajor,
+    //   editedPhoneNumber,
+    //   selectedImage,
+    // });
+    const result = await api.cloudinary.uploadImage(selectedImage);
+    console.log(result);
   };
 
   const pickImage = () => {
     const options: any = {
       mediaType: 'photo',
       title: 'Select Image',
+      includeBase64: true,
       storageOptions: {
         skipBackup: true,
         path: 'images',
