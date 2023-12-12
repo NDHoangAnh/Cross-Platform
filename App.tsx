@@ -11,14 +11,15 @@ import ForgotPassword from './src/scenes/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumStackScreen from './src/scenes/Forum/index';
 import ProfileStackScreen from './src/scenes/ProfilePage';
-import TargetScreen from "./src/scenes/Target";
+import TargetScreen from './src/scenes/Target';
+import AdminHomePageStackScreen from './src/scenes/AdminHomePage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-
+  let isAdmin = true;
   // Check if storage is empty
   const isAsyncStorageEmpty = async () => {
     try {
@@ -43,7 +44,10 @@ export default function App() {
     <NavigationContainer>
       {isLoggedIn ? (
         <Tab.Navigator screenOptions={{headerShown: false}}>
-          <Tab.Screen name="Home" component={Home} />
+          {!isAdmin && <Tab.Screen name="Home" component={Home} />}
+          {isAdmin && (
+            <Tab.Screen name="Home" component={AdminHomePageStackScreen} />
+          )}
           <Tab.Screen name="Settings">
             {/* Pass this function if that page have the logout button */}
             {props => <Settings {...props} setIsLoggedIn={setIsLoggedIn} />}

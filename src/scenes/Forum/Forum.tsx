@@ -16,10 +16,11 @@ function Forum({navigation}: ForumProps) {
 
   return (
     <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
-      <Navbar listAction={[{onPress: showScreenAddPost, name:'Add Post' }]} />
+      <Navbar listAction={[{onPress: showScreenAddPost, name: 'Add Post'}]} />
       {posts.map((post, index) => (
         <Post
           postId={post.id}
+          isApproved={post.isApproved}
           user={post.user}
           avatar={post.avatar}
           createdAt={post.createdAt}

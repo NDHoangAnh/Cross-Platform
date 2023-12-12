@@ -1,6 +1,7 @@
 export const posts = [
   {
     id: 1,
+    isApproved: true,
     user: 'Test',
     avatar: 'https://avatars.githubusercontent.com/u/74105921?v=4',
     createdAt: '10/11/2023',

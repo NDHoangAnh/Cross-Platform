@@ -5,7 +5,7 @@ const commonStyles = {
 };
 
 const styles = StyleSheet.create({
-  postContainer: {
+  container: {
     backgroundColor: 'white',
     padding: 10,
     marginBottom: 10,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   userInfo: {
-    flex: 1,
+    flex: 0.5,
   },
   userName: {
     fontWeight: 'bold',
@@ -36,37 +36,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     ...commonStyles,
   },
-  content: {
-    fontSize: 14,
-    marginBottom: 10,
-    ...commonStyles,
-  },
-  imagePost: {
-    width: '100%',
-
-    borderRadius: 8,
-    marginBottom: 10,
-    aspectRatio: 135 / 76,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  actionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   icon: {
     fontSize: 20,
     marginRight: 5,
     ...commonStyles,
   },
-  actionText: {
-    fontSize: 14,
-    ...commonStyles,
-  },
-  moreOptionsContainer: {
-    alignSelf: 'flex-end',
+  active: {
+    color: 'green',
   },
   modalContainer: {
     justifyContent: 'center',
@@ -88,12 +64,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  approveText: {
-    color: 'black',
-    fontSize: 14,
-    fontWeight: 'bold',
+  actionContainer: {
+    flex: 0.5,
     textAlign: 'center',
-    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

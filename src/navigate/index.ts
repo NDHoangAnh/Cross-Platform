@@ -4,4 +4,8 @@ type ForumProps = {
   navigation: NativeStackNavigationProp<any, 'ForumStack'>;
 };
 
-export type {ForumProps};
+type AdminHomePageProps = {
+  navigation: NativeStackNavigationProp<any, 'ForumStack'>;
+};
+
+export type {ForumProps, AdminHomePageProps};

@@ -6,6 +6,7 @@ import styles from './Post.style';
 
 function Post({
   postId,
+  isApproved,
   user,
   avatar,
   createdAt,
@@ -15,6 +16,7 @@ function Post({
   image,
   showScreenListComment,
 }) {
+  const [isAdmin, setIsAdmin] = useState(false);
   const [likeCount, setLikeCount] = useState(like);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -53,6 +55,16 @@ function Post({
   };
   //
 
+  const toggleApprove = id => {
+    console.log(id);
+    toggleModal();
+  };
+
+  const toggleDeclines = id => {
+    console.log(id);
+    toggleModal();
+  };
+
   return (
     <View style={styles.postContainer}>
       <View style={styles.userInfoContainer}>
@@ -79,28 +91,56 @@ function Post({
         )}
         <Text style={styles.content}>{content}</Text>
       </View>
-
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity onPress={toggleLike} style={styles.actionContainer}>
-          <Icon
-            name={liked ? 'thumbs-up' : 'thumbs-o-up'}
-            style={styles.icon}
-          />
-          <Text style={[styles.actionText, liked && {color: 'blue'}]}>
-            {likeCount} Like
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionContainer}
-          onPress={() => showScreenListComment(postId)}>
-          <Icon name="comment" style={styles.icon} />
-          <Text style={styles.actionText}>{comment} Comment</Text>
-        </TouchableOpacity>
-        <View style={styles.actionContainer}>
-          <Icon name="share" style={styles.icon} />
-          <Text style={styles.actionText}>Share</Text>
+      {isApproved && (
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity onPress={toggleLike} style={styles.actionContainer}>
+            <Icon
+              name={liked ? 'thumbs-up' : 'thumbs-o-up'}
+              style={styles.icon}
+            />
+            <Text style={[styles.actionText, liked && {color: 'blue'}]}>
+              {likeCount} {liked ? 'Liked' : 'Like'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionContainer}
+            onPress={() => showScreenListComment(postId)}>
+            <Icon name="comment" style={styles.icon} />
+            <Text style={styles.actionText}>{comment} Comment</Text>
+          </TouchableOpacity>
+          <View style={styles.actionContainer}>
+            <Icon name="share" style={styles.icon} />
+            <Text style={styles.actionText}>Share</Text>
+          </View>
         </View>
-      </View>
+      )}
+
+      {!isApproved && isAdmin && (
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity
+            onPress={() => toggleApprove(postId)}
+            style={styles.actionContainer}>
+            <Icon name={'check'} style={styles.icon} />
+            <Text style={[styles.actionText, liked && {color: 'blue'}]}>
+              Approve
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionContainer}
+            onPress={() => toggleDeclines(postId)}>
+            <Icon name={'close'} style={styles.icon} />
+            <Text style={styles.actionText}>Declines</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {!isApproved && !isAdmin && (
+        <View style={styles.actionsContainer}>
+          <Text style={styles.approveText}>
+            The article is waiting for approval
+          </Text>
+        </View>
+      )}
 
       {/* Modal */}
       <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
