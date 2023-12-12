@@ -4,6 +4,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import styles from './Post.style';
 
+interface PostProps {
+  postId: number;
+  isApproved?: boolean;
+  user: string;
+  avatar: string;
+  createdAt: string;
+  content: string;
+  like: number;
+  comment: number;
+  image?: string;
+  showScreenListComment?: (postId: number) => void;
+}
+
 function Post({
   postId,
   isApproved,
@@ -15,8 +28,8 @@ function Post({
   comment,
   image,
   showScreenListComment,
-}) {
-  const [isAdmin, setIsAdmin] = useState(false);
+}: PostProps) {
+  let isAdmin = false;
   const [likeCount, setLikeCount] = useState(like);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -104,7 +117,7 @@ function Post({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionContainer}
-            onPress={() => showScreenListComment(postId)}>
+            onPress={() => showScreenListComment!(postId)}>
             <Icon name="comment" style={styles.icon} />
             <Text style={styles.actionText}>{comment} Comment</Text>
           </TouchableOpacity>

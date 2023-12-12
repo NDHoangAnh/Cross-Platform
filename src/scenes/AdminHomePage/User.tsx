@@ -34,8 +34,11 @@ function User({userId, isActive, username, avatar, createdAt}) {
           <Text style={styles.createdAt}>{createdAt}</Text>
         </View>
         <View style={styles.actionContainer}>
-          <Icon name="circle" style={[styles.icon, styles.active]} />
-          <Text>Active</Text>
+          <Icon
+            name="circle"
+            style={[styles.icon, isActive && styles.active]}
+          />
+          <Text>{isActive ? 'Active' : 'Deactive'}</Text>
         </View>
         <TouchableOpacity onPress={toggleModal}>
           <Icon name="ellipsis-h" style={styles.icon} />
@@ -46,13 +49,13 @@ function User({userId, isActive, username, avatar, createdAt}) {
       <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
         <View style={styles.modalContainer}>
           <TouchableOpacity onPress={handleEdit} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Edit</Text>
+            <Text style={styles.buttonText}>Active</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleDelete} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Delete</Text>
+            <Text style={styles.buttonText}>Deactive</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleReport} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Report</Text>
+            <Text style={styles.buttonText}>Delete</Text>
           </TouchableOpacity>
         </View>
       </Modal>

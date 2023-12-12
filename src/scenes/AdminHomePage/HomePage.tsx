@@ -1,6 +1,5 @@
 import {users} from '../../data/user';
-import {View, ScrollView} from 'react-native';
-import styles from './HomePage.style';
+import {ScrollView} from 'react-native';
 
 import Navbar from '../../components/Navbar';
 import {AdminHomePageProps} from '../../navigate';
@@ -8,12 +7,15 @@ import User from './User';
 
 function AdminHomePage({navigation}: AdminHomePageProps) {
   const showScreenApprovePosts = () => {
-    navigation.navigate('AddPostScreen');
+    navigation.navigate('HomePagePostScreen');
   };
 
   return (
     <ScrollView stickyHeaderIndices={[0]}>
-      <Navbar listAction={[{onPress: showScreenApprovePosts, name: 'Posts'}]} />
+      <Navbar
+        showBackButton={false}
+        listAction={[{onPress: showScreenApprovePosts, name: 'Posts'}]}
+      />
       {users.map((user, index) => (
         <User
           key={index}

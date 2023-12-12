@@ -1,14 +1,21 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AdminHomePage from './HomePage';
+import AdminPostScreen from './AdminPostScreen';
 
-const ForumStack = createNativeStackNavigator();
+const AdminHomePageStack = createNativeStackNavigator();
 
 function AdminHomePageStackScreen() {
   return (
-    <ForumStack.Navigator screenOptions={{headerShown: false}}>
-      <ForumStack.Screen name="ForumScreen" component={AdminHomePage} />
-      {/* <ForumStack.Screen name="AddPostScreen" component={AddPostScreen} /> */}
-    </ForumStack.Navigator>
+    <AdminHomePageStack.Navigator screenOptions={{headerShown: false}}>
+      <AdminHomePageStack.Screen
+        name="HomePageUserScreen"
+        component={AdminHomePage}
+      />
+      <AdminHomePageStack.Screen
+        name="HomePagePostScreen"
+        component={AdminPostScreen}
+      />
+    </AdminHomePageStack.Navigator>
   );
 }
 

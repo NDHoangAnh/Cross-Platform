@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 type Props = {
   showBackButton?: boolean;
-  listAction: {
+  listAction?: {
     onPress: (e?: any) => void;
     name: string;
   }[];
