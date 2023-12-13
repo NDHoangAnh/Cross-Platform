@@ -25,14 +25,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   userInfo: {
-    flex: 0.5,
+    flex: 1,
   },
   userName: {
     fontWeight: 'bold',
     fontSize: 16,
     ...commonStyles,
   },
-  createdAt: {
+  role: {
     fontSize: 12,
     ...commonStyles,
   },
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   modalContainer: {
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
@@ -64,11 +65,58 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  actionContainer: {
-    flex: 0.5,
-    textAlign: 'center',
-    flexDirection: 'row',
+  errors: {
+    color: '#FF7F7F',
+    alignSelf: 'baseline',
+    marginLeft: '11%',
+    fontSize: 12,
+  },
+  textbox: {
+    borderRadius: 20,
+    backgroundColor: 'white',
+    padding: 20,
     alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#87CEFA',
+    padding: 10,
+    borderRadius: 5,
+    width: '30%',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  register: {
+    marginTop: '5%',
+    color: 'gray',
+  },
+  link: {
+    textDecorationLine: 'underline',
+    color: '#87CEFA',
+  },
+  input: {
+    color: 'black',
+    height: 40,
+    width: '80%',
+    margin: 12,
+    borderWidth: 0,
+    padding: 10,
+    marginBottom: '5%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 5,
+    backgroundColor: 'white',
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: '5%',
+    color: 'black',
   },
 });
 

@@ -3,6 +3,7 @@ import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import styles from './Post.style';
+import apis from '../../apis';
 
 interface PostProps {
   postId: number;
@@ -29,7 +30,7 @@ function Post({
   image,
   showScreenListComment,
 }: PostProps) {
-  let isAdmin = false;
+  let isAdmin = true;
   const [likeCount, setLikeCount] = useState(like);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -68,14 +69,12 @@ function Post({
   };
   //
 
-  const toggleApprove = id => {
-    console.log(id);
-    toggleModal();
+  const toggleApprove = async () => {
+    await apis.admin.approvePost(postId);
   };
 
-  const toggleDeclines = id => {
-    console.log(id);
-    toggleModal();
+  const toggleDeclines = async () => {
+    await apis.admin.declinePost(postId);
   };
 
   return (
@@ -131,7 +130,7 @@ function Post({
       {!isApproved && isAdmin && (
         <View style={styles.actionsContainer}>
           <TouchableOpacity
-            onPress={() => toggleApprove(postId)}
+            onPress={toggleApprove}
             style={styles.actionContainer}>
             <Icon name={'check'} style={styles.icon} />
             <Text style={[styles.actionText, liked && {color: 'blue'}]}>
@@ -140,7 +139,7 @@ function Post({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionContainer}
-            onPress={() => toggleDeclines(postId)}>
+            onPress={toggleDeclines}>
             <Icon name={'close'} style={styles.icon} />
             <Text style={styles.actionText}>Declines</Text>
           </TouchableOpacity>
