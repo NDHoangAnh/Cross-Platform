@@ -6,13 +6,10 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import Home from './src/scenes/Home';
 import Settings from './src/scenes/Settings';
 import Login from './src/scenes/Login';
-<<<<<<<<< Temporary merge branch 1
 import SignUp from './src/scenes/SignUp';
 import VerifyOTP from './src/scenes/VerifyOTP';
 import ForgotPassword from './src/scenes/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ForumStackScreen from './src/scenes/Forum/index';
-=========
 import ForumStackScreen from './src/scenes/Forum/Forum';
 import HomeScheduleScreen from './src/scenes/Schedule/HomeScheduleScreen';
 import SearchScheduleScreen from './src/scenes/Schedule/SearchScheduleScreen';
@@ -22,7 +19,6 @@ import DetailScheduleScreen from './src/scenes/Schedule/DetailScheduleScreen';
 import ButtonFunction from './src/components/schedule/ButtonFunction';
 
 import 'react-native-gesture-handler';
->>>>>>>>> Temporary merge branch 2
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
