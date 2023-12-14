@@ -1,30 +1,72 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableHighlight, TouchableOpacity, TextInput, Switch} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+  TextInput,
+  Switch,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { format } from 'date-fns';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {Calendar, LocaleConfig} from 'react-native-calendars';
+import {format} from 'date-fns';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 LocaleConfig.locales['en'] = {
-  monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  monthNamesShort: ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'],
-  dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  monthNames: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+  monthNamesShort: [
+    'Jan.',
+    'Feb.',
+    'Mar.',
+    'Apr.',
+    'May',
+    'Jun.',
+    'Jul.',
+    'Aug.',
+    'Sep.',
+    'Oct.',
+    'Nov.',
+    'Dec.',
+  ],
+  dayNames: [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ],
   dayNamesShort: ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.'],
   today: 'Today',
 };
 
 LocaleConfig.defaultLocale = 'en';
 
-export default function EditScheduleScreen() : React.JSX.Element {
+export default function EditScheduleScreen(): React.JSX.Element {
   const navigation = useNavigation();
   const route = useRoute();
   const [title, setTitle] = React.useState('Hoc tieng anh');
   const [note, setNote] = React.useState('hoc nhieu vao');
-  const [isFullDay,setIsFullDay] = React.useState(false);
+  const [isFullDay, setIsFullDay] = React.useState(false);
   const [startTime, setStartTime] = React.useState('00:00');
   const [endTime, setEndTime] = React.useState('00:00');
   const [isDatePickerVisible, setIsDatePickerVisible] = React.useState(false);
@@ -34,8 +76,10 @@ export default function EditScheduleScreen() : React.JSX.Element {
 
   const item = route.params?.item;
 
-  const onDayPress = (day : any) => {
-    const formattedDate = day ? format(new Date(day.dateString), 'eeee, do MMMM, yyyy') : '00:00';
+  const onDayPress = (day: any) => {
+    const formattedDate = day
+      ? format(new Date(day.dateString), 'eeee, do MMMM, yyyy')
+      : '00:00';
     setSelectedDay(formattedDate);
     setIsDatePickerVisible(false);
   };
@@ -56,12 +100,12 @@ export default function EditScheduleScreen() : React.JSX.Element {
     setIsEndPickerVisible(false);
   };
 
-  const handleStartConfirm = (time : any) => {
+  const handleStartConfirm = (time: any) => {
     setStartTime(format(time, 'HH:mm'));
     hideStartPicker();
   };
 
-  const handleEndConfirm = (time : any) => {
+  const handleEndConfirm = (time: any) => {
     setEndTime(format(time, 'HH:mm'));
     hideEndPicker();
   };
@@ -76,12 +120,21 @@ export default function EditScheduleScreen() : React.JSX.Element {
           <Text style={styles.textBar}>Xong</Text>
         </TouchableOpacity>
       </View>
-      <TextInput style={styles.textHeader} value={title} onChangeText={newText => setTitle(newText)}/>
+      <TextInput
+        style={styles.textHeader}
+        value={title}
+        onChangeText={newText => setTitle(newText)}
+      />
       <View style={styles.rowNote}>
         <View style={styles.iconNoteCover}>
           <MaterialIcons name="notes" size={30} />
         </View>
-        <TextInput style={styles.textNote} multiline={true} value={note} onChangeText={newText => setNote(newText)} />
+        <TextInput
+          style={styles.textNote}
+          multiline={true}
+          value={note}
+          onChangeText={newText => setNote(newText)}
+        />
       </View>
       <View style={styles.row}>
         <View style={styles.iconCover}>
@@ -92,39 +145,49 @@ export default function EditScheduleScreen() : React.JSX.Element {
             <Text style={styles.textNote}>Cả ngày</Text>
           </View>
           <Switch
-          trackColor={{false: '#767577', true: '#81b0ff'}}
-          thumbColor={isFullDay ? '#f5dd4b' : '#f4f3f4'}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={() => setIsFullDay(!isFullDay)}
-          value={isFullDay}
+            trackColor={{false: '#767577', true: '#81b0ff'}}
+            thumbColor={isFullDay ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => setIsFullDay(!isFullDay)}
+            value={isFullDay}
           />
         </View>
       </View>
       <View style={styles.rowDay}>
         <View>
-          <Text style={styles.textDate} onPress={() => setIsDatePickerVisible(!isDatePickerVisible)}>{selectedDay}</Text>
+          <Text
+            style={styles.textDate}
+            onPress={() => setIsDatePickerVisible(!isDatePickerVisible)}>
+            {selectedDay}
+          </Text>
         </View>
       </View>
       <View style={styles.selectDay}>
-        {isDatePickerVisible && <Calendar
-          onDayPress={onDayPress}
-          markedDates={{
-            [selectedDay]: {
-              selected: true,
-              selectedColor: 'blue',
-            },
-          }}
-        />
-        }
+        {isDatePickerVisible && (
+          <Calendar
+            onDayPress={onDayPress}
+            markedDates={{
+              [selectedDay]: {
+                selected: true,
+                selectedColor: 'blue',
+              },
+            }}
+          />
+        )}
       </View>
-      {!isFullDay && <View style={styles.rowDate}>
-        <Text style={styles.textDate} onPress={showStartPicker}>{startTime}</Text>
-        <Text>
-            <Octicons name="dash" size={30}/>
-        </Text>
-        <Text style={styles.textDate} onPress={showEndPicker}>{endTime}</Text>
-      </View>
-      }
+      {!isFullDay && (
+        <View style={styles.rowDate}>
+          <Text style={styles.textDate} onPress={showStartPicker}>
+            {startTime}
+          </Text>
+          <Text>
+            <Octicons name="dash" size={30} />
+          </Text>
+          <Text style={styles.textDate} onPress={showEndPicker}>
+            {endTime}
+          </Text>
+        </View>
+      )}
       <View style={styles.row}>
         <DateTimePickerModal
           isVisible={isStartPickerVisible}
@@ -134,7 +197,7 @@ export default function EditScheduleScreen() : React.JSX.Element {
         />
         <DateTimePickerModal
           isVisible={isEndPickerVisible}
-          mode= "time"
+          mode="time"
           onConfirm={handleEndConfirm}
           onCancel={hideEndPicker}
         />
@@ -165,7 +228,7 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 20,
   },
-  rowTask:{
+  rowTask: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -173,16 +236,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBlockColor: 'lightgrey',
   },
-  row:{
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginVertical: 8,
   },
-  allDay:{
+  allDay: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    flex:1,
+    flex: 1,
     marginEnd: 20,
     marginVertical: 12,
   },
@@ -230,8 +293,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderTopWidth: 1,
   },
-  iconNoteCover:{
-    width:60,
+  iconNoteCover: {
+    width: 60,
     height: '100%',
     paddingTop: 8,
     flexDirection: 'column',
@@ -239,7 +302,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconCover: {
-    width:60,
+    width: 60,
     flexDirection: 'column',
     alignItems: 'center',
   },

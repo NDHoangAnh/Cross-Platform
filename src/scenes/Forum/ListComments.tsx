@@ -10,7 +10,7 @@ function ListComments({route}) {
 
   return (
     <ScrollView style={{backgroundColor: 'white'}} stickyHeaderIndices={[0]}>
-      <Navbar action={undefined} actionName={undefined} />
+      <Navbar listAction={[]} />
       {listComments?.map((cmt, idx) => (
         <Comment
           key={idx}

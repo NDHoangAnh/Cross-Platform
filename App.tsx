@@ -6,6 +6,13 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import Home from './src/scenes/Home';
 import Settings from './src/scenes/Settings';
 import Login from './src/scenes/Login';
+<<<<<<<<< Temporary merge branch 1
+import SignUp from './src/scenes/SignUp';
+import VerifyOTP from './src/scenes/VerifyOTP';
+import ForgotPassword from './src/scenes/ForgotPassword';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ForumStackScreen from './src/scenes/Forum/index';
+=========
 import ForumStackScreen from './src/scenes/Forum/Forum';
 import HomeScheduleScreen from './src/scenes/Schedule/HomeScheduleScreen';
 import SearchScheduleScreen from './src/scenes/Schedule/SearchScheduleScreen';
@@ -15,10 +22,7 @@ import DetailScheduleScreen from './src/scenes/Schedule/DetailScheduleScreen';
 import ButtonFunction from './src/components/schedule/ButtonFunction';
 
 import 'react-native-gesture-handler';
-import SignUp from './src/scenes/SignUp';
-import VerifyOTP from './src/scenes/VerifyOTP';
-import ForgotPassword from './src/scenes/ForgotPassword';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+>>>>>>>>> Temporary merge branch 2
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -62,7 +66,7 @@ export default function App() {
   React.useEffect(() => {
     const checkAsyncStorage = async () => {
       const empty = await isAsyncStorageEmpty();
-      setIsLoggedIn(!empty);
+      setIsLoggedIn(true);
     };
 
     checkAsyncStorage();
@@ -76,6 +80,7 @@ export default function App() {
           <Tab.Screen name="Settings">
             {props => <Settings {...props} setIsLoggedIn={setIsLoggedIn} />}
           </Tab.Screen>
+          <Tab.Screen name="Target" component={TargetScreen} />
           <Tab.Screen name="Forum" component={ForumStackScreen} />
         </Tab.Navigator>
       ) : (
