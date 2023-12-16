@@ -1,6 +1,7 @@
 import {View, TouchableOpacity, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
+
 type Props = {
   showBackButton?: boolean;
   listAction: {

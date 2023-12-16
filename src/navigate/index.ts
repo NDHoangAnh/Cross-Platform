@@ -4,4 +4,8 @@ type ForumProps = {
   navigation: NativeStackNavigationProp<any, 'ForumStack'>;
 };
 
-export type {ForumProps};
+type KlassProps = {
+  navigation: NativeStackNavigationProp<any, 'KlassStack'>;
+};
+
+export type {ForumProps, KlassProps};
