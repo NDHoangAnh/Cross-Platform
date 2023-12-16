@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {
   Text,
@@ -9,13 +9,16 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './index.style';
 import api from '../../apis';
+import asyncData from '../../config/auth';
 
 const Login = ({navigation, route, setIsLoggedIn}) => {
+  const [loading, setLoading] = useState(false);
   const {verify} = route.params || 'none';
 
   const {
@@ -46,18 +49,26 @@ const Login = ({navigation, route, setIsLoggedIn}) => {
   }, [verify]);
 
   const onSubmit = async data => {
-    const response = await api.auth.login(data);
+    try {
+      setLoading(true);
 
-    if (response?.data?.errMsg !== undefined) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: `${response?.data?.errMsg}`,
-      });
-    } else {
-      await AsyncStorage.clear();
-      await AsyncStorage.setItem('userData', JSON.stringify(response?.data));
-      setIsLoggedIn(true);
+      const response = await api.auth.login(data);
+
+      if (response?.data?.errMsg !== undefined) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: `${response?.data?.errMsg}`,
+        });
+      } else {
+        await AsyncStorage.clear();
+        await asyncData.addData(response?.data);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,8 +141,13 @@ const Login = ({navigation, route, setIsLoggedIn}) => {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.buttonText}>Login</Text>
+            onPress={handleSubmit(onSubmit)}
+            disabled={loading}>
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={styles.buttonText}>Login</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleSignUp}>

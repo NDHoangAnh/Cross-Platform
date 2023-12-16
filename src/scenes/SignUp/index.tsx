@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {
   Text,
@@ -8,12 +9,14 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import styles from './index.style';
 import api from '../../apis';
 import Toast from 'react-native-toast-message';
 
 const SignUp = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -29,6 +32,7 @@ const SignUp = ({navigation}) => {
   });
 
   const onSubmit = async data => {
+    setLoading(true);
     const params = {
       username: data.username,
       email: data.email,
@@ -36,14 +40,19 @@ const SignUp = ({navigation}) => {
     };
     const response = await api.auth.register(params);
     if (response?.data?.errMsg !== undefined) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: `${response?.data?.errMsg}`,
-      });
+      if (response?.data?.errMsg === 'User is not verified') {
+        navigation.navigate('VerifyOTP', {email: data.email});
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: `${response?.data?.errMsg}`,
+        });
+      }
     } else {
       navigation.navigate('VerifyOTP', {email: data.email});
     }
+    setLoading(false);
   };
 
   const handleLogin = () => {
@@ -155,8 +164,13 @@ const SignUp = ({navigation}) => {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.buttonText}>Sign up</Text>
+            onPress={handleSubmit(onSubmit)}
+            disabled={loading}>
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={styles.buttonText}>Sign up</Text>
+            )}
           </TouchableOpacity>
           <TouchableOpacity onPress={handleLogin}>
             <Text style={styles.register}>

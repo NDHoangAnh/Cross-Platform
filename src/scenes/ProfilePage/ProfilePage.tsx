@@ -1,75 +1,135 @@
-import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
-import {FAB} from 'react-native-paper';
-import {posts} from '../../data/post';
-import Post from '../../containers/Post/Post';
+import {useState, useEffect, useCallback} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  ImageBackground,
+} from 'react-native';
 import styles from './ProfilePage.style';
+import asyncData from '../../config/auth';
+import {useFocusEffect} from '@react-navigation/native';
+import api from '../../apis';
+
+type UserData = {
+  id: string | null;
+  username: string | null;
+  email: string | null;
+  role: string | null;
+  avatar: string | null;
+  birthDate: Date | null;
+  address: string | null;
+  phone: string | null;
+};
 
 const Profile = ({navigation}) => {
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const userPictureUrl =
     'https://icon-library.com/images/default-profile-icon/default-profile-icon-5.jpg';
-  const userName = 'John Doe';
-  const numberOfPosts = 30;
-  const totalLikes = 500;
-  const commentsReceived = 100;
 
-  const dateOfBirth = 'January 1, 1990';
-  const email = 'john.doe@example.com';
-  const major = 'Computer Science';
-  const phoneNumber = '123-456-7890';
+  // reload when back to page
+  useFocusEffect(
+    useCallback(() => {
+      handleGetUserData();
+    }, [])
+  );
 
-  const showScreenListComment = postId => {
-    navigation.navigate('ListCommentsScreen', {postId});
-  };
+  useEffect(() => {
+    handleGetUserData();
+  }, []);
 
-  const handleAddPost = () => {
-    navigation.navigate('Forum', {screen: 'AddPostScreen'});
+  useEffect(() => {
+    // Log userData when it changes
+    setLoading(false);
+  }, [userData]);
+
+  const handleGetUserData = async () => {
+    try {
+      const data = await asyncData.getData();
+      const user = await api.user.getUserData(data?.id);
+
+      if (data !== null && typeof data === 'object') {
+        const userProfile: UserData = {
+          id: data.id,
+          username: user?.username || null,
+          email: data.email,
+          role: data.role,
+          avatar: user?.avatar || null,
+          birthDate: user?.birthDate || null,
+          address: user?.address || null,
+          phone: user?.phone || null,
+        };
+
+        setUserData(userProfile);
+      } else {
+        console.log('Invalid user data received');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditScreen');
+    navigation.navigate('EditScreen', {userData: userData});
   };
 
   const handleChangePassword = () => {
-    navigation.navigate('ChangePasswordScreen');
+    navigation.navigate('ChangePasswordScreen', userData?.email);
   };
 
+  if (loading) {
+    // Return a loading indicator or any other appropriate UI
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
-    <View>
+    <View style={{flex: 1, backgroundColor: 'whitesmoke'}}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
-          <View style={styles.background} />
-          <Image source={{uri: userPictureUrl}} style={styles.userPicture} />
-          <Text style={styles.userName}>{userName}</Text>
-
-          <View style={styles.infoContainer}>
-            <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Posts</Text>
-              <Text style={styles.infoText}>{numberOfPosts}</Text>
-            </View>
-
-            <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Likes</Text>
-              <Text style={styles.infoText}>{totalLikes}</Text>
-            </View>
-
-            <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Comments</Text>
-              <Text style={styles.infoText}>{commentsReceived}</Text>
-            </View>
-          </View>
+          <ImageBackground
+            source={{
+              uri: 'https://static.vecteezy.com/system/resources/previews/003/127/954/non_2x/abstract-template-blue-background-white-squares-free-vector.jpg',
+            }}
+            style={styles.background}
+          />
+          <Image
+            source={{uri: userData?.avatar ? userData?.avatar : userPictureUrl}}
+            style={styles.userPicture}
+          />
+          <Text style={styles.userName}>
+            {userData?.username ? userData?.username : ''}
+          </Text>
 
           <View style={styles.infoCard}>
             <Text style={styles.infoCardLabel}>Date of Birth:</Text>
-            <Text style={styles.infoCardText}>{dateOfBirth}</Text>
+            <Text style={styles.infoCardText}>
+              {userData?.birthDate
+                ? new Date(userData.birthDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })
+                : 'No Date Selected'}
+            </Text>
 
             <Text style={styles.infoCardLabel}>Email:</Text>
-            <Text style={styles.infoCardText}>{email}</Text>
+            <Text style={styles.infoCardText}>
+              {userData?.email ? userData?.email : ''}
+            </Text>
 
-            <Text style={styles.infoCardLabel}>Major:</Text>
-            <Text style={styles.infoCardText}>{major}</Text>
+            <Text style={styles.infoCardLabel}>Address:</Text>
+            <Text style={styles.infoCardText}>
+              {userData?.address ? userData?.address : ''}
+            </Text>
 
             <Text style={styles.infoCardLabel}>Phone Number:</Text>
-            <Text style={styles.infoCardText}>{phoneNumber}</Text>
+            <Text style={styles.infoCardText}>
+              {userData?.phone ? userData?.phone : ''}
+            </Text>
           </View>
 
           <View style={styles.buttonContainer}>
@@ -83,31 +143,8 @@ const Profile = ({navigation}) => {
               <Text style={styles.buttonText}>Change Password</Text>
             </TouchableOpacity>
           </View>
-
-          <View style={styles.postsContainer}>
-            {posts.map((post, index) => (
-              <Post
-                postId={post.id}
-                user={post.user}
-                avatar={post.avatar}
-                createdAt={post.createdAt}
-                content={post.content}
-                like={post.like}
-                comment={post.comment}
-                key={index}
-                image={post?.image}
-                showScreenListComment={showScreenListComment}
-              />
-            ))}
-          </View>
         </View>
       </ScrollView>
-      <FAB
-        style={styles.fab}
-        icon="pencil"
-        color="#fff"
-        onPress={handleAddPost}
-      />
     </View>
   );
 };

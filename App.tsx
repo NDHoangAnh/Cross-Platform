@@ -11,12 +11,13 @@ import ForgotPassword from './src/scenes/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumStackScreen from './src/scenes/Forum/index';
 import ProfileStackScreen from './src/scenes/ProfilePage';
-import TargetScreen from "./src/scenes/Target";
+import TargetScreen from './src/scenes/Target';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // Change back to false in real app
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   // Check if storage is empty
@@ -32,7 +33,8 @@ export default function App() {
 
   useEffect(() => {
     const checkAsyncStorage = async () => {
-      const empty = await isAsyncStorageEmpty();
+      const isEmpty = await isAsyncStorageEmpty();
+      // isEmpty here
       setIsLoggedIn(true);
     };
 
