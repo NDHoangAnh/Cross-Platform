@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
     color: 'black',
+    marginBottom: 20,
   },
 
   infoContainer: {

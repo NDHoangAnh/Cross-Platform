@@ -20,6 +20,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // Change back to false in real app
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   // Check if storage is empty
@@ -35,7 +36,8 @@ export default function App() {
 
   useEffect(() => {
     const checkAsyncStorage = async () => {
-      const empty = await isAsyncStorageEmpty();
+      const isEmpty = await isAsyncStorageEmpty();
+      // isEmpty here
       setIsLoggedIn(true);
     };
 

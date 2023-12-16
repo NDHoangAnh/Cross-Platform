@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 20,
+    marginTop: 150,
   },
   heading: {
     fontSize: 24,
@@ -28,11 +29,12 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderColor: 'gray',
-    borderWidth: 1,
+    borderWidth: 0.2,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,
     color: 'black',
+    backgroundColor: 'white',
   },
 
   saveButton: {
@@ -72,6 +74,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#3498db',
     marginTop: 10,
+  },
+  image: {
+    resizeMode: 'contain',
+    width: '105%',
+    height: '105%',
+    position: 'absolute',
+    right: -10,
+    top: -10,
+    zIndex: -1,
   },
 });
 

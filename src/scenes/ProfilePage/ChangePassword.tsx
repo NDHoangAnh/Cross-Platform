@@ -5,34 +5,55 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
+  Image,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import styles from './ChangePassword.style';
+import api from '../../apis';
+import Toast from 'react-native-toast-message';
 
-const ChangePassword = () => {
+const ChangePassword = ({navigation}) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const navigation = useNavigation();
+  const route = useRoute();
 
-  const handleChangePassword = () => {
-    console.log('Password changed:', {
-      oldPassword,
-      newPassword,
-      confirmPassword,
-    });
+  const email = route.params;
+
+  const handleChangePassword = async () => {
+    setLoading(true);
+    const data = {
+      email: email,
+      oldPass: oldPassword,
+      newPass: newPassword,
+      confirmPass: confirmPassword,
+    };
+    const result = await api.user.editPass(data);
+    if (result.errMsg !== undefined) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: `${result?.errMsg}`,
+      });
+    } else {
+      navigation.goBack();
+    }
+    setLoading(false);
   };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>Back</Text>
-        </TouchableOpacity>
+      <Toast />
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}>
+        <Text style={styles.backButtonText}>Back</Text>
+      </TouchableOpacity>
 
+      <View style={styles.container}>
         <Text style={styles.heading}>Change Password</Text>
 
         <View style={styles.formContainer}>
@@ -63,10 +84,19 @@ const ChangePassword = () => {
 
         <TouchableOpacity
           style={styles.saveButton}
-          onPress={handleChangePassword}>
-          <Text style={styles.buttonText}>Change Password</Text>
+          onPress={handleChangePassword}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.buttonText}>Change Password</Text>
+          )}
         </TouchableOpacity>
       </View>
+      <Image
+        source={require('../../../public/edit-image.png')}
+        style={styles.image}
+      />
     </ScrollView>
   );
 };

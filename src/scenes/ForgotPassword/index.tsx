@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import styles from './index.style';
@@ -18,6 +19,7 @@ import Toast from 'react-native-toast-message';
 const ForgotPassword = ({navigation}) => {
   // State to control OTP input view
   const [showOtpInput, setShowOtpInput] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -31,6 +33,7 @@ const ForgotPassword = ({navigation}) => {
   });
 
   const onSubmit = async data => {
+    setLoading(true);
     const response = await api.auth.reqChangePassword(data);
     // console.log(response?.data);
     if (response?.data?.errMsg !== undefined) {
@@ -46,6 +49,7 @@ const ForgotPassword = ({navigation}) => {
       });
       setShowOtpInput(true);
     }
+    setLoading(false);
   };
 
   const handleVerify = async code => {
@@ -116,8 +120,13 @@ const ForgotPassword = ({navigation}) => {
               />
               <TouchableOpacity
                 style={styles.button}
-                onPress={handleSubmit(onSubmit)}>
-                <Text style={styles.buttonText}>Submit</Text>
+                onPress={handleSubmit(onSubmit)}
+                disabled={loading}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text style={styles.buttonText}>Submit</Text>
+                )}
               </TouchableOpacity>
             </>
           ) : (
