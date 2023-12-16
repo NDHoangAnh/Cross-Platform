@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const addData = async (data) => {
+const addData = async data => {
   try {
     console.log(data._id, data.email, data.role);
 
@@ -26,10 +26,9 @@ const getData = async () => {
 
     return result;
   } catch (error) {
-    // Error retrieving data
     console.error(error);
     return null;
   }
 };
 
-export default { getData, addData };
+export default {getData, addData};

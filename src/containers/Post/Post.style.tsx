@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   postContainer: {
     backgroundColor: 'white',
     padding: 10,
-    marginBottom: 10,
+    margin: 5,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',

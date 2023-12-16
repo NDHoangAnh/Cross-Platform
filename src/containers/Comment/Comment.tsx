@@ -1,37 +1,60 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Image, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
+import {convertDateToDay, convertDateToHour} from '../../utils';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
-function Comment({user, avatar, content, createdAt}) {
+function Comment({
+  user,
+  avatar,
+  content,
+  createdAt,
+  idComment,
+  handleDeleteComment,
+  setContent,
+  setIdToEdit,
+}) {
   const [isShowModalComment, setIsShowModalComment] = useState(false);
+  const day = convertDateToDay(createdAt);
+  const time = convertDateToHour(createdAt);
   const toggleModal = () => {
     setIsShowModalComment(!isShowModalComment);
   };
 
   const handleEdit = () => {
     toggleModal();
+    setIdToEdit(idComment);
+    setContent(content);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    await handleDeleteComment(idComment);
     toggleModal();
   };
+
   return (
     <View style={styles.commentContainer}>
       <Image source={{uri: avatar}} style={styles.avatar} />
-      <TouchableOpacity style={styles.commentContent} onPress={toggleModal}>
+      <View style={styles.commentContent}>
         <Text style={styles.userName}>{user}</Text>
         <Text style={styles.commentText}>{content}</Text>
-        <Text style={styles.createdAt}>{createdAt}</Text>
+        <Text style={styles.createdAt}>
+          {time}
+          {'\t'} {day}
+        </Text>
+      </View>
+      <TouchableOpacity onPress={toggleModal}>
+        <Icon name="options" style={{fontSize: 20, color: 'black'}} />
       </TouchableOpacity>
 
       {/* Modal */}
       <Modal isVisible={isShowModalComment} onBackdropPress={toggleModal}>
-        <View style={styles.modalContainer}>
-          <TouchableOpacity onPress={handleEdit} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Edit</Text>
+        <View style={styles.modalButtonContainer}>
+          <TouchableOpacity onPress={handleEdit} style={styles.editButton}>
+            <Text style={[styles.blueText]}>Edit</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleDelete} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Delete</Text>
+          <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+            <Text style={[styles.redText]}>Delete</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -70,26 +93,36 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 10,
   },
-  modalContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     backgroundColor: 'white',
-    padding: 20,
+    padding: 40,
+    borderRadius: 20,
   },
-  modalButton: {
-    marginBottom: 10,
+  editButton: {
+    flex: 1,
+    marginRight: 5,
     borderRadius: 8,
     alignItems: 'center',
-    width: '100%',
     padding: 10,
-    borderTopWidth: 0.2,
-    borderBottomWidth: 0.2,
+    borderColor: 'lightblue',
+    borderWidth: 1,
   },
-  buttonText: {
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
+  deleteButton: {
+    flex: 1,
+    marginLeft: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'lightcoral',
+    borderWidth: 1,
+  },
+  blueText: {
+    color: 'blue',
+  },
+  redText: {
+    color: 'red',
   },
 });
-
 export default Comment;

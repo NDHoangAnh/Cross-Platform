@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const baseUrl = '1';
+const baseUrl = 'http://192.168.196.89:8089';
 
 const getPostOfForum = async () => {
   try {
     const listPost = await axios.get(`${baseUrl}/post/getAllPost`);
-    return listPost;
+    return listPost.data;
   } catch (error) {
     console.log(error);
   }
@@ -13,8 +13,10 @@ const getPostOfForum = async () => {
 
 const getPostOfUser = async id => {
   try {
+    console.log(1);
+
     const result = await axios.get(`${baseUrl}/post/getPersonalPost/${id}`);
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -28,7 +30,7 @@ const addPost = async ({senderId, content, imageUrl}) => {
       imageUrl,
     });
 
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -37,7 +39,7 @@ const addPost = async ({senderId, content, imageUrl}) => {
 const deletPost = async id => {
   try {
     const result = await axios.delete(`${baseUrl}/post/delete/${id}`);
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -46,7 +48,7 @@ const deletPost = async id => {
 const editPost = async data => {
   try {
     const result = await axios.put(`${baseUrl}/post/edit`, {...data});
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -58,7 +60,7 @@ const likePost = async (postId, senderId) => {
       senderId,
     });
 
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }

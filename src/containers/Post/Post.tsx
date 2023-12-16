@@ -3,6 +3,9 @@ import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import styles from './Post.style';
+import asyncData from '../../config/auth';
+import apis from '../../apis';
+import {convertDateToDay, convertDateToHour} from '../../utils';
 
 function Post({
   postId,
@@ -11,28 +14,51 @@ function Post({
   createdAt,
   content,
   like,
-  comment,
   image,
   showScreenListComment,
+  listPostForum,
+  setListPostForum,
 }) {
   const [likeCount, setLikeCount] = useState(like);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isImageModalVisible, setImageModalVisible] = useState(false);
 
+  const day = convertDateToDay(createdAt);
+  const hour = convertDateToHour(createdAt);
+
   // image modal
   const toggleImageModal = () => {
     setImageModalVisible(!isImageModalVisible);
   };
 
-  // action
-  const toggleLike = () => {
-    if (liked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
+  const toggleLike = async () => {
+    try {
+      const currentUser = await asyncData.getData(); // Fetch current user's information
+
+      if (liked) {
+        setLikeCount(likeCount - 1);
+        setLiked(false);
+      } else {
+        setLikeCount(likeCount + 1);
+        setLiked(true);
+      }
+
+      await apis.forum.likePost(postId, currentUser?.id);
+
+      const updatedList = listPostForum.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            likedByUser: !liked,
+          };
+        }
+        return post;
+      });
+      setListPostForum(updatedList);
+    } catch (error) {
+      console.log(error);
     }
-    setLiked(!liked);
   };
 
   // additional modal
@@ -59,7 +85,7 @@ function Post({
         <Image style={styles.avatar} source={{uri: avatar}} />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{user}</Text>
-          <Text style={styles.createdAt}>{createdAt}</Text>
+          <Text style={styles.createdAt}>{`${hour} ${day}`}</Text>
         </View>
         <TouchableOpacity onPress={toggleModal}>
           <Icon name="ellipsis-h" style={styles.icon} />
@@ -94,7 +120,7 @@ function Post({
           style={styles.actionContainer}
           onPress={() => showScreenListComment(postId)}>
           <Icon name="comment" style={styles.icon} />
-          <Text style={styles.actionText}>{comment} Comment</Text>
+          <Text style={styles.actionText}>Comment</Text>
         </TouchableOpacity>
         <View style={styles.actionContainer}>
           <Icon name="share" style={styles.icon} />

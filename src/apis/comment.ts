@@ -1,11 +1,13 @@
 import axios from 'axios';
 
-const baseUrl = '1';
+const baseUrl = 'http://192.168.196.89:8089';
 
 const getListCommentOfPost = async postId => {
   try {
     const result = await axios.get(`${baseUrl}/post/getComment/${postId}`);
-    return result;
+    console.log(result.data);
+
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -14,7 +16,7 @@ const getListCommentOfPost = async postId => {
 const deleteComment = async id => {
   try {
     const result = await axios.delete(`${baseUrl}/comment/delete/${id}`);
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -27,7 +29,7 @@ const addComment = async ({senderId, content, postId}) => {
       content,
       postId,
     });
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -40,7 +42,7 @@ const editComment = async data => {
       `${baseUrl}/comment/updateComment/${commentId}`,
       {senderId, content}
     );
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }

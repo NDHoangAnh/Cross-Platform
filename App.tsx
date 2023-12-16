@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './src/scenes/Home';
-import Settings from './src/scenes/Settings';
 import Login from './src/scenes/Login';
 import SignUp from './src/scenes/SignUp';
 import VerifyOTP from './src/scenes/VerifyOTP';
@@ -21,7 +19,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   // Change back to false in real app
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Check if storage is empty
   const isAsyncStorageEmpty = async () => {
@@ -38,7 +36,8 @@ export default function App() {
     const checkAsyncStorage = async () => {
       const isEmpty = await isAsyncStorageEmpty();
       // isEmpty here
-      setIsLoggedIn(true);
+      // setIsLoggedIn(true);
+      setIsLoggedIn(!isEmpty);
     };
 
     checkAsyncStorage();

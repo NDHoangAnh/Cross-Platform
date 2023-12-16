@@ -2,6 +2,7 @@ import * as auth from './auth';
 import * as cloudinary from './cloudinary';
 import * as user from './user';
 import * as klass from './klass';
-import * as post from './forum';
+import * as forum from './forum';
+import * as comment from './comment';
 
-export default {auth, klass, post, cloudinary, user};
+export default {auth, klass, forum, cloudinary, user, comment};
