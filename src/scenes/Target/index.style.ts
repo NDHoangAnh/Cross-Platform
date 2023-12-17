@@ -9,18 +9,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    color: 'black',
+    borderRadius: 6,
+    marginTop: 8,
+    backgroundColor: 'white'
   },
   container: {
     height: '100%',
-    width: '100%'
+    width: '100%',
   },
   nameTarget: {
     fontWeight: 'bold'
   },
   point: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'black'
+    
   },
   formCreateTargetContainer: {
     display: 'flex',
@@ -40,18 +46,22 @@ const styles = StyleSheet.create({
     flex: 1
   },
   inputContainer: {
-    display: 'flex',
-    rowGap: 12
+    rowGap: 12,
+    width: '100%'
   },
   formItem: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     width: '100%',
+    alignItems: 'center',
     gap: 8,
   },
   formLabel: {
-    minWidth: 80
+    minWidth: 80,
+    fontWeight: '600'
+  },
+  labelField: {
+    fontWeight: '600'
   },
   button: {
     alignItems: 'center',
@@ -94,6 +104,24 @@ const styles = StyleSheet.create({
   },
   buttonSaveChild: {
     marginTop: 16
+  },
+  modalFooter: {
+    display: "flex",
+    flexDirection: 'row',
+    gap: 12
+  },
+  childTarget: {
+    width: '100%',
+    minHeight: 32,
+    borderRadius: 6,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginTop: 8,
+    padding: 8,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white'
   }
 });
 

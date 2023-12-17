@@ -112,7 +112,7 @@ const CreateTarget = ({}: Props) => {
             />
           </View>
         </View>
-        <Pressable onClick={handleSaveChild} style={[styles.button, styles.buttonSaveChild]}>
+        <Pressable onPress={handleSaveChild} style={[styles.button, styles.buttonSaveChild]}>
           <Text>Save</Text>
         </Pressable>
         {/*<Pressable*/}
