@@ -1,8 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {FlatList, Modal, Pressable, Text, TextInput, TouchableOpacity, View} from "react-native";
 import Navbar from "../../components/Navbar";
 import styles from './index.style'
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {deleteTarget, editTarget, getAllTargets} from "../../apis";
+import {Controller, useForm} from "react-hook-form";
 type ChildTarget = Omit<TargetType, 'childTarget'>
 type TargetType = {
   name: string
@@ -59,9 +61,19 @@ type Props = {
   navigation: NativeStackNavigationProp<any, 'TargetScreen', undefined>
 }
 const TargetHome = ({navigation}: Props) => {
+  const [listTarget, setListTarget] = useState<any>([]);
   const [currentTarget, setCurrentTarget] = useState<any>();
   const [openModalDetail, setOpenModalDetail] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
+  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+    defaultValues: {
+      name: '',
+      description: '',
+      realPoint: '',
+      targetPoint: '',
+      listChild: []
+    }
+  });
   const handleRedirectCreateTarget = () => {
     navigation.navigate('CreateTarget');
   }
@@ -74,9 +86,20 @@ const TargetHome = ({navigation}: Props) => {
     setOpenModalDetail(false)
     setOpenModalEdit(true)
   }
-  const handleDelete = () => {
-  
+  const handleDelete = async () => {
+    await deleteTarget(currentTarget.id)
   }
+  const handleConfirmEditTarget = async value => {
+    await editTarget({...value})
+  }
+  
+  useEffect(() => {
+    getAllTargets({userId: 'hehehe'}).then((rs) => {
+      setListTarget(rs || [])
+    })
+  }, []);
+  
+  
   const renderItemTarget = ({item}) => {
     return <TouchableOpacity onPress={() => handleOpenViewDetail(item)} style={styles.itemTarget}>
       <View>
@@ -103,7 +126,6 @@ const TargetHome = ({navigation}: Props) => {
       </View>
     </View>
   };
-  console.log(currentTarget)
   return  <View style={styles.container}>
     <Navbar title={'List Target'} listAction={[{onPress: handleRedirectCreateTarget, name:'Add' }]} />
     <View style={{paddingHorizontal: 8}}>
@@ -185,41 +207,95 @@ const TargetHome = ({navigation}: Props) => {
         <View style={styles.inputContainer}>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Name</Text>
-            <TextInput
-              style={styles.input}
-              value={`${currentTarget?.name}`}
-              placeholder="Name"
-            />
+            <View style={{flex: 1}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    placeholder="Name"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    style={styles.input}
+                  />
+                )}
+                name="name"
+              />
+              {errors.name && <Text style={styles.errorText}>This is required.</Text>}
+            </View>
           </View>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Description</Text>
-            <TextInput
-              style={styles.input}
-              value={`${currentTarget?.description}`}
-              placeholder="Description"
-              keyboardType="numeric"
-            />
+            <View style={{flex: 1}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    placeholder="Description"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    style={styles.input}
+                  />
+                )}
+                name="description"
+              />
+              {errors.description && <Text style={styles.errorText}>This is required.</Text>}
+            </View>
           </View>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Real Point</Text>
-            <TextInput
-              style={styles.input}
-              value={`${currentTarget?.real_point}`}
-              placeholder="Real Point"
-              keyboardType="numeric"
-            />
+            <View style={{flex: 1}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    placeholder="0"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    style={styles.input}
+                  />
+                )}
+                name="realPoint"
+              />
+              {errors.realPoint && <Text style={styles.errorText}>This is required.</Text>}
+            </View>
+            {errors.realPoint && <Text style={styles.errorText}>This is required.</Text>}
           </View>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Target Point</Text>
-            <TextInput
-              style={styles.input}
-              value={`${currentTarget?.target}`}
-              placeholder="Target Point"
-              keyboardType="numeric"
-            />
+            <View style={{flex: 1}}>
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    placeholder="0"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    style={styles.input}
+                  />
+                )}
+                name="targetPoint"
+              />
+              {errors.targetPoint && <Text style={styles.errorText}>This is required.</Text>}
+            </View>
           </View>
         </View>
-        <Pressable onPress={() => {}} style={[styles.button, styles.buttonSaveChild]}>
+        <Pressable onPress={handleSubmit(handleConfirmEditTarget)} style={[styles.button, styles.buttonSaveChild]}>
           <Text>Save</Text>
         </Pressable>
       </View>

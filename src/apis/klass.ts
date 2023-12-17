@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://192.168.0.106:8089';
+export const baseUrl = 'http://192.168.0.106:8089';
 
 const getClassOfStudent = async id => {
   try {

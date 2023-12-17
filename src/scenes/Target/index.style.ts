@@ -122,6 +122,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'white'
+  },
+  errorText: {
+    color: 'red',
+    fontWeight: '600'
   }
 });
 
