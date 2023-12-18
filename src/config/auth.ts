@@ -2,8 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const addData = async data => {
   try {
-    console.log(data._id, data.email, data.role);
-
     await AsyncStorage.setItem('id', data._id);
     await AsyncStorage.setItem('email', data.email);
     await AsyncStorage.setItem('role', data.role);

@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import styles from './ProfilePage.style';
 import asyncData from '../../config/auth';
-import {useFocusEffect} from '@react-navigation/native';
 import api from '../../apis';
 
 type UserData = {

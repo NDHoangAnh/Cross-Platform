@@ -18,6 +18,7 @@ type PostData = {
   likedByUser: boolean;
   share: number;
   createdAt: Date | null;
+  belongToUser: boolean | null;
 };
 
 function Forum({navigation}: ForumProps) {
@@ -40,6 +41,7 @@ function Forum({navigation}: ForumProps) {
           likedByUser: item?.like?.includes(currentUser?.id) || false,
           share: item?.share || null,
           createdAt: item?.createdAt || null,
+          belongToUser: item?._id === currentUser?.id || null,
         }));
         setListPostForum(listPost);
         setLoading(false);
@@ -74,18 +76,18 @@ function Forum({navigation}: ForumProps) {
           />
           {listPostForum.map((post, index) => (
             <Post
-              postId={post.id}
-              user={post.user}
-              avatar={post.avatar}
-              createdAt={post.createdAt}
-              content={post.content}
-              like={post.like}
-              // comment={post.comments}
+              postId={post?.id}
+              user={post?.user}
+              avatar={post?.avatar}
+              createdAt={post?.createdAt}
+              content={post?.content}
+              like={post?.like}
               key={index}
-              image={post.image}
+              image={post?.image}
               showScreenListComment={showScreenListComment}
               listPostForum={listPostForum}
               setListPostForum={setListPostForum}
+              belongToUser={post?.belongToUser}
             />
           ))}
         </>

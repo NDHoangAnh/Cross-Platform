@@ -10,6 +10,7 @@ function Comment({
   content,
   createdAt,
   idComment,
+  belongToUser,
   handleDeleteComment,
   setContent,
   setIdToEdit,
@@ -43,9 +44,11 @@ function Comment({
           {'\t'} {day}
         </Text>
       </View>
-      <TouchableOpacity onPress={toggleModal}>
-        <Icon name="options" style={{fontSize: 20, color: 'black'}} />
-      </TouchableOpacity>
+      {belongToUser && (
+        <TouchableOpacity onPress={toggleModal}>
+          <Icon name="options" style={{fontSize: 20, color: 'black'}} />
+        </TouchableOpacity>
+      )}
 
       {/* Modal */}
       <Modal isVisible={isShowModalComment} onBackdropPress={toggleModal}>

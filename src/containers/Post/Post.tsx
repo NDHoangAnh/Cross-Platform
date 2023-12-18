@@ -15,6 +15,7 @@ function Post({
   content,
   like,
   image,
+  belongToUser,
   showScreenListComment,
   listPostForum,
   setListPostForum,
@@ -87,9 +88,11 @@ function Post({
           <Text style={styles.userName}>{user}</Text>
           <Text style={styles.createdAt}>{`${hour} ${day}`}</Text>
         </View>
-        <TouchableOpacity onPress={toggleModal}>
-          <Icon name="ellipsis-h" style={styles.icon} />
-        </TouchableOpacity>
+        {belongToUser && (
+          <TouchableOpacity onPress={toggleModal}>
+            <Icon name="ellipsis-h" style={styles.icon} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View>
