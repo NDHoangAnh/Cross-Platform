@@ -1,12 +1,12 @@
 import {ActivityIndicator, ScrollView} from 'react-native';
 import {useCallback, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import Post from '../../containers/Post/Post';
 import styles from './Forum.style';
 import Navbar from '../../components/Navbar';
 import {ForumProps} from '../../navigate';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
-import {useFocusEffect} from '@react-navigation/native';
 
 type PostData = {
   id: string | null;

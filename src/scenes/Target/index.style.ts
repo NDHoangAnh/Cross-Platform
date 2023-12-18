@@ -1,6 +1,10 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   itemTarget: {
     minHeight: 32,
     width: '100%',
@@ -10,23 +14,29 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderColor: '#ccc',
-    borderWidth: 1,
+    borderWidth: 0.2,
     color: 'black',
-    borderRadius: 6,
+    borderRadius: 5,
     marginTop: 8,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
-  container: {
-    height: '100%',
-    width: '100%',
-  },
+  // container: {
+  //   height: '100%',
+  //   width: '100%',
+  // },
   nameTarget: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  description: {
+    color: 'black',
+  },
+  label: {
+    color: 'black',
   },
   point: {
     fontWeight: 'bold',
-    color: 'black'
-    
+    color: 'black',
   },
   formCreateTargetContainer: {
     display: 'flex',
@@ -35,7 +45,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '100%',
     flex: 1,
-    gap: 8
+    gap: 8,
   },
   input: {
     borderWidth: 1,
@@ -43,11 +53,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderColor: '#ccc',
     borderRadius: 4,
-    flex: 1
+    flex: 1,
+    color: 'black',
   },
   inputContainer: {
     rowGap: 12,
-    width: '100%'
+    width: '100%',
   },
   formItem: {
     display: 'flex',
@@ -55,43 +66,36 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     gap: 8,
+    justifyContent: 'center',
   },
   formLabel: {
     minWidth: 80,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: 'black',
   },
   labelField: {
-    fontWeight: '600'
+    fontWeight: '600',
+    color: 'black',
+  },
+  contentTarget: {
+    color: 'black',
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
+    backgroundColor: '#87CEEB',
     padding: 10,
     marginTop: 20,
-    width: 80
+    width: 80,
   },
-  childTargetItem: {
-    padding: 10,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-    
-    elevation: 2,
-  },
-  buttonLink: {
-    alignItems: 'center',
+  textBtn: {
+    color: 'white',
   },
   modal: {
     padding: 16,
     marginTop: 20,
     paddingTop: 10,
-    display: "flex",
-    alignItems: 'center'
+    display: 'flex',
+    alignItems: 'center',
   },
   buttonClose: {
     position: 'absolute',
@@ -103,12 +107,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   buttonSaveChild: {
-    marginTop: 16
+    marginTop: 16,
   },
   modalFooter: {
-    display: "flex",
+    display: 'flex',
     flexDirection: 'row',
-    gap: 12
+    gap: 12,
   },
   childTarget: {
     width: '100%',
@@ -121,12 +125,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   errorText: {
     color: 'red',
-    fontWeight: '600'
-  }
+    fontWeight: '600',
+  },
 });
 
 export default styles;

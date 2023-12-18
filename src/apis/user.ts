@@ -1,8 +1,9 @@
 import axios from 'axios';
+import {configs} from '../config';
 
-const baseUrl = 'http://10.0.2.2:8089';
+const baseUrl = configs.baseUrl;
 
-const editPass = async (data) => {
+const editPass = async data => {
   try {
     const response = await axios.put(`${baseUrl}/user/editPass`, data);
     return response.data;
@@ -11,7 +12,7 @@ const editPass = async (data) => {
   }
 };
 
-const getUserData = async (id) => {
+const getUserData = async id => {
   try {
     const response = await axios.get(`${baseUrl}/user/${id}`);
     return response.data;
@@ -20,7 +21,7 @@ const getUserData = async (id) => {
   }
 };
 
-const updateUserData = async (data) => {
+const updateUserData = async data => {
   try {
     const response = await axios.put(`${baseUrl}/user/edit`, data);
     return response.data;
@@ -29,4 +30,4 @@ const updateUserData = async (data) => {
   }
 };
 
-export { editPass, getUserData, updateUserData };
+export {editPass, getUserData, updateUserData};

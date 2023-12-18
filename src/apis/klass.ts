@@ -1,11 +1,12 @@
 import axios from 'axios';
+import {configs} from '../config';
 
-export const baseUrl = 'http://192.168.0.106:8089';
+const baseUrl = configs.baseUrl;
 
 const getClassOfStudent = async id => {
   try {
     const listClass = await axios.get(`${baseUrl}/class/student/${id}`);
-    return listClass;
+    return listClass.data;
   } catch (error) {
     console.log(error);
   }
@@ -14,7 +15,7 @@ const getClassOfStudent = async id => {
 const getClassOfTeacher = async id => {
   try {
     const listClass = await axios.get(`${baseUrl}/class/teacher/${id}`);
-    return listClass;
+    return listClass.data;
   } catch (error) {
     console.log(error);
   }
@@ -23,7 +24,7 @@ const getClassOfTeacher = async id => {
 const getDetailClass = async id => {
   try {
     const detailClass = await axios.get(`${baseUrl}/class/detail/${id}`);
-    return detailClass;
+    return detailClass.data;
   } catch (error) {
     console.log(error);
   }
@@ -36,7 +37,7 @@ const enrollClass = async (code, userId) => {
       userId,
     });
 
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -52,7 +53,7 @@ const addClass = async (teacherId, name, startTime, endTime, numOfWeek) => {
       numOfWeek,
     });
 
-    return newClass;
+    return newClass.data;
   } catch (error) {
     console.log(error);
   }
@@ -61,7 +62,7 @@ const addClass = async (teacherId, name, startTime, endTime, numOfWeek) => {
 const deleteClass = async id => {
   try {
     const result = await axios.delete(`${baseUrl}/class/delete/${id}`);
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }

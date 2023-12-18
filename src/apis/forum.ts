@@ -1,6 +1,7 @@
 import axios from 'axios';
+import {configs} from '../config';
 
-const baseUrl = 'http://192.168.196.89:8089';
+const baseUrl = configs.baseUrl;
 
 const getPostOfForum = async () => {
   try {
