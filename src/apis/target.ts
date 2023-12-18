@@ -1,48 +1,56 @@
-import axios from "axios/index";
-import {baseUrl} from "./klass";
+import axios from 'axios/index';
+import {configs} from '../config';
+
+const baseUrl = configs.baseUrl;
 
 const getAllTargets = async ({userId}) => {
   try {
-    return await axios.get(`${baseUrl}/target/getListTarget`,{
+    const result = await axios.get(`${baseUrl}/target/getListTarget`, {
       params: {
-        userId
-      }
+        userId,
+      },
     });
+
+    return result.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-const getTargetById = async (targetId) => {
+const getTargetById = async targetId => {
   try {
-    return await axios.get(`${baseUrl}/target/getTarget/${targetId}`);
+    const result = await axios.get(`${baseUrl}/target/getTarget/${targetId}`);
+    return result.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-const createTarget = async (data) => {
+const createTarget = async data => {
   try {
-    return await axios.post(`${baseUrl}/target/addTarget`,data);
+    const result = await axios.post(`${baseUrl}/target/addTarget`, data);
+    return result.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-const editTarget = async (data) => {
+const editTarget = async data => {
   try {
-    return await axios.put(`${baseUrl}/target/editTarget`, data);
+    const result = await axios.put(`${baseUrl}/target/editTarget`, data);
+    return result.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-const deleteTarget = async (targetId) => {
+const deleteTarget = async targetId => {
   try {
-    return await axios.delete(`${baseUrl}/target/delete/${targetId}`,);
+    const result = await axios.delete(`${baseUrl}/target/delete/${targetId}`);
+    return result.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export {getTargetById, getAllTargets, editTarget, deleteTarget, createTarget }
+export {getTargetById, getAllTargets, editTarget, deleteTarget, createTarget};

@@ -1,11 +1,12 @@
 import axios from 'axios';
+import {configs} from '../config';
 
-const baseUrl = '1';
+const baseUrl = configs.baseUrl;
 
 const addActivity = async data => {
   try {
     const act = await axios.post(`${baseUrl}/activity/add`, data);
-    return act;
+    return act.data;
   } catch (error) {
     console.log(error);
   }
@@ -14,7 +15,7 @@ const addActivity = async data => {
 const deleteActivity = async id => {
   try {
     const result = await axios.delete(`${baseUrl}/activity/delete/${id}`);
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }
@@ -23,7 +24,7 @@ const deleteActivity = async id => {
 const editActivity = async data => {
   try {
     const result = await axios.put(`${baseUrl}/activity/edit`, data);
-    return result;
+    return result.data;
   } catch (error) {
     console.log(error);
   }

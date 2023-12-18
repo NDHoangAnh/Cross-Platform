@@ -1,12 +1,11 @@
 import axios from 'axios';
+import {configs} from '../config';
 
-const baseUrl = 'http://192.168.196.89:8089';
+const baseUrl = configs.baseUrl;
 
 const getListCommentOfPost = async postId => {
   try {
     const result = await axios.get(`${baseUrl}/post/getComment/${postId}`);
-    console.log(result.data);
-
     return result.data;
   } catch (error) {
     console.log(error);
