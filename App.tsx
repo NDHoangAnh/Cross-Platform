@@ -11,6 +11,7 @@ import ForgotPassword from './src/scenes/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumStackScreen from './src/scenes/Forum/index';
 import ProfileStackScreen from './src/scenes/ProfilePage';
+import ScheduleStackScreen from './src/scenes/Schedule';
 import TargetScreen from './src/scenes/Target';
 
 const Tab = createBottomTabNavigator();
@@ -53,6 +54,7 @@ export default function App() {
           <Tab.Screen name="Target" component={TargetScreen} />
           <Tab.Screen name="Forum" component={ForumStackScreen} />
           <Tab.Screen name="Profile" component={ProfileStackScreen} />
+          <Tab.Screen name="Schedule" component={ScheduleStackScreen} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator
