@@ -7,10 +7,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     borderWidth: 0.5,
-    borderColor: '#87CEEB', // border color
-    backgroundColor: '#fff', // background color
+    borderColor: '#87CEEB',
+    backgroundColor: '#fff',
     margin: 5,
-    borderRadius: 10, // border radius
+    borderRadius: 10,
   },
   timeContainer: {
     flexDirection: 'column',
@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: 'gray', // text color
+    color: 'gray',
   },
   timeDivider: {
     fontSize: 12,
     marginVertical: 5,
-    color: 'gray', // text color
+    color: 'gray',
   },
   classInfo: {
     flexDirection: 'column',
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
   arrowIcon: {
     fontSize: 20,
-    color: 'gray', // text color
+    color: 'gray',
   },
 });
 
