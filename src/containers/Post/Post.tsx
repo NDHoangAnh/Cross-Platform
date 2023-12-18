@@ -20,7 +20,8 @@ function Post({
   listPostForum,
   setListPostForum,
 }) {
-  const [likeCount, setLikeCount] = useState(like);
+  const initNumLike = like && like?.length;
+  const [likeCount, setLikeCount] = useState(initNumLike);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isImageModalVisible, setImageModalVisible] = useState(false);
@@ -35,7 +36,7 @@ function Post({
 
   const toggleLike = async () => {
     try {
-      const currentUser = await asyncData.getData(); // Fetch current user's information
+      const currentUser = await asyncData.getData();
 
       if (liked) {
         setLikeCount(likeCount - 1);
@@ -78,7 +79,6 @@ function Post({
   const handleReport = () => {
     toggleModal();
   };
-  //
 
   return (
     <View style={styles.postContainer}>

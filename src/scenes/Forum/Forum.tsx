@@ -1,4 +1,4 @@
-import {ActivityIndicator, ScrollView} from 'react-native';
+import {ActivityIndicator, ScrollView, View} from 'react-native';
 import {useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import Post from '../../containers/Post/Post';
@@ -41,7 +41,7 @@ function Forum({navigation}: ForumProps) {
           likedByUser: item?.like?.includes(currentUser?.id) || false,
           share: item?.share || null,
           createdAt: item?.createdAt || null,
-          belongToUser: item?._id === currentUser?.id || null,
+          belongToUser: item?.senderId?._id === currentUser?.id || null,
         }));
         setListPostForum(listPost);
         setLoading(false);
@@ -66,33 +66,35 @@ function Forum({navigation}: ForumProps) {
   );
 
   return (
-    <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+    <>
       {loading ? (
         <ActivityIndicator style={{flex: 1}} size="large" color="#0000ff" />
       ) : (
-        <>
+        <View style={{flex: 1}}>
           <Navbar
             listAction={[{onPress: showScreenAddPost, name: 'Add Post'}]}
           />
-          {listPostForum.map((post, index) => (
-            <Post
-              postId={post?.id}
-              user={post?.user}
-              avatar={post?.avatar}
-              createdAt={post?.createdAt}
-              content={post?.content}
-              like={post?.like}
-              key={index}
-              image={post?.image}
-              showScreenListComment={showScreenListComment}
-              listPostForum={listPostForum}
-              setListPostForum={setListPostForum}
-              belongToUser={post?.belongToUser}
-            />
-          ))}
-        </>
+          <ScrollView style={styles.container} stickyHeaderIndices={[]}>
+            {listPostForum.map((post, index) => (
+              <Post
+                postId={post?.id}
+                user={post?.user}
+                avatar={post?.avatar}
+                createdAt={post?.createdAt}
+                content={post?.content}
+                like={post?.like}
+                key={index}
+                image={post?.image}
+                showScreenListComment={showScreenListComment}
+                listPostForum={listPostForum}
+                setListPostForum={setListPostForum}
+                belongToUser={post?.belongToUser}
+              />
+            ))}
+          </ScrollView>
+        </View>
       )}
-    </ScrollView>
+    </>
   );
 }
 

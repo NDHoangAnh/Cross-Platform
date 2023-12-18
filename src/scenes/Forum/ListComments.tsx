@@ -43,7 +43,7 @@ function ListComments({route}) {
           username: item?.senderId?.username || null,
           avatar: item?.senderId?.avatar || null,
           createdAt: item?.createdAt || null,
-          belongToUser: item?._id === user?.id || null,
+          belongToUser: item?.senderId?._id === user?.id || null,
         }));
 
         setComments(listCommentOfPost);
@@ -91,7 +91,7 @@ function ListComments({route}) {
         });
         setIdToEdit(null);
         await handleGetListComments();
-        setContent(''); // Reset the content after editing
+        setContent('');
       }
     } catch (error) {
       console.log(error);
