@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import styles from './ProfilePage.style';
 import asyncData from '../../config/auth';
-import {useFocusEffect} from '@react-navigation/native';
 import api from '../../apis';
 
 type UserData = {
@@ -31,7 +31,6 @@ const Profile = ({navigation}) => {
   const userPictureUrl =
     'https://icon-library.com/images/default-profile-icon/default-profile-icon-5.jpg';
 
-  // reload when back to page
   useFocusEffect(
     useCallback(() => {
       handleGetUserData();
@@ -43,7 +42,6 @@ const Profile = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    // Log userData when it changes
     setLoading(false);
   }, [userData]);
 
@@ -82,7 +80,6 @@ const Profile = ({navigation}) => {
   };
 
   if (loading) {
-    // Return a loading indicator or any other appropriate UI
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
