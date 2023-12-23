@@ -5,82 +5,28 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Switch,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {useNavigation} from '@react-navigation/native';
-import {Calendar, LocaleConfig} from 'react-native-calendars';
-import {format} from 'date-fns';
+import {format, parse} from 'date-fns';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-LocaleConfig.locales.en = {
-  monthNames: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ],
-  monthNamesShort: [
-    'Jan.',
-    'Feb.',
-    'Mar.',
-    'Apr.',
-    'May',
-    'Jun.',
-    'Jul.',
-    'Aug.',
-    'Sep.',
-    'Oct.',
-    'Nov.',
-    'Dec.',
-  ],
-  dayNames: [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ],
-  dayNamesShort: ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.'],
-  today: 'Today',
-};
-
-LocaleConfig.defaultLocale = 'en';
+import Toast from 'react-native-toast-message';
+import { addPlant } from '../../apis/schedule';
+import asyncData from '../../config/auth';
 
 export default function EditScreen(): React.JSX.Element {
   const navigation = useNavigation();
   const [title, setTitle] = React.useState('');
   const [note, setNote] = React.useState('');
-  const [isFullDay, setIsFullDay] = React.useState(false);
-  const [startTime, setStartTime] = React.useState(format(new Date(), 'HH:mm'));
-  const [endTime, setEndTime] = React.useState('00:00');
-  const [isDatePickerVisible, setIsDatePickerVisible] = React.useState(false);
+
+  const [startTime, setStartTime] = React.useState(format(new Date(), 'HH:mm - dd,MMMM,yyyy'));
+  const [endTime, setEndTime] = React.useState(format(new Date(), 'HH:mm - dd,MMMM,yyyy'));
+
   const [isStartPickerVisible, setIsStartPickerVisible] = React.useState(false);
   const [isEndPickerVisible, setIsEndPickerVisible] = React.useState(false);
-  const [selectedDay, setSelectedDay] = React.useState(
-    format(new Date(), 'eeee, do MMMM, yyyy')
-  );
-
-  const onDayPress = (day: any) => {
-    const formattedDate = day
-      ? format(new Date(day.dateString), 'eeee, do MMMM, yyyy')
-      : '';
-    setSelectedDay(formattedDate);
-    setIsDatePickerVisible(false);
-  };
 
   const showStartPicker = () => {
     setIsStartPickerVisible(true);
@@ -99,13 +45,49 @@ export default function EditScreen(): React.JSX.Element {
   };
 
   const handleStartConfirm = (time: any) => {
-    setStartTime(format(time, 'HH:mm'));
+    setStartTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
     hideStartPicker();
   };
 
   const handleEndConfirm = (time: any) => {
-    setEndTime(format(time, 'HH:mm'));
+    setEndTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
     hideEndPicker();
+  };
+
+  const handleAdd = async () => {
+    try {
+      const user = await asyncData.getData();
+      const body = {
+        userId: user?.id,
+        name: title,
+        description: note,
+        startTime: parse(startTime,'HH:mm - dd,MMMM,yyyy', new Date()),
+        endTime: parse(endTime,'HH:mm - dd,MMMM,yyyy', new Date()),
+      };
+      const result = await addPlant(body);
+      console.log(body);
+      console.log(result);
+      if (result.errMsg){
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to update',
+          text2: 'Update failed, please try again.',
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Completed to update',
+          text2: 'You have successfully to update it.',
+        });
+        navigation.navigate('HomeScreen', {item: Math.random()});
+      }
+    } catch (e) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to update',
+        text2: 'Update failed, please try again.',
+      });
+    }
   };
 
   return (
@@ -114,13 +96,13 @@ export default function EditScreen(): React.JSX.Element {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.textBar}>Hủy</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={handleAdd}>
           <Text style={styles.textBar}>Xong</Text>
         </TouchableOpacity>
       </View>
       <TextInput
         style={styles.textHeader}
-        placeholder="Nhập tiêu đề"
+        placeholder="Enter your schedule name"
         value={title}
         onChangeText={newText => setTitle(newText)}
       />
@@ -129,7 +111,7 @@ export default function EditScreen(): React.JSX.Element {
           <MaterialIcons name="notes" size={30} />
         </View>
         <TextInput
-          placeholder="Nhập ghi chú"
+          placeholder="Enter your note"
           style={styles.textNote}
           multiline={true}
           value={note}
@@ -141,79 +123,40 @@ export default function EditScreen(): React.JSX.Element {
           <MaterialCommunityIcons name="clock-time-four-outline" size={30} />
         </View>
         <View style={styles.allDay}>
-          <View>
-            <Text style={styles.textNote}>Cả ngày</Text>
-          </View>
-          <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
-            thumbColor={isFullDay ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={() => setIsFullDay(!isFullDay)}
-            value={isFullDay}
-          />
-        </View>
-      </View>
-      <View style={styles.rowDay}>
-        <View>
-          <Text
-            style={styles.textDate}
-            onPress={() => setIsDatePickerVisible(!isDatePickerVisible)}>
-            {selectedDay}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.selectDay}>
-        {isDatePickerVisible && (
-          <Calendar
-            onDayPress={onDayPress}
-            markedDates={{
-              [selectedDay]: {
-                selected: true,
-                selectedColor: 'blue',
-              },
-            }}
-          />
-        )}
-      </View>
-      {!isFullDay && (
         <View style={styles.rowDate}>
-          <Text style={styles.textDate} onPress={showStartPicker}>
-            {startTime}
-          </Text>
-          <Text>
-            <Octicons name="dash" size={30} />
-          </Text>
-          <Text style={styles.textDate} onPress={showEndPicker}>
-            {endTime}
-          </Text>
+            <Text onPress={showStartPicker}>Start Time :</Text>
+            <Text style={styles.textDate} onPress={showStartPicker}>{startTime}</Text>
+          </View>
+          <View>
+            <Text style={styles.rowDate}>
+              <Octicons name="dash" size={30}/>
+            </Text>
+          </View>
+          <View style={styles.rowDate}>
+            <Text onPress={showEndPicker}>End Time :</Text>
+            <Text style={styles.textDate} onPress={showEndPicker}>{endTime}</Text>
+          </View>
+            <DateTimePickerModal
+              isVisible={isStartPickerVisible}
+              mode="datetime"
+              onConfirm={handleStartConfirm}
+              onCancel={hideStartPicker}
+            />
+            <DateTimePickerModal
+              isVisible={isEndPickerVisible}
+              mode= "datetime"
+              onConfirm={handleEndConfirm}
+              onCancel={hideEndPicker}
+            />
         </View>
-      )}
-      <View style={styles.row}>
-        <DateTimePickerModal
-          isVisible={isStartPickerVisible}
-          mode="time"
-          onConfirm={handleStartConfirm}
-          onCancel={hideStartPicker}
-        />
-        <DateTimePickerModal
-          isVisible={isEndPickerVisible}
-          mode="time"
-          onConfirm={handleEndConfirm}
-          onCancel={hideEndPicker}
-        />
-      </View>
-      <View style={styles.row}>
-        <View style={styles.iconNoteCover}>
-          <FontAwesome name="repeat" size={30} />
-        </View>
-        <Text style={styles.textRepeat}>Lặp lại hàng tuần</Text>
       </View>
       <View style={styles.rowTask}>
         <View style={styles.iconNoteCover}>
           <FontAwesome name="list-ul" size={30} />
         </View>
-        <Text style={styles.textRepeat}>Việc cần làm của tôi</Text>
+        <Text style={styles.textRepeat}>My Schedule</Text>
       </View>
+      <Toast/>
     </View>
   );
 }
@@ -243,8 +186,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   allDay: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     flex: 1,
     marginEnd: 20,
     marginVertical: 12,
@@ -264,7 +206,6 @@ const styles = StyleSheet.create({
   rowDate: {
     flexDirection: 'row',
     marginTop: 20,
-    marginStart: 60,
     alignItems: 'center',
     justifyContent: 'space-between',
     marginEnd: 20,

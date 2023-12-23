@@ -1,11 +1,33 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {Avatar, Card} from 'react-native-paper';
+import { formatTime } from '../utils';
 
 export default function ScheduleItem({
   navigation,
   item,
+  isDefaultItem,
 }: any): React.JSX.Element {
+
+  if (isDefaultItem) {
+    return (<TouchableOpacity
+      style={styles.cardCoverSchedule}>
+      <Card style={styles.cardCover}>
+        <Card.Content>
+          <View style={styles.cardSchedule}>
+            <View style={styles.textCoverSchedule}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.textScheduleHeader}>
+                No schedule on your selecting day
+              </Text>
+            </View>
+          </View>
+        </Card.Content>
+      </Card>
+    </TouchableOpacity>);
+  } else {
   return (
     <TouchableOpacity
       style={styles.cardCoverSchedule}
@@ -14,28 +36,27 @@ export default function ScheduleItem({
         <Card.Content>
           <View style={styles.cardSchedule}>
             <View style={styles.textCoverSchedule}>
-              <Text style={styles.textSchedule}>10:00 AM - 10:00 PM</Text>
+              <Text style={styles.textSchedule}>{formatTime(item.startTime)} - {formatTime(item.endTime)}</Text>
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
                 style={styles.textScheduleHeader}>
-                Việc cần làm
+                {item.name}
               </Text>
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
                 style={styles.textScheduleNote}>
-                Đây là một ví dụ về văn bản dài mà bạn muốn hiển thị với dấu
-                "..." khi nó bị tràn khỏi khung. Đây là một ví dụ về văn bản dài
-                mà bạn muốn hiển thị với dấu "..." khi nó bị tràn khỏi khung.
+                {item.description ?? ''}
               </Text>
             </View>
-            <Avatar.Text label="D" />
+            <Avatar.Text label={item.email[0]}/>
           </View>
         </Card.Content>
       </Card>
     </TouchableOpacity>
   );
+  }
 }
 
 const styles = StyleSheet.create({

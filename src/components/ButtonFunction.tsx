@@ -4,14 +4,16 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Avatar} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
+import asyncData from '../config/auth';
 
-export default function ButtonFunction() {
+export default async function ButtonFunction() {
   const navigation = useNavigation();
+  const user = await asyncData.getData();
   return (
     <View style={styles.container}>
       {/* TouchableOpacity for search icon */}
       <View style={styles.buttonFunction}>
-        <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
           <FontAwesome5
             name="search"
             size={30}
@@ -19,19 +21,19 @@ export default function ButtonFunction() {
             color={'black'}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Search button pressed')}>
+        <TouchableOpacity>
           <FontAwesome6
             name="calendar-day"
             size={30}
             style={styles.icon}
             color={'black'}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* TouchableOpacity for Avatar.Text */}
-      <TouchableOpacity>
-        <Avatar.Text size={40} label="D" />
+      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <Avatar.Text size={40} label= {user?.email?.[0] ?? 'A'} />
       </TouchableOpacity>
     </View>
   );
@@ -42,7 +44,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   container: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
