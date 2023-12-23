@@ -51,6 +51,19 @@ function Forum({navigation}: ForumProps) {
     }
   };
 
+  const handleDeletePost = async id => {
+    try {
+      await apis.forum.deletPost(id);
+      await handleGetForumPost();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEditPost = postId => {
+    navigation.navigate('EditPostScreen');
+  };
+
   const showScreenAddPost = () => {
     navigation.navigate('AddPostScreen');
   };
@@ -89,6 +102,8 @@ function Forum({navigation}: ForumProps) {
                 listPostForum={listPostForum}
                 setListPostForum={setListPostForum}
                 belongToUser={post?.belongToUser}
+                handleDeletePost={handleDeletePost}
+                handleEditPost={handleEditPost}
               />
             ))}
           </ScrollView>
