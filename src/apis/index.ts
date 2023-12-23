@@ -5,5 +5,15 @@ import * as klass from './klass';
 import * as forum from './forum';
 import * as comment from './comment';
 import * as target from './target';
+import * as schedule from './schedule';
 
-export default {auth, klass, forum, cloudinary, user, target, comment};
+export default {
+  auth,
+  klass,
+  forum,
+  cloudinary,
+  user,
+  target,
+  comment,
+  schedule,
+};

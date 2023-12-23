@@ -1,17 +1,27 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {useState, useEffect} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Avatar} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
 import asyncData from '../config/auth';
 
-export default async function ButtonFunction() {
-  const navigation = useNavigation();
-  const user = await asyncData.getData();
+export default function ButtonFunction({navigation}) {
+  const [userEmail, setUserEmail] = useState('');
+  const fetchData = async () => {
+    try {
+      const user = await asyncData.getData();
+      setUserEmail(user?.email || 'A');
+      console.log(userEmail);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
-      {/* TouchableOpacity for search icon */}
       <View style={styles.buttonFunction}>
         {/* <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
           <FontAwesome5
@@ -32,8 +42,11 @@ export default async function ButtonFunction() {
       </View>
 
       {/* TouchableOpacity for Avatar.Text */}
-      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-        <Avatar.Text size={40} label= {user?.email?.[0] ?? 'A'} />
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('ProfilePage', {screen: 'ProfileScreen'})
+        }>
+        <Avatar.Text size={40} label={userEmail[0]} />
       </TouchableOpacity>
     </View>
   );

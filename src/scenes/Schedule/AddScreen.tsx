@@ -9,21 +9,25 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {useNavigation} from '@react-navigation/native';
+// import {useNavigation} from '@react-navigation/native';
 import {format, parse} from 'date-fns';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
-import { addPlant } from '../../apis/schedule';
 import asyncData from '../../config/auth';
+import apis from '../../apis';
 
-export default function EditScreen(): React.JSX.Element {
-  const navigation = useNavigation();
+export default function EditScreen({navigation}): React.JSX.Element {
+  // const navigation = useNavigation();
   const [title, setTitle] = React.useState('');
   const [note, setNote] = React.useState('');
 
-  const [startTime, setStartTime] = React.useState(format(new Date(), 'HH:mm - dd,MMMM,yyyy'));
-  const [endTime, setEndTime] = React.useState(format(new Date(), 'HH:mm - dd,MMMM,yyyy'));
+  const [startTime, setStartTime] = React.useState(
+    format(new Date(), 'HH:mm - dd,MMMM,yyyy')
+  );
+  const [endTime, setEndTime] = React.useState(
+    format(new Date(), 'HH:mm - dd,MMMM,yyyy')
+  );
 
   const [isStartPickerVisible, setIsStartPickerVisible] = React.useState(false);
   const [isEndPickerVisible, setIsEndPickerVisible] = React.useState(false);
@@ -61,13 +65,13 @@ export default function EditScreen(): React.JSX.Element {
         userId: user?.id,
         name: title,
         description: note,
-        startTime: parse(startTime,'HH:mm - dd,MMMM,yyyy', new Date()),
-        endTime: parse(endTime,'HH:mm - dd,MMMM,yyyy', new Date()),
+        startTime: parse(startTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
+        endTime: parse(endTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
       };
-      const result = await addPlant(body);
+      const result = await apis.schedule.addPlan(body);
       console.log(body);
       console.log(result);
-      if (result.errMsg){
+      if (result.errMsg) {
         Toast.show({
           type: 'error',
           text1: 'Failed to update',
@@ -123,31 +127,35 @@ export default function EditScreen(): React.JSX.Element {
           <MaterialCommunityIcons name="clock-time-four-outline" size={30} />
         </View>
         <View style={styles.allDay}>
-        <View style={styles.rowDate}>
+          <View style={styles.rowDate}>
             <Text onPress={showStartPicker}>Start Time :</Text>
-            <Text style={styles.textDate} onPress={showStartPicker}>{startTime}</Text>
+            <Text style={styles.textDate} onPress={showStartPicker}>
+              {startTime}
+            </Text>
           </View>
           <View>
             <Text style={styles.rowDate}>
-              <Octicons name="dash" size={30}/>
+              <Octicons name="dash" size={30} />
             </Text>
           </View>
           <View style={styles.rowDate}>
             <Text onPress={showEndPicker}>End Time :</Text>
-            <Text style={styles.textDate} onPress={showEndPicker}>{endTime}</Text>
+            <Text style={styles.textDate} onPress={showEndPicker}>
+              {endTime}
+            </Text>
           </View>
-            <DateTimePickerModal
-              isVisible={isStartPickerVisible}
-              mode="datetime"
-              onConfirm={handleStartConfirm}
-              onCancel={hideStartPicker}
-            />
-            <DateTimePickerModal
-              isVisible={isEndPickerVisible}
-              mode= "datetime"
-              onConfirm={handleEndConfirm}
-              onCancel={hideEndPicker}
-            />
+          <DateTimePickerModal
+            isVisible={isStartPickerVisible}
+            mode="datetime"
+            onConfirm={handleStartConfirm}
+            onCancel={hideStartPicker}
+          />
+          <DateTimePickerModal
+            isVisible={isEndPickerVisible}
+            mode="datetime"
+            onConfirm={handleEndConfirm}
+            onCancel={hideEndPicker}
+          />
         </View>
       </View>
       <View style={styles.rowTask}>
@@ -156,7 +164,7 @@ export default function EditScreen(): React.JSX.Element {
         </View>
         <Text style={styles.textRepeat}>My Schedule</Text>
       </View>
-      <Toast/>
+      <Toast />
     </View>
   );
 }
