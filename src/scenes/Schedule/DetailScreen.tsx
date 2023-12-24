@@ -8,11 +8,12 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-toast-message';
-import {formatDate, formatTime} from '../../utils';
+import {formatDate, formatTimeEdit} from '../../utils';
 import apis from '../../apis';
 
 export default function DetailScreen({navigation, route}): React.JSX.Element {
   const item = route.params?.item ?? {};
+  let reRender = route.params?.reRender ?? false;
 
   const handleDelete = async () => {
     try {
@@ -41,7 +42,8 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
   };
 
   const returnHome = () => {
-    navigation.navigate('HomeScreen', {item});
+    if (reRender) {navigation.navigate('HomeScreen', {item});}
+    else {navigation.goBack();}
   };
 
   return (
@@ -61,7 +63,7 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
           </TouchableHighlight>
         </View>
       </View>
-      <Text style={styles.textHint}>VIỆC CẦN LÀM CỦA TÔI</Text>
+      <Text style={styles.textHint}>My schedule</Text>
       <View style={styles.row}>
         <View style={styles.iconNoteCover}>
           <Text style={styles.blockText} />
@@ -69,7 +71,7 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
         <Text style={styles.textHeader}>{item.name}</Text>
       </View>
       <Text style={styles.textDate}>
-        {formatTime(item.startTime)} - {formatTime(item.endTime)}
+        {formatTimeEdit(item.startTime)} - {formatTimeEdit(item.endTime)}
       </Text>
       <Text style={styles.textDate}>
         Created at: {item.createdAt ? formatDate(item.createdAt) : 'Not time'}

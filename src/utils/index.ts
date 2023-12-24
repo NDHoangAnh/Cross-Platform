@@ -51,7 +51,12 @@ const convertMonthToString = index => {
 
 const formatTime = date => {
   const dateObject = parseISO(date);
-  return format(dateObject, 'HH:mm dd/MM');
+  return format(dateObject, 'HH:mm');
+};
+
+const formatTimeEdit = date => {
+  const dateObject = parseISO(date);
+  return format(dateObject, 'HH:mm dd/MM/yyyy');
 };
 
 const formatDate = date => {
@@ -66,4 +71,5 @@ export {
   convertDateToDay,
   formatTime,
   formatDate,
+  formatTimeEdit,
 };

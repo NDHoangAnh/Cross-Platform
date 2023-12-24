@@ -20,63 +20,69 @@ export default function HomeScreen({navigation, route}): React.JSX.Element {
   useEffect(() => {
     const getData = async () => {
       try {
-        const user = await asyncData.getData();
-        const response = await apis.schedule.getListScheduleForUser(user?.id);
-        const plans = response.plans ?? [];
-        const studyArray = response.klass ?? [];
-        const studyMap = studyArray.map((study: any) => {
-          return {
-            ...study,
-            isClass: true,
-          };
-        });
+      const user = await asyncData.getData();
+      const response = await apis.schedule.getListScheduleForUser(user?.id);
+      const plans = response.plans ?? [];
+      const studyArray = response.klass ?? [];
+      const studyMap = studyArray.map((study : any) => {
+        return {
+          ...study,
+          isClass:true,
+        };
+      });
 
-        const arrays = plans.concat(studyMap);
+      const arrays = plans.concat(studyMap);
 
-        const mappedData = arrays.map((plan: any) => {
-          const {startTime, endTime} = plan;
-          if (startTime && endTime) {
-            const startDate = new Date(startTime);
-            const endDate = new Date(endTime);
-            if (startDate > endDate) {
-              return null;
+      const mappedData = arrays.map((plan : any) => {
+        const { startTime, endTime } = plan;
+        if (startTime && endTime) {
+          const startDate = new Date(startTime);
+          const endDate = new Date(endTime);
+          if (startDate > endDate) {return null;}
+          if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) ) {
+            if (plan.isClass === false){
+            const dateRange = eachDayOfInterval({ start: startDate, end: endDate });
+            return {
+              ...plan,
+              email: user?.email ?? 'A',
+              dateRange: dateRange.map(date => format(date, 'yyyy-MM-dd')),
+            };
             }
-            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
-              const dateRange = eachDayOfInterval({
-                start: startDate,
-                end: endDate,
-              });
+            else {
+              const duration = plan.duration;
+              let dateRange = duration.map((time) => format(new Date(time[0]),'yyyy-MM-dd'));
               return {
                 ...plan,
                 email: user?.email ?? 'A',
-                dateRange: dateRange.map(date => format(date, 'yyyy-MM-dd')),
+                dateRange: dateRange,
               };
-            } else {
-              console.error('Invalid start or end date for plan:', plan);
             }
           } else {
-            console.error('startTime or endTime is undefined for plan:', plan);
+            console.error('Invalid start or end date for plan:', plan);
           }
+        } else {
+          console.error('startTime or endTime is undefined for plan:', plan);
+        }
 
-          return null; // or handle the case where dates are undefined or invalid
+        return null; // or handle the case where dates are undefined or invalid
+      });
+
+      const validMappedData = mappedData.filter(item => item !== null);
+
+      const reduced = validMappedData.reduce((acc: any, currentItem: any) => {
+        currentItem.dateRange.forEach(date=> {
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push(currentItem);
         });
 
-        const validMappedData = mappedData.filter(item => item !== null);
+        return acc;
+      }, {});
 
-        const reduced = validMappedData.reduce((acc: any, currentItem: any) => {
-          currentItem.dateRange.forEach(date => {
-            if (!acc[date]) {
-              acc[date] = [];
-            }
-            acc[date].push(currentItem);
-          });
-
-          return acc;
-        }, {});
-
-        setItems(reduced);
-        setSelectedDay(String(new Date()));
-        setLoading(false);
+      setItems(reduced);
+      setLoading(false);
+      setSelectedDay(String(new Date()));
       } catch (e) {
         console.error(e);
       }

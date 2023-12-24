@@ -18,10 +18,11 @@ import {formatDate} from '../../utils';
 
 type ErrorData = {
   title: string | null;
+  note: string | null;
 };
 
-export default function EditScreen({navigation, route}): React.JSX.Element {
-  var item = route.params?.item ?? {};
+export default function EditScreen({navigation, route}) : React.JSX.Element {
+  let item = route.params?.item ?? {};
 
   const [errors, setErrors] = React.useState<ErrorData | null>(null);
 
@@ -65,7 +66,7 @@ export default function EditScreen({navigation, route}): React.JSX.Element {
           _id: item._id,
           ...result,
         };
-        navigation.navigate('DetailScreen', {item});
+        navigation.navigate('DetailScreen', {item, reRender: true});
       }
     } catch (e) {
       Toast.show({
@@ -78,12 +79,13 @@ export default function EditScreen({navigation, route}): React.JSX.Element {
   };
 
   const validateForm = () => {
-    let error: ErrorData = {title: null};
+    let error: ErrorData = {title: null,note: null};
 
     if (!title.trim()) {
       error = {...error, title: 'Name of Schedule is required'};
-    } else {
-      error = {...error, title: null};
+    }
+    if (!note.trim()){
+      error = {...error,note: 'Note of Schedule is required'};
     }
 
     setErrors(error);
@@ -192,7 +194,7 @@ export default function EditScreen({navigation, route}): React.JSX.Element {
         <View style={styles.iconNoteCover}>
           <FontAwesome color={'gray'} name="list-ul" size={30} />
         </View>
-        <Text style={styles.textRepeat}>Việc cần làm của tôi</Text>
+        <Text style={styles.textRepeat}>My Schedule</Text>
       </View>
       <Toast />
     </View>
@@ -247,6 +249,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginEnd: 20,
+    color: 'gray',
   },
   rowHeader: {
     flexDirection: 'row',

@@ -18,6 +18,7 @@ import asyncData from '../../config/auth';
 
 type ErrorData = {
   title: string | null;
+  note: string | null;
   startTime: string | null;
   endTime: string | null;
 };
@@ -102,16 +103,22 @@ export default function EditScreen({navigation}): React.JSX.Element {
   };
 
   const validateForm = () => {
-    let error: ErrorData = {title: null, startTime: null, endTime: null};
+    let error: ErrorData = {title: null, note: null, startTime: null, endTime: null};
 
-    if (!title) {
-      error = {...error, title: 'Name of Schedule is required'};
-    }
-    if (!startTime) {
-      error = {...error, startTime: 'Start time is required'};
-    }
-    if (!endTime) {
-      error = {...error, endTime: 'End time is required'};
+    if (!title) {error = {...error,title :'Name of Schedule is required'};}
+    if (!note) {error = {...error,note : 'Note of schedule is required'};}
+    if (!startTime) {error = {...error,startTime: 'Start time is required'};}
+    if (!endTime) {error = {...error,endTime: 'End time is required'};}
+    if (startTime && endTime ){
+      const start = parse(startTime,'HH:mm - dd,MMMM,yyyy', new Date());
+      const end = parse(endTime,'HH:mm - dd,MMMM,yyyy', new Date());
+      let endTimeText = '';
+      if (start > end) {endTimeText = 'End time is greater than start time';}
+      if (start.getHours() > end.getHours() || (start.getHours() === end.getHours() && start.getMinutes() > end.getMinutes())){
+        endTimeText = 'End time is greater than start time';
+        if (endTimeText !== '')
+        {error = {...error,endTime: endTimeText};}
+      }
     }
 
     setErrors(error);
@@ -150,6 +157,7 @@ export default function EditScreen({navigation}): React.JSX.Element {
           onChangeText={newText => setNote(newText)}
         />
       </View>
+      { errors?.note ? <Text style={styles.errorText}>{errors.note}</Text> : null}
       <View style={styles.row}>
         <View style={styles.iconCover}>
           <MaterialCommunityIcons
@@ -241,6 +249,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginStart: 60,
     alignItems: 'flex-start',
+    color: 'gray',
   },
   selectDay: {
     width: '100%',
