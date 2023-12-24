@@ -55,6 +55,11 @@ const EditProfile = ({navigation}) => {
     setDate(birthDate);
   }, [userData]);
 
+  const validatePhoneNumber = (phoneNumber: string): boolean => {
+    const phoneNumberRegex = /^\d{10}$/;
+    return phoneNumberRegex.test(phoneNumber);
+  };
+
   const handleSaveProfile = async () => {
     setLoad(true);
     let data;
@@ -79,16 +84,25 @@ const EditProfile = ({navigation}) => {
       };
     }
 
-    const response = await api.user.updateUserData(data);
-    if (response?.errMsg !== undefined) {
+    if (!validatePhoneNumber(data.phone)) {
       Toast.show({
         type: 'error',
         text1: 'Error',
-        text2: `${response?.errMsg}`,
+        text2: 'Invalid phone number',
       });
     } else {
-      navigation.goBack();
+      const response = await api.user.updateUserData(data);
+      if (response?.errMsg !== undefined) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: `${response?.errMsg}`,
+        });
+      } else {
+        navigation.goBack();
+      }
     }
+
     setLoad(false);
   };
 
@@ -169,6 +183,7 @@ const EditProfile = ({navigation}) => {
             style={styles.input}
             value={editedPhoneNumber}
             onChangeText={setEditedPhoneNumber}
+            keyboardType="numeric"
           />
 
           <View style={styles.birthDateContainer}>
