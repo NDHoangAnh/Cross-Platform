@@ -1,23 +1,26 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Avatar} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
 import asyncData from '../config/auth';
+import {useNavigation} from '@react-navigation/native';
 
 export default function ButtonFunction() {
-  const navigation = useNavigation();
-  const [user,setUser] = React.useState<any>({email: 'A'});
+  const navigation: any = useNavigation();
+  const [user, setUser] = React.useState<any>({email: 'A'});
+  const handleNavigation = () => {
+    navigation.navigate('Profile', {screen: 'ProfileScreen'});
+  };
+
   useEffect(() => {
     const getData = async () => {
       const user1 = await asyncData.getData();
       setUser(user1);
     };
     getData();
-  },[]);
+  }, []);
   return (
     <View style={styles.container}>
-      {/* TouchableOpacity for Avatar.Text */}
-      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+      <TouchableOpacity onPress={() => handleNavigation()}>
         <Avatar.Text size={40} label={user?.email[0]} />
       </TouchableOpacity>
     </View>

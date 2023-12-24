@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -20,7 +13,6 @@ import * as utils from '../../utils';
 const Stack = createNativeStackNavigator();
 
 function Schedule(): React.JSX.Element {
-
   return (
     <Stack.Navigator>
       <Stack.Screen

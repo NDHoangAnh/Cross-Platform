@@ -1,88 +1,125 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import {StyleSheet, View, TouchableHighlight} from 'react-native';
+import {useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableHighlight,
+  ActivityIndicator,
+} from 'react-native';
 import {Agenda} from 'react-native-calendars';
-import ScheduleItem from '../../components/ScheduleItem';
 import {eachDayOfInterval, format} from 'date-fns';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import * as scheduleApi from '../../apis/schedule';
+import ScheduleItem from '../../components/ScheduleItem';
+import apis from '../../apis';
 import asyncData from '../../config/auth';
 
-export default function HomeScreen(): React.JSX.Element {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const [items, setItems] = React.useState<{[key: string]: any}>();
-  const [selectedDay, setSelectedDay] = React.useState<string>(String(new Date()));
+export default function HomeScreen({navigation, route}): React.JSX.Element {
+  const [items, setItems] = useState<{[key: string]: any}>();
+  const [selectedDay, setSelectedDay] = useState<string>(String(new Date()));
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getData = async () => {
-      const user = await asyncData.getData();
-      const response = await scheduleApi.getListScheduleForUser(user?.id);
-      const plans = response.plans ?? [];
-      const studyArray = response.klass ?? [];
-      const studyMap = studyArray.map((study : any) => {
-        return {
-          ...study,
-          isClass:true,
-        };
-      });
-
-      const arrays = plans.concat(studyMap);
-
-      const mappedData = arrays.map((plan : any) => {
-        const { startTime, endTime } = plan;
-        const dateRange = eachDayOfInterval({ start: new Date(startTime), end: new Date(endTime) });
-
-        return {
-          ...plan,
-          email: user?.email ?? 'A',
-          dateRange: dateRange.map(date => format(date, 'yyyy-MM-dd')),
-        };
-      });
-
-      const reduced = mappedData.reduce((acc: any, currentItem: any) => {
-        currentItem.dateRange.forEach(date=> {
-          if (!acc[date]) {
-            acc[date] = [];
-          }
-          acc[date].push(currentItem);
+      try {
+        const user = await asyncData.getData();
+        const response = await apis.schedule.getListScheduleForUser(user?.id);
+        const plans = response.plans ?? [];
+        const studyArray = response.klass ?? [];
+        const studyMap = studyArray.map((study: any) => {
+          return {
+            ...study,
+            isClass: true,
+          };
         });
 
-        return acc;
-      }, {});
+        const arrays = plans.concat(studyMap);
 
-      setItems(reduced);
-      setSelectedDay(String(new Date()));
+        const mappedData = arrays.map((plan: any) => {
+          const {startTime, endTime} = plan;
+          if (startTime && endTime) {
+            const startDate = new Date(startTime);
+            const endDate = new Date(endTime);
+            if (startDate > endDate) {
+              return null;
+            }
+            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+              const dateRange = eachDayOfInterval({
+                start: startDate,
+                end: endDate,
+              });
+              return {
+                ...plan,
+                email: user?.email ?? 'A',
+                dateRange: dateRange.map(date => format(date, 'yyyy-MM-dd')),
+              };
+            } else {
+              console.error('Invalid start or end date for plan:', plan);
+            }
+          } else {
+            console.error('startTime or endTime is undefined for plan:', plan);
+          }
+
+          return null; // or handle the case where dates are undefined or invalid
+        });
+
+        const validMappedData = mappedData.filter(item => item !== null);
+
+        const reduced = validMappedData.reduce((acc: any, currentItem: any) => {
+          currentItem.dateRange.forEach(date => {
+            if (!acc[date]) {
+              acc[date] = [];
+            }
+            acc[date].push(currentItem);
+          });
+
+          return acc;
+        }, {});
+
+        setItems(reduced);
+        setSelectedDay(String(new Date()));
+        setLoading(false);
+      } catch (e) {
+        console.error(e);
+      }
     };
 
     getData();
   }, [route.params?.item]);
 
   return (
-    <View style={styles.container}>
-      <Agenda
-        items={items}
-        selected={selectedDay}
-        onDayPress={(day) => {
-          setSelectedDay(day.dateString);
-        }}
-        renderEmptyData={() => <ScheduleItem item={null} navigation={navigation} isDefaultItem={true} />}
-        renderItem={(item, firstItemInDay) => <ScheduleItem item={item} navigation={navigation} isDefaultItem={firstItemInDay && !item}/>
-        }
-      />
-      <TouchableHighlight
-        style={styles.addBtn}
-        onPress={() => navigation.navigate('AddScreen')}>
-        <Octicons name="plus" size={50} color={'cadetblue'} />
-      </TouchableHighlight>
-    </View>
+    <>
+      {loading ? (
+        <ActivityIndicator style={{flex: 1}} size="large" color="#0000ff" />
+      ) : (
+        <View style={styles.container}>
+          <Agenda
+            items={items}
+            selected={selectedDay}
+            onDayPress={day => {
+              setSelectedDay(day.dateString);
+            }}
+            renderEmptyData={() => (
+              <ScheduleItem
+                item={null}
+                navigation={navigation}
+                isDefaultItem={true}
+              />
+            )}
+            renderItem={(item, firstItemInDay) => (
+              <ScheduleItem
+                item={item}
+                navigation={navigation}
+                isDefaultItem={firstItemInDay && !item}
+              />
+            )}
+          />
+          <TouchableHighlight
+            style={styles.addBtn}
+            onPress={() => navigation.navigate('AddScreen')}>
+            <Octicons name="plus" size={50} color={'cadetblue'} />
+          </TouchableHighlight>
+        </View>
+      )}
+    </>
   );
 }
 

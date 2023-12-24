@@ -1,22 +1,29 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { format, parse } from 'date-fns';
+import {format, parse} from 'date-fns';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
-import {updatePlant} from '../../apis/schedule';
-import { formatDate } from '../../utils';
+import apis from '../../apis';
+import {formatDate} from '../../utils';
 
-export default function EditScreen() : React.JSX.Element {
-  const navigation = useNavigation();
-  const route = useRoute();
-  var item= route.params?.item ?? {};
+type ErrorData = {
+  title: string | null;
+};
 
-  const [errors, setErrors] = React.useState({});
+export default function EditScreen({navigation, route}): React.JSX.Element {
+  var item = route.params?.item ?? {};
+
+  const [errors, setErrors] = React.useState<ErrorData | null>(null);
 
   const [title, setTitle] = React.useState(item.name);
   const [note, setNote] = React.useState(item.description ?? '');
@@ -25,22 +32,22 @@ export default function EditScreen() : React.JSX.Element {
   const [isStartPickerVisible, setIsStartPickerVisible] = React.useState(false);
   const [isEndPickerVisible, setIsEndPickerVisible] = React.useState(false);
 
-
   const handleUpdate = async () => {
     try {
-
       const validate = validateForm();
 
-      if (!validate) {return;}
+      if (!validate) {
+        return;
+      }
       const body = {
         planId: item._id,
         name: title,
         description: note,
-        startTime: parse(startTime,'HH:mm - dd,MMMM,yyyy', new Date()),
-        endTime: parse(endTime,'HH:mm - dd,MMMM,yyyy', new Date()),
+        startTime: parse(startTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
+        endTime: parse(endTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
       };
-      const result = await updatePlant(body);
-      if (result.errMsg){
+      const result = await apis.schedule.updatePlan(body);
+      if (result.errMsg) {
         Toast.show({
           type: 'error',
           visibilityTime: 1000,
@@ -71,11 +78,17 @@ export default function EditScreen() : React.JSX.Element {
   };
 
   const validateForm = () => {
-    let error = {};
-    if (!title) {error = {title :'Name off Schedule is required'};}
+    let error: ErrorData = {title: null};
+
+    if (!title.trim()) {
+      error = {...error, title: 'Name of Schedule is required'};
+    } else {
+      error = {...error, title: null};
+    }
+
     setErrors(error);
 
-    return Object.keys(error).length === 0;
+    return !error.title;
   };
 
   const showStartPicker = () => {
@@ -94,12 +107,12 @@ export default function EditScreen() : React.JSX.Element {
     setIsEndPickerVisible(false);
   };
 
-  const handleStartConfirm = (time : any) => {
+  const handleStartConfirm = (time: any) => {
     setStartTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
     hideStartPicker();
   };
 
-  const handleEndConfirm = (time : any) => {
+  const handleEndConfirm = (time: any) => {
     setEndTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
     hideEndPicker();
   };
@@ -114,46 +127,65 @@ export default function EditScreen() : React.JSX.Element {
           <Text style={styles.textBar}>Xong</Text>
         </TouchableOpacity>
       </View>
-      <TextInput style={styles.textHeader} value={title} onChangeText={newText => setTitle(newText)}/>
-      { errors.title ? <Text style={styles.errorText}>{errors.title}</Text> : null}
+      <TextInput
+        style={styles.textHeader}
+        value={title}
+        onChangeText={newText => setTitle(newText)}
+      />
+      {errors?.title ? (
+        <Text style={styles.errorText}>{errors.title}</Text>
+      ) : null}
       <View style={styles.rowNote}>
         <View style={styles.iconNoteCover}>
           <MaterialIcons color={'gray'} name="notes" size={30} />
         </View>
-        <TextInput style={styles.textNote} multiline={true} value={note} onChangeText={newText => setNote(newText)} />
+        <TextInput
+          style={styles.textNote}
+          multiline={true}
+          value={note}
+          onChangeText={newText => setNote(newText)}
+        />
       </View>
       <View style={styles.row}>
         <View style={styles.iconCover}>
-          <MaterialCommunityIcons color={'gray'} name="clock-time-four-outline" size={30} />
+          <MaterialCommunityIcons
+            color={'gray'}
+            name="clock-time-four-outline"
+            size={30}
+          />
         </View>
         <View style={styles.allDay}>
           <View style={styles.rowDate}>
             <Text onPress={showStartPicker}>Start Time :</Text>
-            <Text style={styles.textDate} onPress={showStartPicker}>{startTime}</Text>
+            <Text style={styles.textDate} onPress={showStartPicker}>
+              {startTime}
+            </Text>
           </View>
           <View>
             <Text style={styles.rowDate}>
-              <Octicons color={'gray'} name="dash" size={30}/>
+              <Octicons color={'gray'} name="dash" size={30} />
             </Text>
           </View>
           <View style={styles.rowDate}>
             <Text onPress={showEndPicker}>End Time :</Text>
-            <Text style={styles.textDate} onPress={showEndPicker}>{endTime}</Text>
+            <Text style={styles.textDate} onPress={showEndPicker}>
+              {endTime}
+            </Text>
           </View>
-            <DateTimePickerModal
-              isVisible={isStartPickerVisible}
-              mode="datetime"
-              date={parse(startTime,'HH:mm - dd,MMMM,yyyy', new Date())}
-              onConfirm={handleStartConfirm}
-              onCancel={hideStartPicker}
-            />
-            <DateTimePickerModal
-              isVisible={isEndPickerVisible}
-              mode= "datetime"
-              date={parse(endTime,'HH:mm - dd,MMMM,yyyy', new Date())}
-              onConfirm={handleEndConfirm}
-              onCancel={hideEndPicker}
-            />
+          <DateTimePickerModal
+            isVisible={isStartPickerVisible}
+            mode="datetime"
+            date={parse(startTime, 'HH:mm - dd,MMMM,yyyy', new Date())}
+            onConfirm={handleStartConfirm}
+            onCancel={hideStartPicker}
+          />
+          <DateTimePickerModal
+            isVisible={isEndPickerVisible}
+            mode="datetime"
+            date={parse(endTime, 'HH:mm - dd,MMMM,yyyy', new Date())}
+            onConfirm={handleEndConfirm}
+            onCancel={hideEndPicker}
+          />
         </View>
       </View>
       <View style={styles.rowTask}>
@@ -162,7 +194,7 @@ export default function EditScreen() : React.JSX.Element {
         </View>
         <Text style={styles.textRepeat}>Việc cần làm của tôi</Text>
       </View>
-      <Toast/>
+      <Toast />
     </View>
   );
 }
@@ -177,7 +209,7 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 20,
   },
-  rowTask:{
+  rowTask: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -185,15 +217,15 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBlockColor: 'lightgrey',
   },
-  row:{
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginVertical: 8,
   },
-  allDay:{
+  allDay: {
     flexDirection: 'column',
-    flex:1,
+    flex: 1,
     marginEnd: 20,
     marginVertical: 12,
   },
@@ -240,8 +272,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderTopWidth: 1,
   },
-  iconNoteCover:{
-    width:60,
+  iconNoteCover: {
+    width: 60,
     height: '100%',
     paddingTop: 8,
     flexDirection: 'column',
@@ -249,7 +281,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconCover: {
-    width:60,
+    width: 60,
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -271,9 +303,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
   },
-  errorText:{
+  errorText: {
     marginStart: 60,
-    fontSize:12,
+    fontSize: 12,
     color: 'red',
   },
 });
