@@ -56,7 +56,7 @@ const EditProfile = ({navigation}) => {
   }, [userData]);
 
   const validatePhoneNumber = (phoneNumber: string): boolean => {
-    const phoneNumberRegex = /^\d{10}$/;
+    const phoneNumberRegex = /^0\d{9}$/;
     return phoneNumberRegex.test(phoneNumber);
   };
 
