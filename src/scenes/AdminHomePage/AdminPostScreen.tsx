@@ -8,14 +8,18 @@ import apis from '../../apis';
 
 function AdminPostScreen({navigation}: AdminHomePageProps) {
   const [posts, setPosts] = useState([]);
+  const [isRender, setIsRender] = useState(true);
 
-  const fetchUsers = useCallback(async () => {
+  const fetchPosts = useCallback(async () => {
     await apis.admin.getListPost().then(res => setPosts(res?.data));
   }, [setPosts]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    if (isRender) {
+      fetchPosts();
+      setIsRender(false);
+    }
+  }, [isRender, fetchPosts]);
 
   return (
     <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
@@ -24,14 +28,15 @@ function AdminPostScreen({navigation}: AdminHomePageProps) {
         <Post
           postId={post._id}
           isApproved={post.isApproved}
-          user={post.user}
-          avatar={post.avatar}
+          user={post.senderName}
+          avatar={post.senderAvatar}
           createdAt={post.createdAt}
           content={post.content}
           like={post.like}
           comment={post.comment}
           key={index}
           image={post?.image}
+          render={() => setIsRender(true)}
         />
       ))}
     </ScrollView>

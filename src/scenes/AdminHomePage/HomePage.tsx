@@ -8,6 +8,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 function AdminHomePage({navigation}: AdminHomePageProps) {
   const [users, setUsers] = useState([]);
+  const [isRender, setIsRender] = useState(true);
 
   const showScreenApprovePosts = () => {
     navigation.navigate('HomePagePostScreen');
@@ -17,8 +18,11 @@ function AdminHomePage({navigation}: AdminHomePageProps) {
   }, [setUsers]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    if (isRender) {
+      fetchUsers();
+      setIsRender(false);
+    }
+  }, [isRender, fetchUsers]);
 
   return (
     <ScrollView stickyHeaderIndices={[0]}>
@@ -33,6 +37,7 @@ function AdminHomePage({navigation}: AdminHomePageProps) {
           role={user?.role}
           username={user?.username}
           avatar={user?.avatar}
+          render={() => setIsRender(true)}
         />
       ))}
     </ScrollView>

@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {green100} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const commonStyles = {
   color: '#555',

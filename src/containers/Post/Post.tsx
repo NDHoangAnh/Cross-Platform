@@ -15,6 +15,7 @@ interface PostProps {
   like: number;
   comment: number;
   image?: string;
+  render?: () => void;
   showScreenListComment?: (postId: number) => void;
 }
 
@@ -28,6 +29,7 @@ function Post({
   like,
   comment,
   image,
+  render,
   showScreenListComment,
 }: PostProps) {
   let isAdmin = true;
@@ -71,10 +73,12 @@ function Post({
 
   const toggleApprove = async () => {
     await apis.admin.approvePost(postId);
+    render!();
   };
 
   const toggleDeclines = async () => {
     await apis.admin.declinePost(postId);
+    render!();
   };
 
   return (
@@ -132,16 +136,14 @@ function Post({
           <TouchableOpacity
             onPress={toggleApprove}
             style={styles.actionContainer}>
-            <Icon name={'check'} style={styles.icon} />
-            <Text style={[styles.actionText, liked && {color: 'blue'}]}>
-              Approve
-            </Text>
+            <Icon name={'check'} style={[styles.icon, {color: 'green'}]} />
+            <Text style={[styles.actionText, {color: 'green'}]}>Approve</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionContainer}
             onPress={toggleDeclines}>
-            <Icon name={'close'} style={styles.icon} />
-            <Text style={styles.actionText}>Declines</Text>
+            <Icon name={'close'} style={[styles.icon, {color: 'red'}]} />
+            <Text style={[styles.actionText, {color: 'red'}]}>Declines</Text>
           </TouchableOpacity>
         </View>
       )}

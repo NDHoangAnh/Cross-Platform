@@ -6,7 +6,16 @@ import styles from './User.style';
 import api from '../../apis';
 import Toast from 'react-native-toast-message';
 import {useForm, Controller} from 'react-hook-form';
-function User({userId, role, username, avatar}) {
+
+interface UserProps {
+  userId: number;
+  role: string;
+  username: string;
+  avatar?: string;
+  render: () => void;
+}
+
+function User({userId, role, username, render, avatar}: UserProps) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isChangeRoleModal, setIsChangeRoleModal] = useState(false);
   const [isChangePassModal, setIsChangePassModal] = useState(false);
@@ -18,6 +27,7 @@ function User({userId, role, username, avatar}) {
       role: data,
     });
     if (res?.status === 200) {
+      render();
       Toast.show({
         type: 'success',
         text1: 'Success',
@@ -49,6 +59,7 @@ function User({userId, role, username, avatar}) {
   const deleteUser = async () => {
     await api.admin.deleteUser(userId);
     setModalVisible(false);
+    render();
   };
 
   const onSubmit = async data => {
@@ -123,6 +134,11 @@ function User({userId, role, username, avatar}) {
             onPress={() => setRole('Admin')}
             style={styles.modalButton}>
             <Text style={styles.buttonText}>Admin</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setRole('Teacher')}
+            style={styles.modalButton}>
+            <Text style={styles.buttonText}>Teacher</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setRole('User')}
