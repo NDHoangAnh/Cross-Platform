@@ -1,52 +1,24 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import {useState, useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Avatar} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import asyncData from '../config/auth';
 
-export default function ButtonFunction({navigation}) {
-  const [userEmail, setUserEmail] = useState('');
-  const fetchData = async () => {
-    try {
-      const user = await asyncData.getData();
-      setUserEmail(user?.email || 'A');
-      console.log(userEmail);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+export default function ButtonFunction() {
+  const navigation = useNavigation();
+  const [user,setUser] = React.useState<any>({email: 'A'});
   useEffect(() => {
-    fetchData();
-  }, []);
-
+    const getData = async () => {
+      const user1 = await asyncData.getData();
+      setUser(user1);
+    };
+    getData();
+  },[]);
   return (
     <View style={styles.container}>
-      <View style={styles.buttonFunction}>
-        {/* <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
-          <FontAwesome5
-            name="search"
-            size={30}
-            style={styles.icon}
-            color={'black'}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <FontAwesome6
-            name="calendar-day"
-            size={30}
-            style={styles.icon}
-            color={'black'}
-          />
-        </TouchableOpacity> */}
-      </View>
-
       {/* TouchableOpacity for Avatar.Text */}
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('ProfilePage', {screen: 'ProfileScreen'})
-        }>
-        <Avatar.Text size={40} label={userEmail[0]} />
+      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <Avatar.Text size={40} label={user?.email[0]} />
       </TouchableOpacity>
     </View>
   );

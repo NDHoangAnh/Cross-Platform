@@ -51,7 +51,7 @@ const convertMonthToString = index => {
 
 const formatTime = date => {
   const dateObject = parseISO(date);
-  return format(dateObject, 'HH:mm dd/MMMM');
+  return format(dateObject, 'HH:mm dd/MM');
 };
 
 const formatDate = date => {

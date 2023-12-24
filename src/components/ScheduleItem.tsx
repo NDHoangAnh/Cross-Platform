@@ -9,6 +9,18 @@ export default function ScheduleItem({
   isDefaultItem,
 }: any): React.JSX.Element {
 
+
+  const comeDetail = () => {
+    if (!item.isClass){
+      navigation.navigate('DetailScreen', {item});
+    } else {
+      navigation.navigate('Class', {
+        screen: 'DetailClass',
+        params: { classId: item._id },
+      });
+    }
+  };
+
   if (isDefaultItem) {
     return (<TouchableOpacity
       style={styles.cardCoverSchedule}>
@@ -31,7 +43,7 @@ export default function ScheduleItem({
   return (
     <TouchableOpacity
       style={styles.cardCoverSchedule}
-      onPress={() => navigation.navigate('DetailScreen', {item})}>
+      onPress={comeDetail}>
       <Card style={styles.cardCover}>
         <Card.Content>
           <View style={styles.cardSchedule}>

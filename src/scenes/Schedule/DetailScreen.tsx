@@ -1,26 +1,20 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableHighlight,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableHighlight, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute } from '@react-navigation/native';
+import { formatDate, formatTime } from '../../utils';
+import {deletePlan} from '../../apis/schedule';
 import Toast from 'react-native-toast-message';
-import {formatDate, formatTime} from '../../utils';
-import apis from '../../apis';
 
-export default function DetailScreen({navigation, route}): React.JSX.Element {
-  // const navigation = useNavigation();
-  // const route = useRoute();
+export default function DetailScreen() : React.JSX.Element {
+  const navigation = useNavigation();
+  const route = useRoute();
   const item = route.params?.item ?? {};
 
   const handleDelete = async () => {
     try {
-      const result = await apis.schedule.deletePlan(item._id);
-      if (result.msg) {
+      const result = await deletePlan(item._id);
+      if (result.msg){
         Toast.show({
           type: 'success',
           text1: 'Completed to delete',
@@ -34,7 +28,7 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
           text2: 'Delete failed, please try again.',
         });
       }
-    } catch (err) {
+    } catch (err){
       Toast.show({
         type: 'error',
         text1: 'Failed to delete',
@@ -51,16 +45,14 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
     <View style={styles.container}>
       <View style={styles.rowHeader}>
         <TouchableOpacity onPress={returnHome}>
-          <MaterialIcons name="close" size={32} color={'black'} />
+          <MaterialIcons name="close" size={32} color={'black'}/>
         </TouchableOpacity>
         <View style={styles.rowHeaderLeft}>
-          <TouchableOpacity
-            style={styles.paddingIcon}
-            onPress={() => navigation.navigate('EditScreen', {item})}>
+          <TouchableOpacity style={styles.paddingIcon} onPress={() => navigation.navigate('EditScreen', {item})}>
             <MaterialIcons name="edit" size={32} color={'black'} />
           </TouchableOpacity>
           <TouchableHighlight onPress={handleDelete}>
-            <MaterialIcons name="delete-forever" size={32} color={'black'} />
+            <MaterialIcons name="delete-forever" size={32} color={'black'}/>
           </TouchableHighlight>
         </View>
       </View>
@@ -71,19 +63,15 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
         </View>
         <Text style={styles.textHeader}>{item.name}</Text>
       </View>
-      <Text style={styles.textDate}>
-        {formatTime(item.startTime)} - {formatTime(item.endTime)}
-      </Text>
-      <Text style={styles.textDate}>
-        createdAt: {formatDate(item.createdAt)}
-      </Text>
+      <Text style={styles.textDate}>{formatTime(item.startTime)} - {formatTime(item.endTime)}</Text>
+      <Text style={styles.textDate}>createdAt: {item.createdAt ? formatDate(item.createdAt) : 'Not time'}</Text>
       <View style={styles.rowNote}>
         <View style={styles.iconNoteCover}>
-          <MaterialIcons name="notes" size={30} />
+          <MaterialIcons color={'gray'} name="notes" size={30} />
         </View>
         <Text style={styles.textNote}>Ghi chú: {item.description ?? ''}</Text>
       </View>
-      <Toast />
+      <Toast/>
     </View>
   );
 }
@@ -92,7 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
   },
-  row: {
+  row:{
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 8,
@@ -109,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   paddingIcon: {
-    paddingRight: 24,
+    paddingRight: 24, 
   },
   rowNote: {
     flexDirection: 'row',
@@ -122,8 +110,8 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: 'purple',
   },
-  iconNoteCover: {
-    width: 60,
+  iconNoteCover:{
+    width:60,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
