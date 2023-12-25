@@ -1,49 +1,26 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import HomeScreen from './HomeScreen';
-// import EmptyScreen from './src/EmptyScreen';
 import ButtonFunction from '../../components/ButtonFunction';
 import SearchScreen from './SearchScreen';
 import DetailScreen from './DetailScreen';
 import EditScreen from './EditScreen';
 import AddScreen from './AddScreen';
-// import { TouchableHighlight } from 'react-native';
-// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-// const Drawer = createDrawerNavigator();
+import * as utils from '../../utils';
+
 const Stack = createNativeStackNavigator();
-
-// function Root(): React.JSX.Element {
-//   return (
-//     <Drawer.Navigator initialRouteName="Home" >
-//       <Drawer.Screen name="Home" component={HomeScreen} options={{headerTitle:'Tháng 1',
-//         headerTitleAlign:'left',
-//         headerRight: ButtonFunction}} />
-//       <Drawer.Screen name="Profile" component={EmptyScreen} />
-//       <Stack.Screen name="Settings" component={EmptyScreen} />
-//     </Drawer.Navigator>
-//   );
-// }
 
 function Schedule(): React.JSX.Element {
   return (
-    <Stack.Navigator screenOptions={{headerTitleAlign: 'left'}}>
+    <Stack.Navigator>
       <Stack.Screen
-        name="Root"
+        name="HomeScreen"
         component={HomeScreen}
         options={{
+          headerTitle: utils.convertMonthToString(new Date().getUTCMonth()),
           headerTitleAlign: 'left',
-          headerShown: false,
-          headerTitle: 'Tháng 1',
           headerRight: ButtonFunction,
         }}
       />

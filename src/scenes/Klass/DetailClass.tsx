@@ -23,7 +23,7 @@ function DetailClass({route}) {
       case 'info':
         return <InfoClass infoClass={classDetails} />;
       case 'activities':
-        return <Activities activities={classDetails?.activity} />;
+        return <Activities activities={classDetails?.activity ?? []} />;
       default:
         return null;
     }

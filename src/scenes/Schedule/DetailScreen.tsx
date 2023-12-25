@@ -1,44 +1,88 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableHighlight, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+import {formatDate, formatTimeEdit} from '../../utils';
+import apis from '../../apis';
 
-export default function DetailScreen() : React.JSX.Element {
-  const navigation = useNavigation();
-  const route = useRoute();
+export default function DetailScreen({navigation, route}): React.JSX.Element {
+  const item = route.params?.item ?? {};
+  let reRender = route.params?.reRender ?? false;
 
-  const item = route.params?.item;
+  const handleDelete = async () => {
+    try {
+      const result = await apis.schedule.deletePlan(item._id);
+      if (result.msg) {
+        Toast.show({
+          type: 'success',
+          text1: 'Completed to delete',
+          text2: 'You have successfully deleted it.',
+        });
+        navigation.navigate('HomeScreen');
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to delete',
+          text2: 'Delete failed, please try again.',
+        });
+      }
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to delete',
+        text2: 'Delete failed, please try again.',
+      });
+    }
+  };
+
+  const returnHome = () => {
+    if (reRender) {navigation.navigate('HomeScreen', {item});}
+    else {navigation.goBack();}
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.rowHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons name="close" size={32} color={'black'}/>
+        <TouchableOpacity onPress={returnHome}>
+          <MaterialIcons name="close" size={32} color={'black'} />
         </TouchableOpacity>
         <View style={styles.rowHeaderLeft}>
-          <TouchableOpacity style={styles.paddingIcon} onPress={() => navigation.navigate('EditScreen', {item})}>
+          <TouchableOpacity
+            style={styles.paddingIcon}
+            onPress={() => navigation.navigate('EditScreen', {item})}>
             <MaterialIcons name="edit" size={32} color={'black'} />
           </TouchableOpacity>
-          <TouchableHighlight>
-            <MaterialIcons name="delete-forever" size={32} color={'black'}/>
+          <TouchableHighlight onPress={handleDelete}>
+            <MaterialIcons name="delete-forever" size={32} color={'black'} />
           </TouchableHighlight>
         </View>
       </View>
-      <Text style={styles.textHint}>VIỆC CẦN LÀM CỦA TÔI</Text>
+      <Text style={styles.textHint}>My schedule</Text>
       <View style={styles.row}>
         <View style={styles.iconNoteCover}>
           <Text style={styles.blockText} />
         </View>
-        <Text style={styles.textHeader}>Học tiếng anh</Text>
+        <Text style={styles.textHeader}>{item.name}</Text>
       </View>
-      <Text style={styles.textDate}>7:30 PM - 9:30 PM</Text>
-      <Text style={styles.textDate}>Thứ Hai, 27 thg 11</Text>
-      <Text style={styles.textDate}>Lặp lại hàng tuần</Text>
+      <Text style={styles.textDate}>
+        {formatTimeEdit(item.startTime)} - {formatTimeEdit(item.endTime)}
+      </Text>
+      <Text style={styles.textDate}>
+        Created at: {item.createdAt ? formatDate(item.createdAt) : 'Not time'}
+      </Text>
       <View style={styles.rowNote}>
         <View style={styles.iconNoteCover}>
-          <MaterialIcons name="notes" size={30} />
+          <MaterialIcons color={'gray'} name="notes" size={30} />
         </View>
-        <Text style={styles.textNote}>Ghi chú: Học nhiều</Text>
+        <Text style={styles.textNote}>Ghi chú: {item.description ?? ''}</Text>
       </View>
+      <Toast />
     </View>
   );
 }
@@ -47,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
   },
-  row:{
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 8,
@@ -64,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   paddingIcon: {
-    paddingRight: 24, 
+    paddingRight: 24,
   },
   rowNote: {
     flexDirection: 'row',
@@ -77,8 +121,8 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: 'purple',
   },
-  iconNoteCover:{
-    width:60,
+  iconNoteCover: {
+    width: 60,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },

@@ -1,3 +1,5 @@
+import {format, parseISO} from 'date-fns';
+
 const convertDateToHour = utcTime => {
   const date = new Date(utcTime);
 
@@ -28,4 +30,46 @@ const convertDateToDay = timestamp => {
   return `${day}-${month}-${year}`;
 };
 
-export {convertDateToHour, convertDateToWeekday, convertDateToDay};
+const convertMonthToString = index => {
+  let months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  return months[index];
+};
+
+const formatTime = date => {
+  const dateObject = parseISO(date);
+  return format(dateObject, 'HH:mm');
+};
+
+const formatTimeEdit = date => {
+  const dateObject = parseISO(date);
+  return format(dateObject, 'HH:mm dd/MM/yyyy');
+};
+
+const formatDate = date => {
+  const dateObject = parseISO(date);
+  return format(dateObject, 'HH:mm - dd,MMMM,yyyy');
+};
+
+export {
+  convertDateToHour,
+  convertDateToWeekday,
+  convertMonthToString,
+  convertDateToDay,
+  formatTime,
+  formatDate,
+  formatTimeEdit,
+};

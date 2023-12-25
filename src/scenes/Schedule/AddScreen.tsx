@@ -5,82 +5,35 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Switch,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {useNavigation} from '@react-navigation/native';
-import {Calendar, LocaleConfig} from 'react-native-calendars';
-import {format} from 'date-fns';
+import {format, parse} from 'date-fns';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Toast from 'react-native-toast-message';
+import {addPlan} from '../../apis/schedule';
+import asyncData from '../../config/auth';
 
-LocaleConfig.locales.en = {
-  monthNames: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ],
-  monthNamesShort: [
-    'Jan.',
-    'Feb.',
-    'Mar.',
-    'Apr.',
-    'May',
-    'Jun.',
-    'Jul.',
-    'Aug.',
-    'Sep.',
-    'Oct.',
-    'Nov.',
-    'Dec.',
-  ],
-  dayNames: [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ],
-  dayNamesShort: ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.'],
-  today: 'Today',
+type ErrorData = {
+  title: string | null;
+  note: string | null;
+  startTime: string | null;
+  endTime: string | null;
 };
 
-LocaleConfig.defaultLocale = 'en';
-
-export default function EditScreen(): React.JSX.Element {
-  const navigation = useNavigation();
+export default function EditScreen({navigation}): React.JSX.Element {
   const [title, setTitle] = React.useState('');
   const [note, setNote] = React.useState('');
-  const [isFullDay, setIsFullDay] = React.useState(false);
-  const [startTime, setStartTime] = React.useState(format(new Date(), 'HH:mm'));
-  const [endTime, setEndTime] = React.useState('00:00');
-  const [isDatePickerVisible, setIsDatePickerVisible] = React.useState(false);
+
+  const [errors, setErrors] = React.useState<ErrorData | null>(null);
+
+  const [startTime, setStartTime] = React.useState('');
+  const [endTime, setEndTime] = React.useState('');
+
   const [isStartPickerVisible, setIsStartPickerVisible] = React.useState(false);
   const [isEndPickerVisible, setIsEndPickerVisible] = React.useState(false);
-  const [selectedDay, setSelectedDay] = React.useState(
-    format(new Date(), 'eeee, do MMMM, yyyy')
-  );
-
-  const onDayPress = (day: any) => {
-    const formattedDate = day
-      ? format(new Date(day.dateString), 'eeee, do MMMM, yyyy')
-      : '';
-    setSelectedDay(formattedDate);
-    setIsDatePickerVisible(false);
-  };
 
   const showStartPicker = () => {
     setIsStartPickerVisible(true);
@@ -99,13 +52,78 @@ export default function EditScreen(): React.JSX.Element {
   };
 
   const handleStartConfirm = (time: any) => {
-    setStartTime(format(time, 'HH:mm'));
+    setStartTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
     hideStartPicker();
   };
 
   const handleEndConfirm = (time: any) => {
-    setEndTime(format(time, 'HH:mm'));
+    setEndTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
     hideEndPicker();
+  };
+
+  const handleAdd = async () => {
+    try {
+      const validate = validateForm();
+
+      if (!validate) {
+        return;
+      }
+      const user = await asyncData.getData();
+      const body = {
+        userId: user?.id,
+        name: title,
+        description: note,
+        startTime: parse(startTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
+        endTime: parse(endTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
+      };
+      const result = await addPlan(body);
+      console.log(body);
+      console.log(result);
+      if (result.errMsg) {
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to update',
+          text2: 'Update failed, please try again.',
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Completed to update',
+          text2: 'You have successfully to update it.',
+        });
+        navigation.navigate('HomeScreen');
+      }
+    } catch (e) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to update',
+        text2: 'Update failed, please try again.',
+      });
+    }
+  };
+
+  const validateForm = () => {
+    let error: ErrorData = {title: null, note: null, startTime: null, endTime: null};
+
+    if (!title) {error = {...error,title :'Name of Schedule is required'};}
+    if (!note) {error = {...error,note : 'Note of schedule is required'};}
+    if (!startTime) {error = {...error,startTime: 'Start time is required'};}
+    if (!endTime) {error = {...error,endTime: 'End time is required'};}
+    if (startTime && endTime ){
+      const start = parse(startTime,'HH:mm - dd,MMMM,yyyy', new Date());
+      const end = parse(endTime,'HH:mm - dd,MMMM,yyyy', new Date());
+      let endTimeText = '';
+      if (start > end) {endTimeText = 'End time is greater than start time';}
+      if (start.getHours() > end.getHours() || (start.getHours() === end.getHours() && start.getMinutes() > end.getMinutes())){
+        endTimeText = 'End time is greater than start time';
+        if (endTimeText !== '')
+        {error = {...error,endTime: endTimeText};}
+      }
+    }
+
+    setErrors(error);
+
+    return Object.values(error).every(value => value === null);
   };
 
   return (
@@ -114,106 +132,85 @@ export default function EditScreen(): React.JSX.Element {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.textBar}>Hủy</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={handleAdd}>
           <Text style={styles.textBar}>Xong</Text>
         </TouchableOpacity>
       </View>
       <TextInput
         style={styles.textHeader}
-        placeholder="Nhập tiêu đề"
+        placeholder="Enter name..."
         value={title}
         onChangeText={newText => setTitle(newText)}
       />
+      {errors?.title ? (
+        <Text style={styles.errorText}>{errors.title}</Text>
+      ) : null}
       <View style={styles.rowNote}>
         <View style={styles.iconNoteCover}>
-          <MaterialIcons name="notes" size={30} />
+          <MaterialIcons color={'gray'} name="notes" size={30} />
         </View>
         <TextInput
-          placeholder="Nhập ghi chú"
+          placeholder="Enter note..."
           style={styles.textNote}
           multiline={true}
           value={note}
           onChangeText={newText => setNote(newText)}
         />
       </View>
+      { errors?.note ? <Text style={styles.errorText}>{errors.note}</Text> : null}
       <View style={styles.row}>
         <View style={styles.iconCover}>
-          <MaterialCommunityIcons name="clock-time-four-outline" size={30} />
+          <MaterialCommunityIcons
+            color={'gray'}
+            name="clock-time-four-outline"
+            size={30}
+          />
         </View>
         <View style={styles.allDay}>
-          <View>
-            <Text style={styles.textNote}>Cả ngày</Text>
+          <View style={styles.rowDate}>
+            <Text onPress={showStartPicker}>Start Time :</Text>
+            <Text style={styles.textDate} onPress={showStartPicker}>
+              {startTime}
+            </Text>
           </View>
-          <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
-            thumbColor={isFullDay ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={() => setIsFullDay(!isFullDay)}
-            value={isFullDay}
+          {errors?.startTime ? (
+            <Text style={styles.errorTime}>{errors.startTime}</Text>
+          ) : null}
+          <View>
+            <Text style={styles.rowDate}>
+              <Octicons color={'gray'} name="dash" size={30} />
+            </Text>
+          </View>
+          <View style={styles.rowDate}>
+            <Text onPress={showEndPicker}>End Time :</Text>
+            <Text style={styles.textDate} onPress={showEndPicker}>
+              {endTime}
+            </Text>
+          </View>
+          {errors?.endTime ? (
+            <Text style={styles.errorTime}>{errors.endTime}</Text>
+          ) : null}
+          <DateTimePickerModal
+            isVisible={isStartPickerVisible}
+            mode="datetime"
+            onConfirm={handleStartConfirm}
+            onCancel={hideStartPicker}
+          />
+          <DateTimePickerModal
+            isVisible={isEndPickerVisible}
+            mode="datetime"
+            onConfirm={handleEndConfirm}
+            onCancel={hideEndPicker}
           />
         </View>
-      </View>
-      <View style={styles.rowDay}>
-        <View>
-          <Text
-            style={styles.textDate}
-            onPress={() => setIsDatePickerVisible(!isDatePickerVisible)}>
-            {selectedDay}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.selectDay}>
-        {isDatePickerVisible && (
-          <Calendar
-            onDayPress={onDayPress}
-            markedDates={{
-              [selectedDay]: {
-                selected: true,
-                selectedColor: 'blue',
-              },
-            }}
-          />
-        )}
-      </View>
-      {!isFullDay && (
-        <View style={styles.rowDate}>
-          <Text style={styles.textDate} onPress={showStartPicker}>
-            {startTime}
-          </Text>
-          <Text>
-            <Octicons name="dash" size={30} />
-          </Text>
-          <Text style={styles.textDate} onPress={showEndPicker}>
-            {endTime}
-          </Text>
-        </View>
-      )}
-      <View style={styles.row}>
-        <DateTimePickerModal
-          isVisible={isStartPickerVisible}
-          mode="time"
-          onConfirm={handleStartConfirm}
-          onCancel={hideStartPicker}
-        />
-        <DateTimePickerModal
-          isVisible={isEndPickerVisible}
-          mode="time"
-          onConfirm={handleEndConfirm}
-          onCancel={hideEndPicker}
-        />
-      </View>
-      <View style={styles.row}>
-        <View style={styles.iconNoteCover}>
-          <FontAwesome name="repeat" size={30} />
-        </View>
-        <Text style={styles.textRepeat}>Lặp lại hàng tuần</Text>
       </View>
       <View style={styles.rowTask}>
         <View style={styles.iconNoteCover}>
-          <FontAwesome name="list-ul" size={30} />
+          <FontAwesome color={'gray'} name="list-ul" size={30} />
         </View>
-        <Text style={styles.textRepeat}>Việc cần làm của tôi</Text>
+        <Text style={styles.textRepeat}>My Schedule</Text>
       </View>
+      <Toast />
     </View>
   );
 }
@@ -243,8 +240,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   allDay: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     flex: 1,
     marginEnd: 20,
     marginVertical: 12,
@@ -253,6 +249,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginStart: 60,
     alignItems: 'flex-start',
+    color: 'gray',
   },
   selectDay: {
     width: '100%',
@@ -264,7 +261,6 @@ const styles = StyleSheet.create({
   rowDate: {
     flexDirection: 'row',
     marginTop: 20,
-    marginStart: 60,
     alignItems: 'center',
     justifyContent: 'space-between',
     marginEnd: 20,
@@ -323,5 +319,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     color: 'black',
+  },
+  errorText: {
+    marginStart: 60,
+    fontSize: 12,
+    color: 'red',
+  },
+  errorTime: {
+    fontSize: 12,
+    color: 'red',
   },
 });
