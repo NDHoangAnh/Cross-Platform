@@ -77,27 +77,25 @@ export default function EditScreen({navigation}): React.JSX.Element {
         endTime: parse(endTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
       };
       const result = await addPlan(body);
-      console.log(body);
-      console.log(result);
       if (result.errMsg) {
         Toast.show({
           type: 'error',
-          text1: 'Failed to update',
-          text2: 'Update failed, please try again.',
+          text1: 'Failed to add',
+          text2: result.errMsg ?? 'Failed to add',
         });
       } else {
+        navigation.navigate('HomeScreen');
         Toast.show({
           type: 'success',
-          text1: 'Completed to update',
-          text2: 'You have successfully to update it.',
+          text1: 'Completed to add',
+          text2: 'You have successfully to add it.',
         });
-        navigation.navigate('HomeScreen');
       }
     } catch (e) {
       Toast.show({
         type: 'error',
-        text1: 'Failed to update',
-        text2: 'Update failed, please try again.',
+        text1: 'Failed to add',
+        text2: 'Add failed, please try again.',
       });
     }
   };
@@ -116,9 +114,9 @@ export default function EditScreen({navigation}): React.JSX.Element {
       if (start > end) {endTimeText = 'End time is greater than start time';}
       if (start.getHours() > end.getHours() || (start.getHours() === end.getHours() && start.getMinutes() > end.getMinutes())){
         endTimeText = 'End time is greater than start time';
-        if (endTimeText !== '')
-        {error = {...error,endTime: endTimeText};}
       }
+      if (endTimeText !== '')
+      {error = {...error,endTime: endTimeText};}
     }
 
     setErrors(error);
