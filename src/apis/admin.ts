@@ -47,7 +47,6 @@ const getListPost = async () => {
 
 const approvePost = async data => {
   try {
-    console.log(data);
     const response = await axiosInstance.put(`/admin/approvePost/${data}`);
     return response;
   } catch (error) {

@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import {green100} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const commonStyles = {
   color: '#555',
@@ -95,6 +94,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     width: '100%',
+  },
+  modalTitle: {
+    color: 'black',
+    fontSize: 15,
+  },
+  modalAction: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 100,
+    marginTop: 20,
+  },
+  agreeAction: {
+    color: 'blue',
+    fontSize: 15,
+  },
+  disagreeAction: {
+    color: 'red',
+    fontSize: 15,
   },
 });
 
