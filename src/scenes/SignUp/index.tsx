@@ -42,6 +42,11 @@ const SignUp = ({navigation}) => {
     if (response?.data?.errMsg !== undefined) {
       if (response?.data?.errMsg === 'User is not verified') {
         navigation.navigate('VerifyOTP', {email: data.email});
+        Toast.show({
+          type: 'success',
+          text1: 'Verify',
+          text2: 'Recheck your email',
+        });
       } else {
         Toast.show({
           type: 'error',
