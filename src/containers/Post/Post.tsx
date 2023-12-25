@@ -19,6 +19,8 @@ function Post({
   showScreenListComment,
   listPostForum,
   setListPostForum,
+  handleDeletePost,
+  handleEditPost,
 }) {
   const initNumLike = like && like?.length;
   const [likeCount, setLikeCount] = useState(initNumLike);
@@ -29,7 +31,6 @@ function Post({
   const day = convertDateToDay(createdAt);
   const hour = convertDateToHour(createdAt);
 
-  // image modal
   const toggleImageModal = () => {
     setImageModalVisible(!isImageModalVisible);
   };
@@ -63,16 +64,14 @@ function Post({
     }
   };
 
-  // additional modal
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const handleEdit = () => {
-    toggleModal();
-  };
+  const handleEdit = async () => {};
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    await handleDeletePost(postId);
     toggleModal();
   };
 
