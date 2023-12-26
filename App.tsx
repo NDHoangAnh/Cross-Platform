@@ -14,15 +14,15 @@ import ScheduleStackScreen from './src/scenes/Schedule';
 import TargetScreen from './src/scenes/Target';
 import Menu from './src/scenes/Menu/Menu';
 import KlassStackScreen from './src/scenes/Klass';
+import LoadingScreen from './src/scenes/Loading';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // Change back to false in real app
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Check if storage is empty
   const isAsyncStorageEmpty = async () => {
     try {
       const allKeys = await AsyncStorage.getAllKeys();
@@ -36,13 +36,16 @@ export default function App() {
   useEffect(() => {
     const checkAsyncStorage = async () => {
       const isEmpty = await isAsyncStorageEmpty();
-      // isEmpty here
-      // setIsLoggedIn(true);
       setIsLoggedIn(!isEmpty);
+      setIsLoading(false);
     };
 
     checkAsyncStorage();
   }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <NavigationContainer>

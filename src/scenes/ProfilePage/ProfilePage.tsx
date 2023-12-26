@@ -12,6 +12,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import styles from './ProfilePage.style';
 import asyncData from '../../config/auth';
 import api from '../../apis';
+import LoadingScreen from '../Loading';
 
 type UserData = {
   id: string | null;
@@ -27,6 +28,7 @@ type UserData = {
 const Profile = ({navigation}) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
 
   const userPictureUrl =
     'https://icon-library.com/images/default-profile-icon/default-profile-icon-5.jpg';
@@ -63,6 +65,7 @@ const Profile = ({navigation}) => {
         };
 
         setUserData(userProfile);
+        setLoadingData(false);
       } else {
         console.log('Invalid user data received');
       }
@@ -81,6 +84,10 @@ const Profile = ({navigation}) => {
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (loadingData) {
+    return <LoadingScreen />;
   }
 
   return (
