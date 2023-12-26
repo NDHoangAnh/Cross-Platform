@@ -1,15 +1,82 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-shadow */
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import {TabView, TabBar} from 'react-native-tab-view';
-import {klass} from '../../data/klass';
+// import {klass} from '../../data/klass';
 import InfoClass from '../../containers/InfoClass/InfoClass';
 import Navbar from '../../components/Navbar';
 import Activities from '../../containers/Activities/Activities';
+import apis from '../../apis';
+import {ActivityIndicator} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+
+type StudentData = {
+  id: string | null;
+  name: string | null;
+  email: string | null;
+  avatar: string | null;
+};
+
+type ActivityData = {
+  id: string | null;
+  name: string | null;
+  time: Date | null;
+  type: string | null;
+  content: string | null;
+};
+
+type DetailClassData = {
+  teacherName: string | null;
+  teacherEmail: string | null;
+  students: StudentData[] | null;
+  activity: ActivityData[] | null;
+  startTime: Date | null;
+  endTime: Date | null;
+  name: string | null;
+  code: string | null;
+};
 
 function DetailClass({route}) {
   const {classId} = route.params;
+  const [detailClass, setDetailClass] = useState<DetailClassData>();
+  const [loading, setLoading] = useState(true);
 
-  const classDetails = klass.find(item => item.id === classId);
+  // const classDetails = klass.find(item => item.id === classId);
+  const handleGetDetailClass = async () => {
+    try {
+      const data = await apis.klass.getDetailClass(classId);
+      if (data !== null && typeof data === 'object') {
+        const klass: DetailClassData = {
+          teacherName: data?.teacherId?.username || null,
+          teacherEmail: data?.teacherId?.email || null,
+          students: data?.studentId?.map(student => ({
+            id: student?._id,
+            name: student?.username || null,
+            avatar:
+              student?.avatar ||
+              'https://cdn-icons-png.flaticon.com/512/3541/3541871.png',
+            email: student?.email || null,
+          })),
+          name: data?.name || null,
+          code: data?.code || null,
+          startTime: data?.startTime || null,
+          endTime: data?.endTime || null,
+          activity: data?.activity?.map(item => ({
+            id: item?._id,
+            name: item?.name || null,
+            type: item?.type || null,
+            time: item?.time || null,
+            content: item?.content || null,
+          })),
+        };
+
+        setDetailClass(klass);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [index, setIndex] = useState(0);
 
@@ -21,9 +88,9 @@ function DetailClass({route}) {
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'info':
-        return <InfoClass infoClass={classDetails} />;
+        return <InfoClass infoClass={detailClass} />;
       case 'activities':
-        return <Activities activities={classDetails?.activity ?? []} />;
+        return <Activities activities={detailClass?.activity ?? []} />;
       default:
         return null;
     }
@@ -39,15 +106,27 @@ function DetailClass({route}) {
     />
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      handleGetDetailClass();
+    }, [handleGetDetailClass])
+  );
+
   return (
     <>
-      <Navbar listAction={[]} />
-      <TabView
-        navigationState={{index, routes}}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        onIndexChange={setIndex}
-      />
+      {loading ? (
+        <ActivityIndicator style={{flex: 1}} size="large" color="#0000ff" />
+      ) : (
+        <>
+          <Navbar listAction={[]} />
+          <TabView
+            navigationState={{index, routes}}
+            renderScene={renderScene}
+            renderTabBar={renderTabBar}
+            onIndexChange={setIndex}
+          />
+        </>
+      )}
     </>
   );
 }

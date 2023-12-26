@@ -16,6 +16,14 @@ const styles = StyleSheet.create({
   activityTitle: {
     fontWeight: 'bold',
   },
+  noActContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noActivityText: {
+    color: 'black',
+  },
 });
 
 export default styles;

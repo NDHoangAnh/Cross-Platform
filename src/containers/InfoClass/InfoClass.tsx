@@ -3,10 +3,10 @@ import styles from './InfoClass.style';
 
 function InfoClass({infoClass}) {
   const startTime = infoClass
-    ? new Date(infoClass.startDate).toLocaleTimeString()
+    ? new Date(infoClass.startTime).toLocaleTimeString()
     : '';
   const endTime = infoClass
-    ? new Date(infoClass.endDate).toLocaleTimeString()
+    ? new Date(infoClass.endTime).toLocaleTimeString()
     : '';
 
   return (
@@ -14,7 +14,7 @@ function InfoClass({infoClass}) {
       <View style={styles.infoBox}>
         <Text style={[styles.headerText]}>Class Information</Text>
         <View style={styles.infoContent}>
-          <View style={styles.column}>
+          <View style={styles.columnTitle}>
             <Text style={styles.blackText}>Class Name:</Text>
             <Text style={styles.blackText}>Code:</Text>
             <Text style={styles.blackText}>Teacher:</Text>
@@ -22,15 +22,11 @@ function InfoClass({infoClass}) {
             <Text style={styles.blackText}>Start time:</Text>
             <Text style={styles.blackText}>End Time:</Text>
           </View>
-          <View style={styles.column}>
+          <View style={styles.columnContent}>
             <Text style={styles.blackText}>{infoClass?.name}</Text>
-            <Text style={styles.blackText}>123456</Text>
-            <Text style={styles.blackText}>
-              {infoClass?.teacherId?.username}
-            </Text>
-            <Text style={styles.blackText}>
-              {infoClass?.teacherId?.username}
-            </Text>
+            <Text style={styles.blackText}>{infoClass?.code}</Text>
+            <Text style={styles.blackText}>{infoClass?.teacherName}</Text>
+            <Text style={styles.blackText}>{infoClass?.teacherEmail}</Text>
             <Text style={styles.blackText}>{startTime}</Text>
             <Text style={styles.blackText}>{endTime}</Text>
           </View>
@@ -39,12 +35,19 @@ function InfoClass({infoClass}) {
 
       <View style={styles.studentsBox}>
         <Text style={[styles.headerText]}>Students</Text>
-        {infoClass?.studentId?.map((student, idx) => (
-          <View key={idx} style={styles.studentItem}>
-            <Image source={{uri: student.avatar}} style={styles.avatar} />
-            <Text style={styles.blackText}>{student.username}</Text>
+        {infoClass?.students &&
+          infoClass?.students?.length > 0 &&
+          infoClass?.students?.map((student, idx) => (
+            <View key={idx} style={styles.studentItem}>
+              <Image source={{uri: student.avatar}} style={styles.avatar} />
+              <Text style={styles.blackText}>{student.name}</Text>
+            </View>
+          ))}
+        {infoClass?.students && infoClass?.students?.length === 0 && (
+          <View>
+            <Text style={{color: 'black'}}>No students</Text>
           </View>
-        ))}
+        )}
       </View>
     </ScrollView>
   );
