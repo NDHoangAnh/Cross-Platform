@@ -5,31 +5,34 @@ import {
   StyleSheet,
   TouchableHighlight,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-toast-message';
 import {formatDate, formatTimeEdit} from '../../utils';
 import apis from '../../apis';
+import SimpleModal from '../../components/SimpleModal';
 
 export default function DetailScreen({navigation, route}): React.JSX.Element {
   const item = route.params?.item ?? {};
   let reRender = route.params?.reRender ?? false;
+  const [isVisibleModal, setIsVisibleModel] = React.useState<boolean>(false);
 
   const handleDelete = async () => {
     try {
       const result = await apis.schedule.deletePlan(item._id);
       if (result.msg) {
+        navigation.navigate('HomeScreen');
         Toast.show({
           type: 'success',
           text1: 'Completed to delete',
           text2: 'You have successfully deleted it.',
         });
-        navigation.navigate('HomeScreen');
       } else {
         Toast.show({
           type: 'error',
           text1: 'Failed to delete',
-          text2: 'Delete failed, please try again.',
+          text2: result.errMsg ?? 'Delete failed, please try again.',
         });
       }
     } catch (err) {
@@ -42,8 +45,11 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
   };
 
   const returnHome = () => {
-    if (reRender) {navigation.navigate('HomeScreen', {item});}
-    else {navigation.goBack();}
+    if (reRender) {
+      navigation.navigate('HomeScreen');
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
@@ -58,7 +64,7 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
             onPress={() => navigation.navigate('EditScreen', {item})}>
             <MaterialIcons name="edit" size={32} color={'black'} />
           </TouchableOpacity>
-          <TouchableHighlight onPress={handleDelete}>
+          <TouchableHighlight onPress={() => setIsVisibleModel(true)}>
             <MaterialIcons name="delete-forever" size={32} color={'black'} />
           </TouchableHighlight>
         </View>
@@ -83,6 +89,18 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
         <Text style={styles.textNote}>Ghi chú: {item.description ?? ''}</Text>
       </View>
       <Toast />
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={isVisibleModal}
+        onRequestClose={() => setIsVisibleModel(false)}>
+        <SimpleModal
+          changeModalVisible={setIsVisibleModel}
+          function={handleDelete}
+          title="Delete your schedule"
+          note="Are you sure about that?"
+        />
+      </Modal>
     </View>
   );
 }

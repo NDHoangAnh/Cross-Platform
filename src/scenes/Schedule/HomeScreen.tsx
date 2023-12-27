@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useCallback} from 'react';
 import {
   StyleSheet,
   View,
@@ -11,46 +11,52 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import ScheduleItem from '../../components/ScheduleItem';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
+import {useFocusEffect} from '@react-navigation/native';
 
-export default function HomeScreen({navigation, route}): React.JSX.Element {
+export default function HomeScreen({navigation}): React.JSX.Element {
   const [items, setItems] = useState<{[key: string]: any}>();
   const [selectedDay, setSelectedDay] = useState<string>(String(new Date()));
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
+  const getData = async () => {
+    try {
       const user = await asyncData.getData();
       const response = await apis.schedule.getListScheduleForUser(user?.id);
       const plans = response.plans ?? [];
       const studyArray = response.klass ?? [];
-      const studyMap = studyArray.map((study : any) => {
+      const studyMap = studyArray.map((study: any) => {
         return {
           ...study,
-          isClass:true,
+          isClass: true,
         };
       });
 
       const arrays = plans.concat(studyMap);
 
-      const mappedData = arrays.map((plan : any) => {
-        const { startTime, endTime } = plan;
+      const mappedData = arrays.map((plan: any) => {
+        const {startTime, endTime} = plan;
         if (startTime && endTime) {
           const startDate = new Date(startTime);
           const endDate = new Date(endTime);
-          if (startDate > endDate) {return null;}
-          if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) ) {
-            if (plan.isClass === false){
-            const dateRange = eachDayOfInterval({ start: startDate, end: endDate });
-            return {
-              ...plan,
-              email: user?.email ?? 'A',
-              dateRange: dateRange.map(date => format(date, 'yyyy-MM-dd')),
-            };
-            }
-            else {
+          if (startDate > endDate) {
+            return null;
+          }
+          if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+            if (plan.isClass === false) {
+              const dateRange = eachDayOfInterval({
+                start: startDate,
+                end: endDate,
+              });
+              return {
+                ...plan,
+                email: user?.email ?? 'A',
+                dateRange: dateRange.map(date => format(date, 'yyyy-MM-dd')),
+              };
+            } else {
               const duration = plan.duration;
-              let dateRange = duration.map((time) => format(new Date(time[0]),'yyyy-MM-dd'));
+              let dateRange = duration.map(time =>
+                format(new Date(time[0]), 'yyyy-MM-dd')
+              );
               return {
                 ...plan,
                 email: user?.email ?? 'A',
@@ -70,7 +76,7 @@ export default function HomeScreen({navigation, route}): React.JSX.Element {
       const validMappedData = mappedData.filter(item => item !== null);
 
       const reduced = validMappedData.reduce((acc: any, currentItem: any) => {
-        currentItem.dateRange.forEach(date=> {
+        currentItem.dateRange.forEach(date => {
           if (!acc[date]) {
             acc[date] = [];
           }
@@ -83,13 +89,16 @@ export default function HomeScreen({navigation, route}): React.JSX.Element {
       setItems(reduced);
       setLoading(false);
       setSelectedDay(String(new Date()));
-      } catch (e) {
-        console.error(e);
-      }
-    };
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-    getData();
-  }, [route.params?.item]);
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
 
   return (
     <>

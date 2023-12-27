@@ -19,9 +19,11 @@ import {formatDate} from '../../utils';
 type ErrorData = {
   title: string | null;
   note: string | null;
+  startTime: string | null;
+  endTime: string | null;
 };
 
-export default function EditScreen({navigation, route}) : React.JSX.Element {
+export default function EditScreen({navigation, route}): React.JSX.Element {
   let item = route.params?.item ?? {};
 
   const [errors, setErrors] = React.useState<ErrorData | null>(null);
@@ -44,8 +46,8 @@ export default function EditScreen({navigation, route}) : React.JSX.Element {
         planId: item._id,
         name: title,
         description: note,
-        startTime: parse(startTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
-        endTime: parse(endTime, 'HH:mm - dd,MMMM,yyyy', new Date()),
+        startTime: parse(startTime, 'HH:mm - dd / MMMM / yyyy', new Date()),
+        endTime: parse(endTime, 'HH:mm - dd / MMMM / yyyy', new Date()),
       };
       const result = await apis.schedule.updatePlan(body);
       if (result.errMsg) {
@@ -53,20 +55,20 @@ export default function EditScreen({navigation, route}) : React.JSX.Element {
           type: 'error',
           visibilityTime: 1000,
           text1: 'Failed to update',
-          text2: 'Update failed, please try again.',
+          text2: result.errMsg ?? 'Update failed, please try again.',
         });
       } else {
+        item = {
+          _id: item._id,
+          ...result,
+        };
+        navigation.navigate('DetailScreen', {item, reRender: true});
         Toast.show({
           type: 'success',
           visibilityTime: 1000,
           text1: 'Completed to update',
           text2: 'You have successfully to update it.',
         });
-        item = {
-          _id: item._id,
-          ...result,
-        };
-        navigation.navigate('DetailScreen', {item, reRender: true});
       }
     } catch (e) {
       Toast.show({
@@ -79,14 +81,45 @@ export default function EditScreen({navigation, route}) : React.JSX.Element {
   };
 
   const validateForm = () => {
-    let error: ErrorData = {title: null,note: null};
+    let error: ErrorData = {
+      title: null,
+      note: null,
+      startTime: null,
+      endTime: null,
+    };
 
-    if (!title.trim()) {
+    if (!title) {
       error = {...error, title: 'Name of Schedule is required'};
     }
-    if (!note.trim()){
-      error = {...error,note: 'Note of Schedule is required'};
+    if (!note) {
+      error = {...error, note: 'Note of schedule is required'};
     }
+    if (!startTime) {
+      error = {...error, startTime: 'Start time is required'};
+    }
+    if (!endTime) {
+      error = {...error, endTime: 'End time is required'};
+    }
+    if (startTime && endTime) {
+      const start = parse(startTime, 'HH:mm - dd / MMMM / yyyy', new Date());
+      const end = parse(endTime, 'HH:mm - dd / MMMM / yyyy', new Date());
+      let endTimeText = '';
+      if (start > end) {
+        endTimeText = 'End time is greater than start time';
+      }
+      if (
+        start.getHours() > end.getHours() ||
+        (start.getHours() === end.getHours() &&
+          start.getMinutes() > end.getMinutes())
+      ) {
+        endTimeText = 'End time is greater than start time';
+      }
+      if (endTimeText !== '') {
+        error = {...error, endTime: endTimeText};
+      }
+    }
+
+    setErrors(error);
 
     setErrors(error);
 
@@ -110,12 +143,12 @@ export default function EditScreen({navigation, route}) : React.JSX.Element {
   };
 
   const handleStartConfirm = (time: any) => {
-    setStartTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
+    setStartTime(format(time, 'HH:mm - dd / MMMM / yyyy'));
     hideStartPicker();
   };
 
   const handleEndConfirm = (time: any) => {
-    setEndTime(format(time, 'HH:mm - dd,MMMM,yyyy'));
+    setEndTime(format(time, 'HH:mm - dd / MMMM / yyyy'));
     hideEndPicker();
   };
 
@@ -148,6 +181,9 @@ export default function EditScreen({navigation, route}) : React.JSX.Element {
           onChangeText={newText => setNote(newText)}
         />
       </View>
+      {errors?.note ? (
+        <Text style={styles.errorText}>{errors.note}</Text>
+      ) : null}
       <View style={styles.row}>
         <View style={styles.iconCover}>
           <MaterialCommunityIcons
@@ -163,6 +199,9 @@ export default function EditScreen({navigation, route}) : React.JSX.Element {
               {startTime}
             </Text>
           </View>
+          {errors?.startTime ? (
+            <Text style={styles.errorTime}>{errors.startTime}</Text>
+          ) : null}
           <View>
             <Text style={styles.rowDate}>
               <Octicons color={'gray'} name="dash" size={30} />
@@ -174,6 +213,9 @@ export default function EditScreen({navigation, route}) : React.JSX.Element {
               {endTime}
             </Text>
           </View>
+          {errors?.endTime ? (
+            <Text style={styles.errorTime}>{errors.endTime}</Text>
+          ) : null}
           <DateTimePickerModal
             isVisible={isStartPickerVisible}
             mode="datetime"
@@ -308,6 +350,10 @@ const styles = StyleSheet.create({
   },
   errorText: {
     marginStart: 60,
+    fontSize: 12,
+    color: 'red',
+  },
+  errorTime: {
     fontSize: 12,
     color: 'red',
   },
