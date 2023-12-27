@@ -61,7 +61,7 @@ const formatTimeEdit = date => {
 
 const formatDate = date => {
   const dateObject = parseISO(date);
-  return format(dateObject, 'HH:mm - dd,MMMM,yyyy');
+  return format(dateObject, 'HH:mm - dd / MMMM / yyyy');
 };
 
 export {

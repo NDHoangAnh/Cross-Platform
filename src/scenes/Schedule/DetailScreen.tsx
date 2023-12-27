@@ -45,8 +45,11 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
   };
 
   const returnHome = () => {
-    if (reRender) {navigation.navigate('HomeScreen', {item});}
-    else {navigation.goBack();}
+    if (reRender) {
+      navigation.navigate('HomeScreen');
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
@@ -88,11 +91,15 @@ export default function DetailScreen({navigation, route}): React.JSX.Element {
       <Toast />
       <Modal
         transparent={true}
-        animationType= "fade"
+        animationType="fade"
         visible={isVisibleModal}
-        onRequestClose={() => setIsVisibleModel(false)}
-      >
-        <SimpleModal changeModalVisible={setIsVisibleModel} function={handleDelete} title="Delete your schedule" note="Are you sure about that?" />
+        onRequestClose={() => setIsVisibleModel(false)}>
+        <SimpleModal
+          changeModalVisible={setIsVisibleModel}
+          function={handleDelete}
+          title="Delete your schedule"
+          note="Are you sure about that?"
+        />
       </Modal>
     </View>
   );
