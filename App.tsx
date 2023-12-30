@@ -41,7 +41,7 @@ export default function App() {
       const isEmpty = await isAsyncStorageEmpty();
       if (isEmpty === false) {
         const user1 = await asyncData.getData();
-        setIsAdmin(user1?.role !== 'Admin');
+        setIsAdmin(user1?.role === 'Admin');
       }
 
       setIsLoggedIn(!isEmpty);
