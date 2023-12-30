@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {useCallback, useState} from 'react';
 import {TabView, TabBar} from 'react-native-tab-view';
-// import {klass} from '../../data/klass';
 import InfoClass from '../../containers/InfoClass/InfoClass';
 import Navbar from '../../components/Navbar';
 import Activities from '../../containers/Activities/Activities';
@@ -41,7 +40,6 @@ function DetailClass({route}) {
   const [detailClass, setDetailClass] = useState<DetailClassData>();
   const [loading, setLoading] = useState(true);
 
-  // const classDetails = klass.find(item => item.id === classId);
   const handleGetDetailClass = async () => {
     try {
       const data = await apis.klass.getDetailClass(classId);
