@@ -1,4 +1,4 @@
-import {useState, useCallback} from 'react';
+import {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -11,9 +11,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import ScheduleItem from '../../components/ScheduleItem';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
-import {useFocusEffect} from '@react-navigation/native';
 
-export default function HomeScreen({navigation}): React.JSX.Element {
+export default function HomeScreen({navigation,route}): React.JSX.Element {
   const [items, setItems] = useState<{[key: string]: any}>();
   const [selectedDay, setSelectedDay] = useState<string>(String(new Date()));
   const [loading, setLoading] = useState(true);
@@ -94,11 +93,9 @@ export default function HomeScreen({navigation}): React.JSX.Element {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      getData();
-    }, [])
-  );
+  useEffect(() => {
+    getData();
+  },[route.params?.item]);
 
   return (
     <>

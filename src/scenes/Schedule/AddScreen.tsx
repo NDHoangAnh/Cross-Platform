@@ -84,7 +84,7 @@ export default function EditScreen({navigation}): React.JSX.Element {
           text2: result.errMsg ?? 'Failed to add',
         });
       } else {
-        navigation.navigate('HomeScreen');
+        navigation.navigate('HomeScreen',{item: Math.random()});
         Toast.show({
           type: 'success',
           text1: 'Completed to add',
