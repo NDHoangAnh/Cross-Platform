@@ -11,7 +11,10 @@ function AdminPostScreen({navigation}: AdminHomePageProps) {
   const [isRender, setIsRender] = useState(true);
 
   const fetchPosts = useCallback(async () => {
-    await apis.admin.getListPost().then(res => setPosts(res?.data));
+    await apis.admin.getListPost().then(res => {
+      console.log(res?.data);
+      setPosts(res?.data);
+    });
   }, [setPosts]);
 
   useEffect(() => {

@@ -13,20 +13,19 @@ import ProfileStackScreen from './src/scenes/ProfilePage';
 import TargetScreen from './src/scenes/Target';
 import AdminHomePageStackScreen from './src/scenes/AdminHomePage';
 import ScheduleStackScreen from './src/scenes/Schedule';
-import TargetScreen from './src/scenes/Target';
 import Menu from './src/scenes/Menu/Menu';
 import KlassStackScreen from './src/scenes/Klass';
 import LoadingScreen from './src/scenes/Loading';
-
+import Settings from './src/scenes/Settings';
+import asyncData from './src/config/auth';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
-  let isAdmin = true;
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const isAsyncStorageEmpty = async () => {
     try {
       const allKeys = await AsyncStorage.getAllKeys();
@@ -40,6 +39,11 @@ export default function App() {
   useEffect(() => {
     const checkAsyncStorage = async () => {
       const isEmpty = await isAsyncStorageEmpty();
+      if (isEmpty === false) {
+        const user1 = await asyncData.getData();
+        setIsAdmin(user1?.role !== 'Admin');
+      }
+
       setIsLoggedIn(!isEmpty);
       setIsLoading(false);
     };
@@ -58,11 +62,11 @@ export default function App() {
           {isAdmin && (
             <Tab.Screen name="Home" component={AdminHomePageStackScreen} />
           )}
+          {!isAdmin && <Tab.Screen name="Home" component={Home} />}
           <Tab.Screen name="Settings">
             {/* Pass this function if that page have the logout button */}
             {props => <Settings {...props} setIsLoggedIn={setIsLoggedIn} />}
           </Tab.Screen>
-          <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Target" component={TargetScreen} />
           <Tab.Screen name="Forum" component={ForumStackScreen} />
           <Tab.Screen name="Profile" component={ProfileStackScreen} />

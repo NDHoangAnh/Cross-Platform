@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
@@ -6,20 +6,6 @@ import styles from './Post.style';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
 import {convertDateToDay, convertDateToHour} from '../../utils';
-
-<!-- interface PostProps {
-  postId: number;
-  isApproved?: boolean;
-  user: string;
-  avatar: string;
-  createdAt: string;
-  content: string;
-  like: number;
-  comment: number;
-  image?: string;
-  render?: () => void;
-  showScreenListComment?: (postId: number) => void;
-} -->
 
 function Post({
   postId,
@@ -36,16 +22,23 @@ function Post({
   listPostForum,
   setListPostForum,
   handleDeletePost,
-  handleEditPost,
 }) {
   const initNumLike = like && like?.length;
   const [likeCount, setLikeCount] = useState(initNumLike);
-  let isAdmin = true;
+  const [isAdmin, setIsAdmin] = useState(false);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isImageModalVisible, setImageModalVisible] = useState(false);
   const [isShowModalApprove, setIsShowModalApprove] = useState(false);
   const [isShowModalDecline, setIsShowModalDecline] = useState(false);
+
+  useEffect(() => {
+    const getData = async () => {
+      const user1 = await asyncData.getData();
+      setIsAdmin(user1?.role === 'Admin');
+    };
+    getData();
+  }, []);
 
   const toggleModalApprove = () => {
     setIsShowModalApprove(!isShowModalApprove);
@@ -160,7 +153,7 @@ function Post({
             style={styles.actionContainer}
             onPress={() => showScreenListComment!(postId)}>
             <Icon name="comment" style={styles.icon} />
-            <Text style={styles.actionText}>{comment} Comment</Text>
+            <Text style={styles.actionText}>Comment</Text>
           </TouchableOpacity>
           <View style={styles.actionContainer}>
             <Icon name="share" style={styles.icon} />
@@ -191,16 +184,6 @@ function Post({
           <Text style={styles.approveText}>
             The article is waiting for approval
           </Text>
-        </View>
-        <TouchableOpacity
-          style={styles.actionContainer}
-          onPress={() => showScreenListComment(postId)}>
-          <Icon name="comment" style={styles.icon} />
-          <Text style={styles.actionText}>Comment</Text>
-        </TouchableOpacity>
-        <View style={styles.actionContainer}>
-          <Icon name="share" style={styles.icon} />
-          <Text style={styles.actionText}>Share</Text>
         </View>
       )}
 
