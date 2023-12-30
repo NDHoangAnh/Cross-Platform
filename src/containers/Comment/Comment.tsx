@@ -51,7 +51,11 @@ function Comment({
       )}
 
       {/* Modal */}
-      <Modal isVisible={isShowModalComment} onBackdropPress={toggleModal}>
+      <Modal
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
+        isVisible={isShowModalComment}
+        onBackdropPress={toggleModal}>
         <View style={styles.modalButtonContainer}>
           <TouchableOpacity onPress={handleEdit} style={styles.editButton}>
             <Text style={[styles.blueText]}>Edit</Text>

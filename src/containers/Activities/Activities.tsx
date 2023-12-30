@@ -1,5 +1,6 @@
 import {ScrollView, Text, View} from 'react-native';
 import styles from './Activities.style';
+import {FAB} from 'react-native-paper';
 
 function Activities({activities}) {
   return (
@@ -22,6 +23,19 @@ function Activities({activities}) {
           <Text style={styles.noActivityText}>No activity</Text>
         </View>
       )}
+      <FAB
+        style={{
+          position: 'absolute',
+          margin: 16,
+          right: 5,
+          bottom: 16,
+          backgroundColor: '#3498db',
+          borderRadius: 50,
+        }}
+        icon="pencil"
+        color="#fff"
+        // onPress={toggleModalEnroll}
+      />
     </>
   );
 }
