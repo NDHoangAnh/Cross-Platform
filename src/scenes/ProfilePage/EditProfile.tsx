@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,34 +6,111 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {launchImageLibrary, Asset} from 'react-native-image-picker';
 import styles from './EditProfile.style';
+import {useRoute} from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import api from '../../apis';
+import Toast from 'react-native-toast-message';
 
-const EditProfile = () => {
-  const [editedName, setEditedName] = useState('John Doe');
-  const [editedEmail, setEditedEmail] = useState('john.doe@example.com');
-  const [editedMajor, setEditedMajor] = useState('Computer Science');
-  const [editedPhoneNumber, setEditedPhoneNumber] = useState('123-456-7890');
+type UserData = {
+  id: string | null;
+  username: string | null;
+  email: string | null;
+  role: string | null;
+  avatar: string | null;
+  birthDate: Date | null;
+  address: string | null;
+  phone: string | null;
+};
+
+const EditProfile = ({navigation}) => {
+  const route = useRoute();
+  const {userData}: {userData?: UserData} = route.params || {};
+  const [loading, setLoading] = useState(true);
+
+  const [editedName, setEditedName] = useState(userData?.username || '');
+  const [editedEmail, setEditedEmail] = useState(userData?.email || '');
+  const [editedAddress, setEditedAddress] = useState(userData?.address || '');
+  const [editedPhoneNumber, setEditedPhoneNumber] = useState(
+    userData?.phone || ''
+  );
   const [selectedImage, setSelectedImage] = useState<null | Asset[]>(null);
 
-  const navigation = useNavigation();
+  const [date, setDate] = useState<Date | null>(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const handleSaveProfile = () => {
-    console.log('Profile saved:', {
-      editedName,
-      editedEmail,
-      editedMajor,
-      editedPhoneNumber,
-      selectedImage,
-    });
+  const [load, setLoad] = useState(false);
+
+  useEffect(() => {
+    // Update form fields if userData changes
+    setEditedName(userData?.username || '');
+    setEditedEmail(userData?.email || '');
+    setEditedAddress(userData?.address || '');
+    setEditedPhoneNumber(userData?.phone || '');
+    setLoading(false);
+    const birthDate = userData?.birthDate ? new Date(userData.birthDate) : null;
+    setDate(birthDate);
+  }, [userData]);
+
+  const validatePhoneNumber = (phoneNumber: string): boolean => {
+    const phoneNumberRegex = /^0\d{9}$/;
+    return phoneNumberRegex.test(phoneNumber);
+  };
+
+  const handleSaveProfile = async () => {
+    setLoad(true);
+    let data;
+
+    if (selectedImage !== null) {
+      const result = await api.cloudinary.uploadImage(selectedImage);
+      data = {
+        username: editedName,
+        email: editedEmail,
+        birthDate: date,
+        avatar: result,
+        address: editedAddress,
+        phone: editedPhoneNumber,
+      };
+    } else {
+      data = {
+        username: editedName,
+        email: editedEmail,
+        birthDate: date,
+        address: editedAddress,
+        phone: editedPhoneNumber,
+      };
+    }
+
+    if (!validatePhoneNumber(data.phone)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Invalid phone number',
+      });
+    } else {
+      const response = await api.user.updateUserData(data);
+      if (response?.errMsg !== undefined) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: `${response?.errMsg}`,
+        });
+      } else {
+        navigation.goBack();
+      }
+    }
+
+    setLoad(false);
   };
 
   const pickImage = () => {
     const options: any = {
       mediaType: 'photo',
       title: 'Select Image',
+      includeBase64: true,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -51,8 +128,14 @@ const EditProfile = () => {
     });
   };
 
+  if (loading) {
+    // Return a loading indicator or any other appropriate UI
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <Toast />
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.backButton}
@@ -88,11 +171,11 @@ const EditProfile = () => {
             onChangeText={setEditedEmail}
           />
 
-          <Text style={styles.label}>Major:</Text>
+          <Text style={styles.label}>Address:</Text>
           <TextInput
             style={styles.input}
-            value={editedMajor}
-            onChangeText={setEditedMajor}
+            value={editedAddress}
+            onChangeText={setEditedAddress}
           />
 
           <Text style={styles.label}>Phone Number:</Text>
@@ -100,13 +183,62 @@ const EditProfile = () => {
             style={styles.input}
             value={editedPhoneNumber}
             onChangeText={setEditedPhoneNumber}
+            keyboardType="numeric"
           />
+
+          <View style={styles.birthDateContainer}>
+            <Text style={styles.label}>Birth Date:</Text>
+
+            <TouchableOpacity
+              style={styles.chooseDateButton}
+              onPress={() => setDatePickerVisibility(true)}>
+              <Text style={styles.chooseDateButtonText}>Choose date</Text>
+            </TouchableOpacity>
+
+            {isDatePickerVisible && (
+              <DateTimePicker
+                value={date || new Date()}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setDatePickerVisibility(false);
+                  if (selectedDate) {
+                    setDate(selectedDate);
+                  }
+                }}
+              />
+            )}
+          </View>
+          <Text style={styles.label}>
+            {date instanceof Date
+              ? date.toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })
+              : 'No Date Selected'}
+          </Text>
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
-          <Text style={styles.buttonText}>Save Profile</Text>
+        <TouchableOpacity
+          style={styles.saveButton}
+          onPress={handleSaveProfile}
+          disabled={load}>
+          {load ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.buttonText}>Save Profile</Text>
+          )}
         </TouchableOpacity>
       </View>
+      <Image
+        source={require('../../../public/edit-profile.png')}
+        style={styles.image}
+      />
+      <Image
+        source={require('../../../public/edit-profile.png')}
+        style={styles.imageTop}
+      />
     </ScrollView>
   );
 };

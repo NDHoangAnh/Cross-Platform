@@ -4,7 +4,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import styles from './Post.style';
 import apis from '../../apis';
-interface PostProps {
+import asyncData from '../../config/auth';
+import {convertDateToDay, convertDateToHour} from '../../utils';
+
+<!-- interface PostProps {
   postId: number;
   isApproved?: boolean;
   user: string;
@@ -16,7 +19,7 @@ interface PostProps {
   image?: string;
   render?: () => void;
   showScreenListComment?: (postId: number) => void;
-}
+} -->
 
 function Post({
   postId,
@@ -26,13 +29,18 @@ function Post({
   createdAt,
   content,
   like,
-  comment,
   image,
   render,
+  belongToUser,
   showScreenListComment,
-}: PostProps) {
+  listPostForum,
+  setListPostForum,
+  handleDeletePost,
+  handleEditPost,
+}) {
+  const initNumLike = like && like?.length;
+  const [likeCount, setLikeCount] = useState(initNumLike);
   let isAdmin = true;
-  const [likeCount, setLikeCount] = useState(like);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isImageModalVisible, setImageModalVisible] = useState(false);
@@ -46,38 +54,56 @@ function Post({
     setIsShowModalDecline(!isShowModalApprove);
   };
 
-  // image modal
+  const day = convertDateToDay(createdAt);
+  const hour = convertDateToHour(createdAt);
+
   const toggleImageModal = () => {
     setImageModalVisible(!isImageModalVisible);
   };
 
-  // action
-  const toggleLike = () => {
-    if (liked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
+  const toggleLike = async () => {
+    try {
+      const currentUser = await asyncData.getData();
+
+      if (liked) {
+        setLikeCount(likeCount - 1);
+        setLiked(false);
+      } else {
+        setLikeCount(likeCount + 1);
+        setLiked(true);
+      }
+
+      await apis.forum.likePost(postId, currentUser?.id);
+
+      const updatedList = listPostForum.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            likedByUser: !liked,
+          };
+        }
+        return post;
+      });
+      setListPostForum(updatedList);
+    } catch (error) {
+      console.log(error);
     }
-    setLiked(!liked);
   };
 
-  // additional modal
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const handleEdit = () => {
-    toggleModal();
-  };
+  const handleEdit = async () => {};
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    await handleDeletePost(postId);
     toggleModal();
   };
 
   const handleReport = () => {
     toggleModal();
   };
-  //
 
   const toggleApprove = async () => {
     await apis.admin.approvePost(postId);
@@ -97,11 +123,13 @@ function Post({
         <Image style={styles.avatar} source={{uri: avatar}} />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{user}</Text>
-          <Text style={styles.createdAt}>{createdAt}</Text>
+          <Text style={styles.createdAt}>{`${hour} ${day}`}</Text>
         </View>
-        <TouchableOpacity onPress={toggleModal}>
-          <Icon name="ellipsis-h" style={styles.icon} />
-        </TouchableOpacity>
+        {belongToUser && (
+          <TouchableOpacity onPress={toggleModal}>
+            <Icon name="ellipsis-h" style={styles.icon} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View>
@@ -163,6 +191,16 @@ function Post({
           <Text style={styles.approveText}>
             The article is waiting for approval
           </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.actionContainer}
+          onPress={() => showScreenListComment(postId)}>
+          <Icon name="comment" style={styles.icon} />
+          <Text style={styles.actionText}>Comment</Text>
+        </TouchableOpacity>
+        <View style={styles.actionContainer}>
+          <Icon name="share" style={styles.icon} />
+          <Text style={styles.actionText}>Share</Text>
         </View>
       )}
 

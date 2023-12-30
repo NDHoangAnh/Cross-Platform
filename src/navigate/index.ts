@@ -8,4 +8,8 @@ type AdminHomePageProps = {
   navigation: NativeStackNavigationProp<any, 'AdminHomePageStack'>;
 };
 
-export type {ForumProps, AdminHomePageProps};
+type KlassProps = {
+  navigation: NativeStackNavigationProp<any, 'KlassStack'>;
+};
+
+export type {ForumProps, KlassProps, AdminHomePageProps};

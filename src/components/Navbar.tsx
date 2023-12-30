@@ -1,14 +1,14 @@
-import {View, TouchableOpacity, Text} from 'react-native';
+import {View, TouchableOpacity, Text,StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {StyleSheet} from 'react-native';
 type Props = {
   showBackButton?: boolean;
   listAction?: {
     onPress: (e?: any) => void;
     name: string;
   }[];
+  title?: string
 };
-const Navbar = ({showBackButton = true, listAction}: Props) => {
+const Navbar = ({showBackButton = true, listAction, title}: Props) => {
   const navigation = useNavigation();
 
   const handleGoBack = () => {
@@ -22,6 +22,9 @@ const Navbar = ({showBackButton = true, listAction}: Props) => {
           <Text style={styles.backButton}>Back</Text>
         </TouchableOpacity>
       )}
+      <View style={styles.titleScreen}>
+        <Text style={styles.title}>{title}</Text>
+      </View>
       <View style={styles.listAction}>
         {listAction &&
           listAction.map((action, index: number) => {
@@ -45,19 +48,32 @@ const styles = StyleSheet.create({
     padding: 10,
     zIndex: 1,
     width: '100%',
+    position: 'relative',
   },
   backButton: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'white',
   },
   addButton: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'white',
   },
   listAction: {
     display: 'flex',
     gap: 10,
     flexDirection: 'row',
+  },
+  titleScreen: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    color: 'white',
   },
 });
 

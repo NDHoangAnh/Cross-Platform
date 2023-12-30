@@ -12,6 +12,8 @@ import Navbar from '../../components/Navbar';
 import styles from './AddPostScree.style';
 import Modal from 'react-native-modal';
 import {ForumProps} from '../../navigate';
+import asyncData from '../../config/auth';
+import apis from '../../apis';
 
 const AddPostScreen = ({navigation}: ForumProps) => {
   const [content, setContent] = useState('');
@@ -22,14 +24,42 @@ const AddPostScreen = ({navigation}: ForumProps) => {
     setIsShowModalAddPost(!isShowModalAddPost);
   };
 
-  const addPost = () => {
-    navigation.navigate('ForumScreen');
+  const handleAddPost = async () => {
+    try {
+      if (content.trim() !== '') {
+        let data;
+        const user = await asyncData.getData();
+        if (selectedImage !== null) {
+          const result = await apis.cloudinary.uploadImage(selectedImage);
+          console.log(result);
+
+          data = {
+            senderId: user?.id,
+            content,
+            imageUrl: result,
+          };
+        } else {
+          data = {
+            senderId: user?.id,
+            content,
+          };
+        }
+
+        await apis.forum.addPost(data);
+        setContent('');
+        setSelectedImage(null);
+        navigation.navigate('ForumScreen');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const pickImage = () => {
     const options: any = {
       mediaType: 'photo',
       title: 'Select Image',
+      includeBase64: true,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -42,9 +72,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
       } else if (response.errorMessage) {
         console.log('ImagePicker Error:', response.errorMessage);
       } else {
-        // Set the selected image URI
         setSelectedImage(response.assets || null);
-        console.log(response.assets);
       }
     });
   };
@@ -55,7 +83,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
 
   return (
     <ScrollView style={{backgroundColor: 'white'}} stickyHeaderIndices={[0]}>
-      <Navbar listAction={[{onPress: toggleModalAddPost, name:'POST' }]} />
+      <Navbar listAction={[{onPress: toggleModalAddPost, name: 'POST'}]} />
       <View style={styles.container}>
         {/* Header Section */}
         <View style={styles.header}>
@@ -113,7 +141,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
                 <TouchableOpacity onPress={toggleModalAddPost}>
                   <Text style={styles.disagreeAction}>No</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={addPost}>
+                <TouchableOpacity onPress={handleAddPost}>
                   <Text style={styles.agreeAction}>Yes</Text>
                 </TouchableOpacity>
               </View>
