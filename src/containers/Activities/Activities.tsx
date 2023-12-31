@@ -1,25 +1,51 @@
+import {useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './Activities.style';
 import {FAB} from 'react-native-paper';
+import Modal from 'react-native-modal';
 import {convertDateToDay, convertDateToHour} from '../../utils';
 
 function Activities({
   activities,
   handleNavigateToAddScreen,
   handleNavigateToEditScreen,
+  handleDeleteActivity,
 }) {
+  const [showModal, setShowModal] = useState(false);
+  const [activityToHandle, setActivityToHandle] = useState(null);
+
+  const toggleModal = activity => {
+    setActivityToHandle(activity);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setActivityToHandle(null);
+  };
+
+  const handleDelete = async id => {
+    await handleDeleteActivity(id);
+    closeModal();
+  };
+
   return (
     <>
       {activities && activities.length > 0 && (
         <ScrollView contentContainerStyle={styles.container}>
-          {activities.map((act, idx) => (
+          {activities.map(act => (
             <TouchableOpacity
-              onPress={() => handleNavigateToEditScreen(act)}
-              key={idx}
+              key={act.id}
+              onPress={() => toggleModal(act)}
               style={styles.activityItem}>
-              <Text style={[styles.activityText, styles.activityTitle]}>
-                Name: {act.name}
-              </Text>
+              <View style={styles.header}>
+                <Text style={[styles.activityText, styles.activityTitle]}>
+                  Name: {act.name}
+                </Text>
+                <Text style={[styles.activityText, styles.typeText]}>
+                  {act?.type}
+                </Text>
+              </View>
               <Text style={styles.activityText}>Content: {act.content}</Text>
               <Text style={styles.activityText}>
                 Time:{' '}
@@ -47,6 +73,30 @@ function Activities({
         color="#fff"
         onPress={handleNavigateToAddScreen}
       />
+      <Modal
+        hideModalContentWhileAnimating
+        backdropTransitionOutTiming={0}
+        onBackdropPress={closeModal}
+        propagateSwipe={true}
+        isVisible={showModal}>
+        {activityToHandle && (
+          <View style={styles.modalContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                handleNavigateToEditScreen(activityToHandle);
+                closeModal();
+              }}
+              style={styles.editButton}>
+              <Text style={styles.blueText}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleDelete(activityToHandle.id)}
+              style={styles.deleteButton}>
+              <Text style={styles.redText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Modal>
     </>
   );
 }

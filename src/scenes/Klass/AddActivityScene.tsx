@@ -57,7 +57,7 @@ function AddActivityScene({route, navigation}) {
         Toast.show({
           type: 'success',
           text1: 'Success',
-          text2: 'Add activity successfulle',
+          text2: 'Add activity successfully',
         });
         navigation.goBack();
       }

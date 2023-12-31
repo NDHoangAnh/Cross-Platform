@@ -68,6 +68,15 @@ const deleteClass = async id => {
   }
 };
 
+const editClass = async data => {
+  try {
+    const result = await axios.put(`${baseUrl}/class/edit`, data);
+    return result.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   getClassOfStudent,
   getDetailClass,
@@ -75,4 +84,5 @@ export {
   getClassOfTeacher,
   addClass,
   deleteClass,
+  editClass,
 };

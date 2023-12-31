@@ -23,7 +23,6 @@ const VerifyOTP = ({navigation, route}) => {
       otp: code,
     };
     const response = await api.auth.verifyOTP(data);
-    // console.log(response?.data);
     if (response?.data?.errMsg !== undefined) {
       Toast.show({
         type: 'error',

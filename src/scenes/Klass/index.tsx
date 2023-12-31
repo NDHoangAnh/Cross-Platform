@@ -3,6 +3,8 @@ import ListClass from './ListClass';
 import DetailClass from './DetailClass';
 import AddActivityScene from './AddActivityScene';
 import EditActivityScene from './EditActivityScene';
+import AddClassScene from './AddClassScene';
+import EditClassScreen from './EditClassScreen';
 
 const KlassStack = createNativeStackNavigator();
 
@@ -19,6 +21,8 @@ function KlassStackScreen() {
         name="EditActivityScreen"
         component={EditActivityScene}
       />
+      <KlassStack.Screen name="AddClassScene" component={AddClassScene} />
+      <KlassStack.Screen name="EditClassScene" component={EditClassScreen} />
     </KlassStack.Navigator>
   );
 }

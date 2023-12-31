@@ -14,8 +14,6 @@ const getPostOfForum = async () => {
 
 const getPostOfUser = async id => {
   try {
-    console.log(1);
-
     const result = await axios.get(`${baseUrl}/post/getPersonalPost/${id}`);
     return result.data;
   } catch (error) {

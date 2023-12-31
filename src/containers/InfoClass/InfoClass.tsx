@@ -2,7 +2,7 @@ import {Image, ScrollView, View, Text} from 'react-native';
 import {FAB} from 'react-native-paper';
 import styles from './InfoClass.style';
 
-function InfoClass({infoClass}) {
+function InfoClass({infoClass, roleInClass, handleNavigateToEditClassScreen}) {
   const startTime = infoClass
     ? new Date(infoClass.startTime).toLocaleTimeString()
     : '';
@@ -52,19 +52,21 @@ function InfoClass({infoClass}) {
           )}
         </View>
       </ScrollView>
-      <FAB
-        style={{
-          position: 'absolute',
-          margin: 16,
-          right: 5,
-          bottom: 16,
-          backgroundColor: '#3498db',
-          borderRadius: 50,
-        }}
-        icon="pencil"
-        color="#fff"
-        // onPress={toggleModalEnroll}
-      />
+      {roleInClass === 'Teacher' && (
+        <FAB
+          onPress={() => handleNavigateToEditClassScreen(infoClass)}
+          style={{
+            position: 'absolute',
+            margin: 16,
+            right: 5,
+            bottom: 16,
+            backgroundColor: '#3498db',
+            borderRadius: 50,
+          }}
+          icon="pencil"
+          color="#fff"
+        />
+      )}
     </>
   );
 }

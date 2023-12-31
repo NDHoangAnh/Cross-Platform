@@ -36,7 +36,7 @@ type DetailClassData = {
 };
 
 function DetailClass({route, navigation}) {
-  const {classId} = route.params;
+  const {classId, roleInClass} = route.params;
   const [detailClass, setDetailClass] = useState<DetailClassData>();
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
@@ -77,12 +77,25 @@ function DetailClass({route, navigation}) {
     }
   };
 
+  const handleNavigateToEditClassScreen = infoClass => {
+    navigation.navigate('EditClassScene', {infoClass, classId});
+  };
+
   const handleNavigateToAddScreen = () => {
     navigation.navigate('AddActivityScreen', {classId});
   };
 
   const handleNavigateToEditScreen = act => {
     navigation.navigate('EditActivityScreen', {activity: act});
+  };
+
+  const handleDeleteActivity = async id => {
+    try {
+      await apis.activity.deleteActivity(id);
+      return;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const routes = [
@@ -93,13 +106,20 @@ function DetailClass({route, navigation}) {
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'info':
-        return <InfoClass infoClass={detailClass} />;
+        return (
+          <InfoClass
+            handleNavigateToEditClassScreen={handleNavigateToEditClassScreen}
+            infoClass={detailClass}
+            roleInClass={roleInClass}
+          />
+        );
       case 'activities':
         return (
           <Activities
             handleNavigateToAddScreen={handleNavigateToAddScreen}
             handleNavigateToEditScreen={handleNavigateToEditScreen}
             activities={detailClass?.activity ?? []}
+            handleDeleteActivity={handleDeleteActivity}
           />
         );
       default:

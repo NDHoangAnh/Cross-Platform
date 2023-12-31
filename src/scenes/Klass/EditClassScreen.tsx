@@ -11,16 +11,16 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {format, parse} from 'date-fns';
 import Toast from 'react-native-toast-message';
 import apis from '../../apis';
-import asyncData from '../../config/auth';
 import Navbar from '../../components/Navbar';
 import styles from './AddActivityScene.style';
+import {formatDate} from '../../utils';
 
-function AddClassScene({navigation}) {
+function EditClassScreen({navigation, route}) {
+  const {infoClass, classId} = route.params;
   const [loading, setLoading] = useState(false);
-  const [className, setClassName] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [numOfWeek, setNumOfWeek] = useState<String | null>(null);
+  const [className, setClassName] = useState(infoClass?.name);
+  const [startTime, setStartTime] = useState(formatDate(infoClass?.startTime));
+  const [endTime, setEndTime] = useState(formatDate(infoClass?.endTime));
   const [showDateStartPicker, setShowDateStartPicker] = useState(false);
   const [showDateEndPicker, setShowDateEndPicker] = useState(false);
 
@@ -36,14 +36,12 @@ function AddClassScene({navigation}) {
   const handleAddClass = async () => {
     try {
       setLoading(true);
-      const user = await asyncData.getData();
-      const data = await apis.klass.addClass(
-        user?.id,
-        className,
-        parse(startTime, 'HH:mm - dd / MMMM / yyyy', new Date()),
-        parse(endTime, 'HH:mm - dd / MMMM / yyyy', new Date()),
-        numOfWeek
-      );
+      const data = await apis.klass.editClass({
+        classId,
+        name: className,
+        startTime: parse(startTime, 'HH:mm - dd / MMMM / yyyy', new Date()),
+        endTime: parse(endTime, 'HH:mm - dd / MMMM / yyyy', new Date()),
+      });
 
       if (data.errMsg !== undefined) {
         Toast.show({
@@ -59,11 +57,10 @@ function AddClassScene({navigation}) {
         setClassName('');
         setStartTime('');
         setEndTime('');
-        setNumOfWeek(null);
         Toast.show({
           type: 'success',
           text1: 'Success',
-          text2: 'Add class successfully',
+          text2: 'Edit class successfully',
         });
         navigation.goBack();
       }
@@ -86,18 +83,6 @@ function AddClassScene({navigation}) {
               value={className}
               onChangeText={text => setClassName(text)}
               placeholder="Enter name"
-              placeholderTextColor={'gray'}
-            />
-          </View>
-          <View>
-            <TextInput
-              style={styles.input}
-              value={numOfWeek !== null ? String(numOfWeek) : ''}
-              onChangeText={text => {
-                setNumOfWeek(text);
-              }}
-              keyboardType="numeric"
-              placeholder="Enter number of weeks"
               placeholderTextColor={'gray'}
             />
           </View>
@@ -162,4 +147,4 @@ function AddClassScene({navigation}) {
   );
 }
 
-export default AddClassScene;
+export default EditClassScreen;

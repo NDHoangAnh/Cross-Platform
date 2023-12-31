@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   ActivityIndicator,
   ScrollView,
@@ -23,6 +24,7 @@ type ClassData = {
   name: string | null;
   startTime: Date | null;
   endTime: Date | null;
+  roleInClass: string | null;
 };
 
 function ListClass({navigation}: KlassProps) {
@@ -31,9 +33,30 @@ function ListClass({navigation}: KlassProps) {
   const [code, setCode] = useState('');
   const [isShowModalEnrollClass, setIsShowModalEnrollClass] = useState(false);
   const [loadingEnroll, setLoadingEnroll] = useState(false);
-
+  const [roleUser, setRoleUser] = useState<string | null>(null);
   const toggleModalEnroll = () => {
     setIsShowModalEnrollClass(!isShowModalEnrollClass);
+  };
+
+  const handleGetRoleUser = async () => {
+    const user = await asyncData.getData();
+    if (user && user.role !== undefined && user.role !== null) {
+      setRoleUser(user.role);
+    }
+  };
+
+  const handleNavigateToAddScene = () => {
+    navigation.navigate('AddClassScene');
+  };
+
+  const handleDeleteClass = async id => {
+    try {
+      await apis.klass.deleteClass(id);
+      handleGetListClass();
+      return;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleEnrollClass = async () => {
@@ -57,6 +80,7 @@ function ListClass({navigation}: KlassProps) {
           name: data?.name || null,
           startTime: data?.startTime || null,
           endTime: data?.endTime || null,
+          roleInClass: 'User',
         };
         setIsShowModalEnrollClass(false);
         Toast.show({
@@ -75,26 +99,44 @@ function ListClass({navigation}: KlassProps) {
   };
 
   const handleGetListClass = async () => {
+    await handleGetRoleUser();
     try {
       const user = await asyncData.getData();
-      const data = await apis.klass.getClassOfStudent(user?.id);
-      if (data !== null && Array.isArray(data)) {
-        const listClass: ClassData[] = data.map(item => ({
-          id: item?._id,
-          name: item?.name || null,
-          startTime: item?.startTime || null,
-          endTime: item?.endTime || null,
-        }));
-        setListClassData(listClass);
-        setLoading(false);
+      if (user?.role === 'User') {
+        const data = await apis.klass.getClassOfStudent(user?.id);
+        if (data !== null && Array.isArray(data)) {
+          const listClass: ClassData[] = data.map(item => ({
+            id: item?._id,
+            name: item?.name || null,
+            startTime: item?.startTime || null,
+            endTime: item?.endTime || null,
+            roleInClass: 'User',
+          }));
+          setListClassData(listClass);
+          setLoading(false);
+        }
+      }
+      if (user?.role === 'Teacher') {
+        const data = await apis.klass.getClassOfTeacher(user?.id);
+        if (data !== null && Array.isArray(data)) {
+          const listClass: ClassData[] = data.map(item => ({
+            id: item?._id,
+            name: item?.name || null,
+            startTime: item?.startTime || null,
+            endTime: item?.endTime || null,
+            roleInClass: 'Teacher',
+          }));
+          setListClassData(listClass);
+          setLoading(false);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleShowClass = classId => {
-    navigation.navigate('DetailClass', {classId});
+  const handleShowClass = (classId, roleInClass) => {
+    navigation.navigate('DetailClass', {classId, roleInClass});
   };
 
   useFocusEffect(
@@ -119,22 +161,41 @@ function ListClass({navigation}: KlassProps) {
                 startTime={item?.startTime}
                 endTime={item?.endTime}
                 handleShowClass={handleShowClass}
+                roleInClass={item?.roleInClass}
+                handleDeleteClass={handleDeleteClass}
               />
             ))}
           </ScrollView>
-          <FAB
-            style={{
-              position: 'absolute',
-              margin: 16,
-              right: 5,
-              bottom: 16,
-              backgroundColor: '#3498db',
-              borderRadius: 50,
-            }}
-            icon="pencil"
-            color="#fff"
-            onPress={toggleModalEnroll}
-          />
+          {roleUser && roleUser === 'User' && (
+            <FAB
+              style={{
+                position: 'absolute',
+                margin: 16,
+                right: 5,
+                bottom: 16,
+                backgroundColor: '#3498db',
+                borderRadius: 50,
+              }}
+              icon="pencil"
+              color="#fff"
+              onPress={toggleModalEnroll}
+            />
+          )}
+          {roleUser && roleUser === 'Teacher' && (
+            <FAB
+              style={{
+                position: 'absolute',
+                margin: 16,
+                right: 5,
+                bottom: 16,
+                backgroundColor: '#3498db',
+                borderRadius: 50,
+              }}
+              icon="pencil"
+              color="#fff"
+              onPress={handleNavigateToAddScene}
+            />
+          )}
           <Toast />
           {isShowModalEnrollClass && (
             <Modal
