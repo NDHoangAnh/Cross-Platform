@@ -1,7 +1,10 @@
 import React from 'react';
 import {
   Dimensions,
-  StyleSheet,Text,TouchableOpacity,View
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 type parameter = {
@@ -9,16 +12,16 @@ type parameter = {
   note: string | null;
   function: Function;
   changeModalVisible: Function;
-}
+};
 
 const HEIGHT_MODAL = 150;
 const WIDTH_MODAL = Dimensions.get('window').width;
-export default function SimpleModal(props : parameter) : React.JSX.Element {
-
-  console.log(props.title, props.note);
-  const onCloseModal = (bool :boolean,data: boolean) => {
+export default function SimpleModal(props: parameter): React.JSX.Element {
+  const onCloseModal = (bool: boolean, data: boolean) => {
     props.changeModalVisible(bool);
-    if (data) {props.function();}
+    if (data) {
+      props.function();
+    }
   };
 
   return (
@@ -29,10 +32,14 @@ export default function SimpleModal(props : parameter) : React.JSX.Element {
           <Text style={styles.text}>{props.note}</Text>
         </View>
         <View style={styles.buttonsView}>
-          <TouchableOpacity onPress={() => onCloseModal(false,false)} style={styles.touchableOpacity}>
+          <TouchableOpacity
+            onPress={() => onCloseModal(false, false)}
+            style={styles.touchableOpacity}>
             <Text style={styles.textCancel}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onCloseModal(false,true)} style={styles.touchableOpacity}>
+          <TouchableOpacity
+            onPress={() => onCloseModal(false, true)}
+            style={styles.touchableOpacity}>
             <Text style={styles.textOk}>Ok</Text>
           </TouchableOpacity>
         </View>
@@ -42,7 +49,7 @@ export default function SimpleModal(props : parameter) : React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,24 +75,24 @@ const styles = StyleSheet.create({
   },
   text: {
     margin: 5,
-    fontSize:16,
+    fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
   },
   textCancel: {
     margin: 5,
-    fontSize:16,
+    fontSize: 16,
     fontWeight: 'bold',
     color: 'blue',
   },
   textOk: {
     margin: 5,
-    fontSize:16,
+    fontSize: 16,
     fontWeight: 'bold',
     color: 'red',
   },
   touchableOpacity: {
-    flex:1,
+    flex: 1,
     paddingVertical: 10,
     alignItems: 'center',
   },

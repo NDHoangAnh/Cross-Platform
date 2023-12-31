@@ -188,7 +188,11 @@ function Post({
       )}
 
       {/* Modal */}
-      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
+      <Modal
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
+        isVisible={isModalVisible}
+        onBackdropPress={toggleModal}>
         <View style={styles.modalContainer}>
           <TouchableOpacity onPress={handleEdit} style={styles.modalButton}>
             <Text style={styles.buttonText}>Edit</Text>
@@ -203,7 +207,11 @@ function Post({
       </Modal>
 
       {/* Modal image */}
-      <Modal isVisible={isImageModalVisible} onBackdropPress={toggleImageModal}>
+      <Modal
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
+        isVisible={isImageModalVisible}
+        onBackdropPress={toggleImageModal}>
         <View
           style={{
             // flex: 1,

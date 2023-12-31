@@ -131,6 +131,8 @@ const AddPostScreen = ({navigation}: ForumProps) => {
 
         {isShowModalAddPost && (
           <Modal
+            backdropTransitionOutTiming={0}
+            hideModalContentWhileAnimating
             isVisible={isShowModalAddPost}
             onBackdropPress={toggleModalAddPost}>
             <View style={styles.modalContainer}>

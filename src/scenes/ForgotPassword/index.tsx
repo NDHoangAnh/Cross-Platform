@@ -35,7 +35,6 @@ const ForgotPassword = ({navigation}) => {
   const onSubmit = async data => {
     setLoading(true);
     const response = await api.auth.reqChangePassword(data);
-    // console.log(response?.data);
     if (response?.data?.errMsg !== undefined) {
       Toast.show({
         type: 'error',
@@ -57,8 +56,6 @@ const ForgotPassword = ({navigation}) => {
       email: getValues('email'),
       otp: Number(code),
     };
-    console.log(data);
-
     const response = await api.auth.resetPass(data);
     if (response?.data?.errMsg !== undefined) {
       Toast.show({

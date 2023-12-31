@@ -7,6 +7,7 @@ import * as forum from './forum';
 import * as comment from './comment';
 import * as target from './target';
 import * as schedule from './schedule';
+import * as activity from './activity';
 
 export default {
   auth,
@@ -17,5 +18,6 @@ export default {
   target,
   comment,
   schedule,
-  admin
+  admin,
+  activity,
 };

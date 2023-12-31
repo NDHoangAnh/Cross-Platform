@@ -42,12 +42,47 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#888',
   },
-  arrowContainer: {
+  iconContainer: {
     alignItems: 'flex-end',
   },
   arrowIcon: {
     fontSize: 20,
     color: 'gray',
+  },
+  deleteIcon: {
+    fontSize: 30,
+    color: 'red',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    padding: 40,
+    borderRadius: 20,
+  },
+  noButton: {
+    flex: 1,
+    marginRight: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'lightcoral',
+    borderWidth: 1,
+  },
+  yesButton: {
+    flex: 1,
+    marginLeft: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'lightblue',
+    borderWidth: 1,
+  },
+  blueText: {
+    color: 'blue',
+  },
+  redText: {
+    color: 'red',
   },
 });
 
