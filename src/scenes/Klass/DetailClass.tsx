@@ -119,6 +119,7 @@ function DetailClass({route, navigation}) {
             handleNavigateToAddScreen={handleNavigateToAddScreen}
             handleNavigateToEditScreen={handleNavigateToEditScreen}
             activities={detailClass?.activity ?? []}
+            roleInClass={roleInClass}
             handleDeleteActivity={handleDeleteActivity}
           />
         );

@@ -7,6 +7,7 @@ import {convertDateToDay, convertDateToHour} from '../../utils';
 
 function Activities({
   activities,
+  roleInClass,
   handleNavigateToAddScreen,
   handleNavigateToEditScreen,
   handleDeleteActivity,
@@ -31,7 +32,7 @@ function Activities({
 
   return (
     <>
-      {activities && activities.length > 0 && (
+      {activities && activities.length > 0 && roleInClass === 'Teacher' && (
         <ScrollView contentContainerStyle={styles.container}>
           {activities.map(act => (
             <TouchableOpacity
@@ -55,24 +56,48 @@ function Activities({
           ))}
         </ScrollView>
       )}
+
+      {activities && activities.length > 0 && roleInClass === 'User' && (
+        <ScrollView contentContainerStyle={styles.container}>
+          {activities.map(act => (
+            <View key={act.id} style={styles.activityItem}>
+              <View style={styles.header}>
+                <Text style={[styles.activityText, styles.activityTitle]}>
+                  Name: {act.name}
+                </Text>
+                <Text style={[styles.activityText, styles.typeText]}>
+                  {act?.type}
+                </Text>
+              </View>
+              <Text style={styles.activityText}>Content: {act.content}</Text>
+              <Text style={styles.activityText}>
+                Time:{' '}
+                {`${convertDateToHour(act.time)} ${convertDateToDay(act.time)}`}
+              </Text>
+            </View>
+          ))}
+        </ScrollView>
+      )}
       {activities && activities.length === 0 && (
         <View style={styles.noActContainer}>
           <Text style={styles.noActivityText}>No activity</Text>
         </View>
       )}
-      <FAB
-        style={{
-          position: 'absolute',
-          margin: 16,
-          right: 5,
-          bottom: 16,
-          backgroundColor: '#3498db',
-          borderRadius: 50,
-        }}
-        icon="pencil"
-        color="#fff"
-        onPress={handleNavigateToAddScreen}
-      />
+      {roleInClass === 'Teacher' && (
+        <FAB
+          style={{
+            position: 'absolute',
+            margin: 16,
+            right: 5,
+            bottom: 16,
+            backgroundColor: '#3498db',
+            borderRadius: 50,
+          }}
+          icon="pencil"
+          color="#fff"
+          onPress={handleNavigateToAddScreen}
+        />
+      )}
       <Modal
         hideModalContentWhileAnimating
         backdropTransitionOutTiming={0}
