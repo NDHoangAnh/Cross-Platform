@@ -1,20 +1,31 @@
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './Activities.style';
 import {FAB} from 'react-native-paper';
+import {convertDateToDay, convertDateToHour} from '../../utils';
 
-function Activities({activities}) {
+function Activities({
+  activities,
+  handleNavigateToAddScreen,
+  handleNavigateToEditScreen,
+}) {
   return (
     <>
       {activities && activities.length > 0 && (
         <ScrollView contentContainerStyle={styles.container}>
           {activities.map((act, idx) => (
-            <View key={idx} style={styles.activityItem}>
+            <TouchableOpacity
+              onPress={() => handleNavigateToEditScreen(act)}
+              key={idx}
+              style={styles.activityItem}>
               <Text style={[styles.activityText, styles.activityTitle]}>
                 Name: {act.name}
               </Text>
               <Text style={styles.activityText}>Content: {act.content}</Text>
-              <Text style={styles.activityText}>Time: {act.time}</Text>
-            </View>
+              <Text style={styles.activityText}>
+                Time:{' '}
+                {`${convertDateToHour(act.time)} ${convertDateToDay(act.time)}`}
+              </Text>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       )}
@@ -34,7 +45,7 @@ function Activities({activities}) {
         }}
         icon="pencil"
         color="#fff"
-        // onPress={toggleModalEnroll}
+        onPress={handleNavigateToAddScreen}
       />
     </>
   );

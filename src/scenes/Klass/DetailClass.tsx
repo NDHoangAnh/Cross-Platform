@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {useCallback, useState} from 'react';
 import {TabView, TabBar} from 'react-native-tab-view';
+import {useFocusEffect} from '@react-navigation/native';
+import {ActivityIndicator} from 'react-native';
 import InfoClass from '../../containers/InfoClass/InfoClass';
 import Navbar from '../../components/Navbar';
 import Activities from '../../containers/Activities/Activities';
 import apis from '../../apis';
-import {ActivityIndicator} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 
 type StudentData = {
   id: string | null;
@@ -35,10 +35,11 @@ type DetailClassData = {
   code: string | null;
 };
 
-function DetailClass({route}) {
+function DetailClass({route, navigation}) {
   const {classId} = route.params;
   const [detailClass, setDetailClass] = useState<DetailClassData>();
   const [loading, setLoading] = useState(true);
+  const [index, setIndex] = useState(0);
 
   const handleGetDetailClass = async () => {
     try {
@@ -76,7 +77,13 @@ function DetailClass({route}) {
     }
   };
 
-  const [index, setIndex] = useState(0);
+  const handleNavigateToAddScreen = () => {
+    navigation.navigate('AddActivityScreen', {classId});
+  };
+
+  const handleNavigateToEditScreen = act => {
+    navigation.navigate('EditActivityScreen', {activity: act});
+  };
 
   const routes = [
     {key: 'info', title: 'Class Info'},
@@ -88,7 +95,13 @@ function DetailClass({route}) {
       case 'info':
         return <InfoClass infoClass={detailClass} />;
       case 'activities':
-        return <Activities activities={detailClass?.activity ?? []} />;
+        return (
+          <Activities
+            handleNavigateToAddScreen={handleNavigateToAddScreen}
+            handleNavigateToEditScreen={handleNavigateToEditScreen}
+            activities={detailClass?.activity ?? []}
+          />
+        );
       default:
         return null;
     }

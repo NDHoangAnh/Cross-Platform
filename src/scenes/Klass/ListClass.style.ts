@@ -2,10 +2,7 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   modalContainer: {
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: 'white',
-    // alignContent: 'center',
     paddingTop: 30,
     paddingBottom: 20,
   },
@@ -17,7 +14,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   textInput: {
-    // flex: 1,
     backgroundColor: '#f0f0f0',
     color: 'black',
     borderRadius: 8,
@@ -37,7 +33,6 @@ const styles = StyleSheet.create({
     marginTop: 25,
     width: '25%',
     alignItems: 'center',
-    // backgroundColor: 'green',
     paddingBottom: 8,
     paddingTop: 8,
   },
