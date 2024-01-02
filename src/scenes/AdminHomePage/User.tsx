@@ -216,6 +216,7 @@ function User({userId, role, username, render, avatar}: UserProps) {
           </TouchableOpacity>
         </View>
       </Modal>
+      <Toast />
     </View>
   );
 }

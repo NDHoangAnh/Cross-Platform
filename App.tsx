@@ -16,6 +16,8 @@ import Menu from './src/scenes/Menu/Menu';
 import KlassStackScreen from './src/scenes/Klass';
 import LoadingScreen from './src/scenes/Loading';
 import asyncData from './src/config/auth';
+import AdminPostScreen from './src/scenes/AdminHomePage/AdminPostScreen';
+import AdminHomePage from './src/scenes/AdminHomePage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,20 +59,20 @@ export default function App() {
     <NavigationContainer>
       {isLoggedIn ? (
         <Tab.Navigator screenOptions={{headerShown: false}}>
-          <Tab.Screen
-            name="Home"
-            component={
-              role === 'Admin'
-                ? AdminHomePageStackScreen
-                : role === 'User'
-                ? ScheduleStackScreen
-                : KlassStackScreen
-            }
-          />
-          {role && role === 'User' && (
+          {role === 'Teacher' && (
+            <Tab.Screen name="Home" component={KlassStackScreen} />
+          )}
+          {role === 'User' ? (
             <>
+              <Tab.Screen name="Home" component={ScheduleStackScreen} />
               <Tab.Screen name="Target" component={TargetScreen} />
               <Tab.Screen name="Class" component={KlassStackScreen} />
+            </>
+          ) : (
+            <>
+              <Tab.Screen name="Home" component={ScheduleStackScreen} />
+              <Tab.Screen name="User Management" component={AdminHomePage} />
+              <Tab.Screen name="Forum Management" component={AdminPostScreen} />
             </>
           )}
           <Tab.Screen name="Forum" component={ForumStackScreen} />
