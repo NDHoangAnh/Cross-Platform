@@ -14,6 +14,7 @@ type PostData = {
   user: string | null;
   avatar: string | null;
   content: string | null;
+  isApproved: boolean | null;
   like: [string] | null;
   likedByUser: boolean;
   share: number;
@@ -37,6 +38,7 @@ function Forum({navigation}: ForumProps) {
           image: item?.imageUrl || null,
           user: item?.senderId?.username || null,
           avatar: item?.senderId?.avatar || null,
+          isApproved: item?.isApproved,
           like: item?.like || null,
           likedByUser: item?.like?.includes(currentUser?.id) || false,
           share: item?.share || null,
@@ -95,6 +97,7 @@ function Forum({navigation}: ForumProps) {
                 avatar={post?.avatar}
                 createdAt={post?.createdAt}
                 content={post?.content}
+                isApproved={post?.isApproved}
                 like={post?.like}
                 key={index}
                 image={post?.image}

@@ -1,0 +1,55 @@
+import {ScrollView, Text, View} from 'react-native';
+import styles from './HomePage.style';
+import Post from '../../containers/Post/Post';
+import Navbar from '../../components/Navbar';
+import {AdminHomePageProps} from '../../navigate';
+import {useCallback, useEffect, useState} from 'react';
+import apis from '../../apis';
+
+function AdminPostScreen({navigation}: AdminHomePageProps) {
+  const [posts, setPosts] = useState([]);
+  const [isRender, setIsRender] = useState(true);
+
+  const fetchPosts = useCallback(async () => {
+    await apis.admin.getListPost().then(res => {
+      setPosts(res?.data);
+    });
+  }, [setPosts]);
+
+  useEffect(() => {
+    if (isRender) {
+      fetchPosts();
+      setIsRender(false);
+    }
+  }, [isRender, fetchPosts]);
+
+  return (
+    <View style={{flex: 1}}>
+      <Navbar />
+      <ScrollView style={styles.container} stickyHeaderIndices={[]}>
+        {posts.map((post, index) => (
+          <Post
+            postId={post._id}
+            isApproved={post.isApproved}
+            user={post.senderId.username}
+            avatar={post.senderId.avatar}
+            createdAt={post.createdAt}
+            content={post.content}
+            like={post.like}
+            comment={post.comment}
+            key={index}
+            image={post?.image}
+            render={() => setIsRender(true)}
+          />
+        ))}
+        {posts && posts.length === 0 && (
+          <View style={styles.notFoundContainer}>
+            <Text style={styles.notFoundPostText}>No any new post</Text>
+          </View>
+        )}
+      </ScrollView>
+    </View>
+  );
+}
+
+export default AdminPostScreen;

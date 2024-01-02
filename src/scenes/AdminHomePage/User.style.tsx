@@ -5,10 +5,10 @@ const commonStyles = {
 };
 
 const styles = StyleSheet.create({
-  postContainer: {
+  container: {
     backgroundColor: 'white',
     padding: 10,
-    margin: 5,
+    marginBottom: 10,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
@@ -32,43 +32,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     ...commonStyles,
   },
-  createdAt: {
+  role: {
     fontSize: 12,
     ...commonStyles,
-  },
-  content: {
-    fontSize: 14,
-    marginBottom: 10,
-    ...commonStyles,
-  },
-  imagePost: {
-    width: '100%',
-
-    borderRadius: 8,
-    marginBottom: 10,
-    aspectRatio: 135 / 76,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  actionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   icon: {
     fontSize: 20,
     marginRight: 5,
     ...commonStyles,
   },
-  actionText: {
-    fontSize: 14,
-    ...commonStyles,
-  },
-  moreOptionsContainer: {
-    alignSelf: 'flex-end',
+  active: {
+    color: 'green',
   },
   modalContainer: {
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
@@ -88,30 +65,58 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  approveText: {
+  errors: {
+    color: '#FF7F7F',
+    alignSelf: 'baseline',
+    marginLeft: '11%',
+    fontSize: 12,
+  },
+  textbox: {
+    borderRadius: 20,
+    backgroundColor: 'white',
+    padding: 20,
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#87CEFA',
+    padding: 10,
+    borderRadius: 5,
+    width: '30%',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  register: {
+    marginTop: '5%',
+    color: 'gray',
+  },
+  link: {
+    textDecorationLine: 'underline',
+    color: '#87CEFA',
+  },
+  input: {
     color: 'black',
-    fontSize: 14,
-    fontWeight: 'bold',
+    height: 40,
+    width: '80%',
+    margin: 12,
+    borderWidth: 0,
+    padding: 10,
+    marginBottom: '5%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 5,
+    backgroundColor: 'white',
+  },
+  title: {
     textAlign: 'center',
-    width: '100%',
-  },
-  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: '5%',
     color: 'black',
-    fontSize: 15,
-  },
-  modalAction: {
-    display: 'flex',
-    flexDirection: 'row',
-    columnGap: 100,
-    marginTop: 20,
-  },
-  agreeAction: {
-    color: 'blue',
-    fontSize: 15,
-  },
-  disagreeAction: {
-    color: 'red',
-    fontSize: 15,
   },
 });
 

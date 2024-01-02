@@ -1,20 +1,22 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import styles from './Post.style';
-import asyncData from '../../config/auth';
 import apis from '../../apis';
+import asyncData from '../../config/auth';
 import {convertDateToDay, convertDateToHour} from '../../utils';
 
 function Post({
   postId,
+  isApproved,
   user,
   avatar,
   createdAt,
   content,
   like,
   image,
+  render,
   belongToUser,
   showScreenListComment,
   listPostForum,
@@ -24,9 +26,28 @@ function Post({
 }) {
   const initNumLike = like && like?.length;
   const [likeCount, setLikeCount] = useState(initNumLike);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isImageModalVisible, setImageModalVisible] = useState(false);
+  const [isShowModalApprove, setIsShowModalApprove] = useState(false);
+  const [isShowModalDecline, setIsShowModalDecline] = useState(false);
+
+  useEffect(() => {
+    const getData = async () => {
+      const user1 = await asyncData.getData();
+      setIsAdmin(user1?.role === 'Admin');
+    };
+    getData();
+  }, []);
+
+  const toggleModalApprove = () => {
+    setIsShowModalApprove(!isShowModalApprove);
+  };
+
+  const toggleModalDecline = () => {
+    setIsShowModalDecline(!isShowModalDecline);
+  };
 
   const day = convertDateToDay(createdAt);
   const hour = convertDateToHour(createdAt);
@@ -79,10 +100,29 @@ function Post({
     toggleModal();
   };
 
+  const toggleApprove = async () => {
+    await apis.admin.approvePost(postId);
+    setIsShowModalApprove(!isShowModalApprove);
+    render!();
+  };
+
+  const toggleDeclines = async () => {
+    await apis.admin.declinePost(postId);
+    setIsShowModalDecline(!isShowModalApprove);
+    render!();
+  };
+
   return (
     <View style={styles.postContainer}>
       <View style={styles.userInfoContainer}>
-        <Image style={styles.avatar} source={{uri: avatar}} />
+        <Image
+          style={styles.avatar}
+          source={{
+            uri:
+              avatar ||
+              'https://cdn-icons-png.flaticon.com/512/3541/3541871.png',
+          }}
+        />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{user}</Text>
           <Text style={styles.createdAt}>{`${hour} ${day}`}</Text>
@@ -108,27 +148,54 @@ function Post({
         <Text style={styles.content}>{content}</Text>
       </View>
 
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity onPress={toggleLike} style={styles.actionContainer}>
-          <Icon
-            name={liked ? 'thumbs-up' : 'thumbs-o-up'}
-            style={styles.icon}
-          />
-          <Text style={[styles.actionText, liked && {color: 'blue'}]}>
-            {likeCount} Like
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionContainer}
-          onPress={() => showScreenListComment(postId)}>
-          <Icon name="comment" style={styles.icon} />
-          <Text style={styles.actionText}>Comment</Text>
-        </TouchableOpacity>
-        <View style={styles.actionContainer}>
-          <Icon name="share" style={styles.icon} />
-          <Text style={styles.actionText}>Share</Text>
+      {isApproved && (
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity onPress={toggleLike} style={styles.actionContainer}>
+            <Icon
+              name={liked ? 'thumbs-up' : 'thumbs-o-up'}
+              style={styles.icon}
+            />
+            <Text style={[styles.actionText, liked && {color: 'blue'}]}>
+              {likeCount} {liked ? 'Liked' : 'Like'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionContainer}
+            onPress={() => showScreenListComment!(postId)}>
+            <Icon name="comment" style={styles.icon} />
+            <Text style={styles.actionText}>Comment</Text>
+          </TouchableOpacity>
+          <View style={styles.actionContainer}>
+            <Icon name="share" style={styles.icon} />
+            <Text style={styles.actionText}>Share</Text>
+          </View>
         </View>
-      </View>
+      )}
+
+      {!isApproved && isAdmin && (
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity
+            onPress={toggleModalApprove}
+            style={styles.actionContainer}>
+            <Icon name={'check'} style={[styles.icon, {color: 'green'}]} />
+            <Text style={[styles.actionText, {color: 'green'}]}>Approve</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionContainer}
+            onPress={toggleModalDecline}>
+            <Icon name={'close'} style={[styles.icon, {color: 'red'}]} />
+            <Text style={[styles.actionText, {color: 'red'}]}>Declines</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* {!isApproved && !isAdmin && (
+        <View style={styles.actionsContainer}>
+          <Text style={styles.approveText}>
+            The article is waiting for approval
+          </Text>
+        </View>
+      )} */}
 
       {/* Modal */}
       <Modal
@@ -169,6 +236,46 @@ function Post({
           />
         </View>
       </Modal>
+
+      {isShowModalApprove && (
+        <Modal
+          isVisible={isShowModalApprove}
+          onBackdropPress={toggleModalApprove}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>
+              Are you sure to approve this post to forum?
+            </Text>
+            <View style={styles.modalAction}>
+              <TouchableOpacity onPress={toggleModalApprove}>
+                <Text style={styles.disagreeAction}>No</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={toggleApprove}>
+                <Text style={styles.agreeAction}>Yes</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
+
+      {isShowModalDecline && (
+        <Modal
+          isVisible={isShowModalDecline}
+          onBackdropPress={toggleModalDecline}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>
+              Are you sure to decline this post to forum?
+            </Text>
+            <View style={styles.modalAction}>
+              <TouchableOpacity onPress={toggleModalDecline}>
+                <Text style={styles.disagreeAction}>No</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={toggleDeclines}>
+                <Text style={styles.agreeAction}>Yes</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 }

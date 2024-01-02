@@ -2,7 +2,7 @@ import {View, TouchableOpacity, Text,StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 type Props = {
   showBackButton?: boolean;
-  listAction: {
+  listAction?: {
     onPress: (e?: any) => void;
     name: string;
   }[];

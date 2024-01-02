@@ -1,4 +1,5 @@
 import * as auth from './auth';
+import * as admin from './admin';
 import * as cloudinary from './cloudinary';
 import * as user from './user';
 import * as klass from './klass';
@@ -17,5 +18,6 @@ export default {
   target,
   comment,
   schedule,
+  admin,
   activity,
 };
