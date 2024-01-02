@@ -26,7 +26,7 @@ function AdminHomePage({navigation}: AdminHomePageProps) {
 
   return (
     <ScrollView stickyHeaderIndices={[0]}>
-      <Navbar showBackButton={false} />
+      <Navbar />
       {users &&
         users.length > 0 &&
         users.map((user, index) => (
