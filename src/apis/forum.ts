@@ -44,9 +44,9 @@ const deletPost = async id => {
   }
 };
 
-const editPost = async data => {
+const editPost = async (id, data) => {
   try {
-    const result = await axios.put(`${baseUrl}/post/edit`, data);
+    const result = await axios.put(`${baseUrl}/post/update/${id}`, data);
     return result.data;
   } catch (error) {
     console.log(error);

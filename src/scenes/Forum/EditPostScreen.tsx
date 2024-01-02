@@ -11,13 +11,18 @@ import {launchImageLibrary, Asset} from 'react-native-image-picker';
 import Navbar from '../../components/Navbar';
 import styles from './EditPostScreen.style';
 import Modal from 'react-native-modal';
-import {ForumProps} from '../../navigate';
-import asyncData from '../../config/auth';
+// import {ForumProps} from '../../navigate';
+// import asyncData from '../../config/auth';
 import apis from '../../apis';
 
-const EditPostScreen = ({navigation}: ForumProps) => {
-  const [content, setContent] = useState('');
-  const [selectedImage, setSelectedImage] = useState<null | Asset[]>(null);
+const EditPostScreen = ({navigation, route}) => {
+  const {postId, user, avatar, content, image} = route.params;
+  const initialSelectedImage = image ? [{uri: image}] : null;
+
+  const [contentUpdate, setContentUpdate] = useState(content);
+  const [selectedImage, setSelectedImage] = useState<null | Asset[]>(
+    initialSelectedImage
+  );
   const [isShowModalEditPost, setIsShowModalEditPost] = useState(false);
 
   const toggleModalEditPost = () => {
@@ -28,25 +33,21 @@ const EditPostScreen = ({navigation}: ForumProps) => {
     try {
       if (content.trim() !== '') {
         let data;
-        const user = await asyncData.getData();
         if (selectedImage !== null) {
           const result = await apis.cloudinary.uploadImage(selectedImage);
-          console.log(result);
 
           data = {
-            senderId: user?.id,
-            content,
+            content: contentUpdate,
             imageUrl: result,
           };
         } else {
           data = {
-            senderId: user?.id,
-            content,
+            content: contentUpdate,
           };
         }
 
-        await apis.forum.addPost(data);
-        setContent('');
+        await apis.forum.editPost(postId, data);
+        setContentUpdate('');
         setSelectedImage(null);
         navigation.navigate('ForumScreen');
       }
@@ -85,27 +86,24 @@ const EditPostScreen = ({navigation}: ForumProps) => {
     <ScrollView style={{backgroundColor: 'white'}} stickyHeaderIndices={[0]}>
       <Navbar listAction={[{onPress: toggleModalEditPost, name: 'EDIT'}]} />
       <View style={styles.container}>
-        {/* Header Section */}
         <View style={styles.header}>
           <Image
             source={{
-              uri: 'https://avatars.githubusercontent.com/u/74105921?v=4',
+              uri:
+                avatar ||
+                'https://avatars.githubusercontent.com/u/74105921?v=4',
             }}
             style={styles.avatar}
           />
-          <Text style={styles.username}>John Doe</Text>
+          <Text style={styles.username}>{user}</Text>
         </View>
-
-        {/* Content Section */}
         <View style={styles.content}>
           <TextInput
-            // placeholder="What's on your mind?"
-            // placeholderTextColor="gray"
             style={styles.input}
             multiline
             numberOfLines={15}
-            value={content}
-            onChangeText={text => setContent(text)}
+            value={contentUpdate}
+            onChangeText={text => setContentUpdate(text)}
           />
         </View>
 
@@ -122,26 +120,25 @@ const EditPostScreen = ({navigation}: ForumProps) => {
                 source={{uri: selectedImage[0].uri}}
                 style={styles.selectedImage}
               />
-              {/* Delete button */}
               <TouchableOpacity onPress={deleteImage}>
                 <Text style={styles.deleteButton}>Delete Image</Text>
               </TouchableOpacity>
             </View>
           )}
 
-        {isShowModalAddPost && (
+        {isShowModalEditPost && (
           <Modal
-            isVisible={isShowModalAddPost}
-            onBackdropPress={toggleModalAddPost}>
+            isVisible={isShowModalEditPost}
+            onBackdropPress={toggleModalEditPost}>
             <View style={styles.modalContainer}>
               <Text style={styles.modalTitle}>
-                Are you sure to publish this post to forum?
+                Are you sure to edit this post ?
               </Text>
               <View style={styles.modalAction}>
-                <TouchableOpacity onPress={toggleModalAddPost}>
+                <TouchableOpacity onPress={toggleModalEditPost}>
                   <Text style={styles.disagreeAction}>No</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleAddPost}>
+                <TouchableOpacity onPress={handleEditPost}>
                   <Text style={styles.agreeAction}>Yes</Text>
                 </TouchableOpacity>
               </View>

@@ -60,10 +60,14 @@ export default function App() {
           <Tab.Screen
             name="Home"
             component={
-              role === 'Admin' ? AdminHomePageStackScreen : ScheduleStackScreen
+              role === 'Admin'
+                ? AdminHomePageStackScreen
+                : role === 'User'
+                ? ScheduleStackScreen
+                : KlassStackScreen
             }
           />
-          {role && role !== 'Admin' && (
+          {role && role === 'User' && (
             <>
               <Tab.Screen name="Target" component={TargetScreen} />
               <Tab.Screen name="Class" component={KlassStackScreen} />

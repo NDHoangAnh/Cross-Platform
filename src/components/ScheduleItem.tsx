@@ -14,7 +14,7 @@ export default function ScheduleItem({
     } else {
       navigation.navigate('Class', {
         screen: 'DetailClass',
-        params: {classId: item._id},
+        params: {classId: item._id, roleInClass: 'User'},
       });
     }
   };

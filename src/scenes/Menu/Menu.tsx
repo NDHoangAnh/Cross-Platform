@@ -16,7 +16,7 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
 
   return (
     <>
-      {role !== 'Admin' ? (
+      {role === 'User' && (
         <View style={styles.container}>
           <TouchableOpacity style={styles.item} onPress={handleLogout}>
             <Icon name="logout" style={styles.icon} />
@@ -35,7 +35,8 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
             <Text style={styles.textMenu}>Mục tiêu học tập</Text>
           </TouchableOpacity>
         </View>
-      ) : (
+      )}
+      {role === 'Admin' && (
         <View style={styles.container}>
           <TouchableOpacity style={styles.item} onPress={handleLogout}>
             <Icon name="logout" style={styles.icon} />
@@ -48,6 +49,18 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
           <TouchableOpacity style={styles.item}>
             <Icon name="human-edit" style={styles.icon} />
             <Text style={styles.textMenu}>Quản lý người dùng</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {role === 'Teacher' && (
+        <View style={styles.container}>
+          <TouchableOpacity style={styles.item} onPress={handleLogout}>
+            <Icon name="logout" style={styles.icon} />
+            <Text style={styles.textMenu}>Đăng xuất</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item}>
+            <Icon name="book-open-outline" style={styles.icon} />
+            <Text style={styles.textMenu}>Bài viết của bạn</Text>
           </TouchableOpacity>
         </View>
       )}

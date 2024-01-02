@@ -22,9 +22,28 @@ type PostData = {
   belongToUser: boolean | null;
 };
 
+type UserData = {
+  avatar: string | null;
+  username: string | null;
+};
+
 function Forum({navigation}: ForumProps) {
   const [listPostForum, setListPostForum] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [infoUser, setInfoUser] = useState<UserData>();
+
+  const handleGetInfoUser = async () => {
+    try {
+      const user = await asyncData.getData();
+      const userData = await apis.user.getUserData(user?.id);
+      setInfoUser({
+        avatar: userData?.avatar,
+        username: userData?.username,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleGetForumPost = async () => {
     try {
@@ -62,21 +81,28 @@ function Forum({navigation}: ForumProps) {
     }
   };
 
-  const handleEditPost = postId => {
-    navigation.navigate('EditPostScreen');
-  };
-
   const showScreenAddPost = () => {
-    navigation.navigate('AddPostScreen');
+    navigation.navigate('AddPostScreen', {infoUser: infoUser});
   };
 
   const showScreenListComment = postId => {
     navigation.navigate('ListCommentsScreen', {postId});
   };
 
+  // const showScreenEditPost = (postId, user, avatar, content, image) => {
+  //   navigation.navigate('EditPostScreen', {
+  //     postId,
+  //     user,
+  //     avatar,
+  //     content,
+  //     image,
+  //   });
+  // };
+
   useFocusEffect(
     useCallback(() => {
       handleGetForumPost();
+      handleGetInfoUser();
     }, [])
   );
 
@@ -106,7 +132,8 @@ function Forum({navigation}: ForumProps) {
                 setListPostForum={setListPostForum}
                 belongToUser={post?.belongToUser}
                 handleDeletePost={handleDeletePost}
-                handleEditPost={handleEditPost}
+                render={undefined}
+                navigation={navigation}
               />
             ))}
           </ScrollView>

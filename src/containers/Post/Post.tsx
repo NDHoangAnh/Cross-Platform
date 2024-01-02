@@ -8,6 +8,7 @@ import asyncData from '../../config/auth';
 import {convertDateToDay, convertDateToHour} from '../../utils';
 
 function Post({
+  navigation,
   postId,
   isApproved,
   user,
@@ -22,7 +23,6 @@ function Post({
   listPostForum,
   setListPostForum,
   handleDeletePost,
-  handleEditPost,
 }) {
   const initNumLike = like && like?.length;
   const [likeCount, setLikeCount] = useState(initNumLike);
@@ -89,7 +89,16 @@ function Post({
     setModalVisible(!isModalVisible);
   };
 
-  const handleEdit = async () => {};
+  const handleEdit = () => {
+    navigation.navigate('EditPostScreen', {
+      postId,
+      user,
+      avatar,
+      content,
+      image,
+    });
+    toggleModal();
+  };
 
   const handleDelete = async () => {
     await handleDeletePost(postId);

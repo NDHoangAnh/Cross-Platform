@@ -165,6 +165,18 @@ function ListClass({navigation}: KlassProps) {
                 handleDeleteClass={handleDeleteClass}
               />
             ))}
+            {listClassData && listClassData.length === 0 && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: 'black'}}>
+                  You have not enrolled any class
+                </Text>
+              </View>
+            )}
           </ScrollView>
           {roleUser && roleUser === 'User' && (
             <FAB

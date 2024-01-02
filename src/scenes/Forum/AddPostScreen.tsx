@@ -11,11 +11,12 @@ import {launchImageLibrary, Asset} from 'react-native-image-picker';
 import Navbar from '../../components/Navbar';
 import styles from './AddPostScree.style';
 import Modal from 'react-native-modal';
-import {ForumProps} from '../../navigate';
+// import {ForumProps} from '../../navigate';
 import asyncData from '../../config/auth';
 import apis from '../../apis';
 
-const AddPostScreen = ({navigation}: ForumProps) => {
+const AddPostScreen = ({navigation, route}) => {
+  const {infoUser} = route.params;
   const [content, setContent] = useState('');
   const [selectedImage, setSelectedImage] = useState<null | Asset[]>(null);
   const [isShowModalAddPost, setIsShowModalAddPost] = useState(false);
@@ -85,15 +86,20 @@ const AddPostScreen = ({navigation}: ForumProps) => {
     <ScrollView style={{backgroundColor: 'white'}} stickyHeaderIndices={[0]}>
       <Navbar listAction={[{onPress: toggleModalAddPost, name: 'POST'}]} />
       <View style={styles.container}>
-        {/* Header Section */}
         <View style={styles.header}>
-          <Image
-            source={{
-              uri: 'https://avatars.githubusercontent.com/u/74105921?v=4',
-            }}
-            style={styles.avatar}
-          />
-          <Text style={styles.username}>John Doe</Text>
+          {infoUser && (
+            <>
+              <Image
+                source={{
+                  uri:
+                    infoUser?.avatar ||
+                    'https://avatars.githubusercontent.com/u/74105921?v=4',
+                }}
+                style={styles.avatar}
+              />
+              <Text style={styles.username}>{infoUser?.username}</Text>
+            </>
+          )}
         </View>
 
         {/* Content Section */}
