@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderColor: 'gray',
-    borderWidth: 0.2,
+    borderWidth: 0,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,
@@ -55,10 +55,13 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     zIndex: 1,
+    backgroundColor: '#3498db',
+    padding: 10,
+    borderRadius: 5,
   },
   backButtonText: {
     fontSize: 16,
-    color: '#3498db',
+    color: '#ffffff',
   },
 
   avatarContainer: {
@@ -77,11 +80,11 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'contain',
-    width: '105%',
-    height: '105%',
+    width: '120%',
+    height: '120%',
     position: 'absolute',
-    right: -10,
-    top: -10,
+    right: -50,
+    top: -100,
     zIndex: -1,
   },
 });

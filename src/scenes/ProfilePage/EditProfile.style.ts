@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderColor: 'gray',
-    borderWidth: 0.2,
+    borderWidth: 0,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,
@@ -56,10 +56,13 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     zIndex: 1,
+    backgroundColor: '#3498db',
+    padding: 10,
+    borderRadius: 5,
   },
   backButtonText: {
     fontSize: 16,
-    color: '#3498db',
+    color: '#ffffff',
   },
 
   avatarContainer: {
