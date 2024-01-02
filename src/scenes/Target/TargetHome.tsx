@@ -5,6 +5,7 @@ import styles from './index.style'
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {deleteTarget, editTarget, getAllTargets} from "../../apis";
 import {Controller, useForm} from "react-hook-form";
+import {Dialog, Portal} from "react-native-paper";
 type ChildTarget = Omit<TargetType, 'childTarget'>
 type TargetType = {
   name: string
@@ -55,6 +56,36 @@ const dumbData: TargetType[] = [{
     description: 'description 2',
     
   }]
+}, {
+  name: 'trang',
+  target: 9.75,
+  real_point: 6,
+  description: 'trang',
+  childTarget: [{
+    name: 'Thanh-child-1',
+    target: 10,
+    real_point: 6,
+    description: 'description 2',
+
+  },{
+    name: 'Thanh-child-2',
+    target: 10,
+    real_point: 1,
+    description: 'description 2',
+
+  },{
+    name: 'Thanh-child-33333',
+    target: 10,
+    real_point: 2,
+    description: 'description 2',
+
+  }]
+}, {
+  name: 'Thanh-213213212',
+  target: 10,
+  real_point: 5,
+  description: 'description 2132132132',
+  childTarget: []
 }]
 
 type Props = {
@@ -62,10 +93,11 @@ type Props = {
 }
 const TargetHome = ({navigation}: Props) => {
   const [listTarget, setListTarget] = useState<any>([]);
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
   const [currentTarget, setCurrentTarget] = useState<any>();
   const [openModalDetail, setOpenModalDetail] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
-  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+  const { control, handleSubmit, formState: { errors }, reset, setValue, getValues } = useForm({
     defaultValues: {
       name: '',
       description: '',
@@ -87,7 +119,7 @@ const TargetHome = ({navigation}: Props) => {
     setOpenModalEdit(true)
   }
   const handleDelete = async () => {
-    await deleteTarget(currentTarget.id)
+    setIsConfirmDelete(true)
   }
   const handleConfirmEditTarget = async value => {
     await editTarget({...value})
@@ -98,8 +130,15 @@ const TargetHome = ({navigation}: Props) => {
       setListTarget(rs || [])
     })
   }, []);
-  
-  
+
+  useEffect(() => {
+    if (openModalEdit) {
+      setValue("name", currentTarget?.name)
+      setValue("description", currentTarget?.description)
+      setValue("realPoint", currentTarget?.real_point?.toString())
+      setValue("targetPoint", currentTarget?.target?.toString())
+    }
+  }, [openModalEdit]);
   const renderItemTarget = ({item}) => {
     return <TouchableOpacity onPress={() => handleOpenViewDetail(item)} style={styles.itemTarget}>
       <View>
@@ -112,17 +151,16 @@ const TargetHome = ({navigation}: Props) => {
       </View>
     </TouchableOpacity>
   };
-  
-  
+
   const renderChildTarget = ({item}) => {
     return <View style={styles.childTarget}>
       <View>
         <Text style={styles.nameTarget}>{item.name}</Text>
-        <Text>{item.description}</Text>
+        <Text style={{color: 'black'}}>{item.description}</Text>
       </View>
       <View>
-        <Text>Target: <Text style={styles.point}>{item.target}</Text></Text>
-        <Text>Current: <Text style={styles.point}>{item.real_point}</Text></Text>
+        <Text style={{color: 'black'}}>Target: <Text style={styles.point}>{item.target}</Text></Text>
+        <Text style={{color: 'black'}}>Current: <Text style={styles.point}>{item.real_point}</Text></Text>
       </View>
     </View>
   };
@@ -134,6 +172,7 @@ const TargetHome = ({navigation}: Props) => {
         renderItem={renderItemTarget}
       />
     </View>
+
     <Modal
       animationType="slide"
       visible={openModalDetail}
@@ -151,20 +190,20 @@ const TargetHome = ({navigation}: Props) => {
           <Text>X</Text>
         </Pressable>
         <View style={styles.inputContainer}>
-          <View style={styles.formItem}>
-            <Text style={styles.labelField}>Name</Text>
+          <View style={styles.formItemDetail}>
+            <Text style={styles.labelFieldDetail}>Name</Text>
             <Text>{currentTarget?.name}</Text>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.labelField}>Description</Text>
+          <View style={styles.formItemDetail}>
+            <Text style={styles.labelFieldDetail}>Description</Text>
             <Text>{currentTarget?.description}</Text>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.labelField}>Real Point</Text>
+          <View style={styles.formItemDetail}>
+            <Text style={styles.labelFieldDetail}>Real Point</Text>
             <Text>{currentTarget?.real_point}</Text>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.labelField}>Target Point</Text>
+          <View style={styles.formItemDetail}>
+            <Text style={styles.labelFieldDetail}>Target Point</Text>
             <Text>{currentTarget?.target}</Text>
           </View>
           
@@ -188,10 +227,18 @@ const TargetHome = ({navigation}: Props) => {
         </View>
       </View>
     </Modal>
+    
+    
+    
+    
+    
+    
+    
     <Modal
       animationType="slide"
       visible={openModalEdit}
       onRequestClose={() => {
+        reset()
         setOpenModalEdit(false)
       }}>
       <View style={styles.modal}>
@@ -224,9 +271,10 @@ const TargetHome = ({navigation}: Props) => {
                 )}
                 name="name"
               />
-              {errors.name && <Text style={styles.errorText}>This is required.</Text>}
             </View>
           </View>
+          {errors.name && <Text style={styles.errorText}>This is required.</Text>}
+
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Description</Text>
             <View style={{flex: 1}}>
@@ -259,7 +307,6 @@ const TargetHome = ({navigation}: Props) => {
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    placeholder="0"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
@@ -268,10 +315,10 @@ const TargetHome = ({navigation}: Props) => {
                 )}
                 name="realPoint"
               />
-              {errors.realPoint && <Text style={styles.errorText}>This is required.</Text>}
             </View>
-            {errors.realPoint && <Text style={styles.errorText}>This is required.</Text>}
           </View>
+          {errors.realPoint && <Text style={styles.errorText}>This is required.</Text>}
+
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Target Point</Text>
             <View style={{flex: 1}}>
@@ -282,7 +329,6 @@ const TargetHome = ({navigation}: Props) => {
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    placeholder="0"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
@@ -291,9 +337,10 @@ const TargetHome = ({navigation}: Props) => {
                 )}
                 name="targetPoint"
               />
-              {errors.targetPoint && <Text style={styles.errorText}>This is required.</Text>}
             </View>
           </View>
+          {errors.targetPoint && <Text style={styles.errorText}>This is required.</Text>}
+
         </View>
         <Pressable onPress={handleSubmit(handleConfirmEditTarget)} style={[styles.button, styles.buttonSaveChild]}>
           <Text>Save</Text>

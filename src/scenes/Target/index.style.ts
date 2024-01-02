@@ -7,14 +7,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderColor: '#ccc',
     borderWidth: 1,
     color: 'black',
-    borderRadius: 6,
-    marginTop: 8,
-    backgroundColor: 'white'
+    borderRadius: 8,
+    marginTop: 12,
+    backgroundColor: 'white',
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   container: {
     height: '100%',
@@ -55,6 +59,15 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     gap: 8,
+    minHeight: 40
+  },
+  formItemDetail: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    gap: 8,
+    minHeight: 30
   },
   formLabel: {
     minWidth: 80,
@@ -62,6 +75,9 @@ const styles = StyleSheet.create({
   },
   labelField: {
     fontWeight: '600'
+  },
+  labelFieldDetail: {
+    minWidth: 100
   },
   button: {
     alignItems: 'center',
@@ -125,7 +141,8 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    fontWeight: '600'
+    fontWeight: '600',
+    paddingLeft: 90
   }
 });
 
