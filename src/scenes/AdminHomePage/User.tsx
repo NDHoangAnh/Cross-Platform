@@ -11,7 +11,7 @@ interface UserProps {
   userId: number;
   role: string;
   username: string;
-  avatar?: string;
+  avatar: string;
   render: () => void;
 }
 
@@ -31,7 +31,7 @@ function User({userId, role, username, render, avatar}: UserProps) {
       Toast.show({
         type: 'success',
         text1: 'Success',
-        text2: `Changed Role Successfully`,
+        text2: 'Changed Role Successfully',
       });
     } else {
       Toast.show({
@@ -72,7 +72,7 @@ function User({userId, role, username, render, avatar}: UserProps) {
       Toast.show({
         type: 'success',
         text1: 'Success',
-        text2: `Change Password Successfully`,
+        text2: 'Change Password Successfully',
       });
       reset();
     } else {
@@ -84,12 +84,18 @@ function User({userId, role, username, render, avatar}: UserProps) {
     }
     setIsChangePassModal(false);
   };
-  //
 
   return (
     <View style={styles.container}>
       <View style={styles.userInfoContainer}>
-        <Image style={styles.avatar} source={{uri: avatar}} />
+        <Image
+          style={styles.avatar}
+          source={{
+            uri:
+              avatar ||
+              'https://cdn-icons-png.flaticon.com/512/3541/3541871.png',
+          }}
+        />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{username}</Text>
           <Text style={styles.role}>{role}</Text>
@@ -101,6 +107,8 @@ function User({userId, role, username, render, avatar}: UserProps) {
 
       {/* Modal */}
       <Modal
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         isVisible={isModalVisible}
         onBackdropPress={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
@@ -127,6 +135,8 @@ function User({userId, role, username, render, avatar}: UserProps) {
       </Modal>
 
       <Modal
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         isVisible={isChangeRoleModal}
         onBackdropPress={() => setIsChangeRoleModal(false)}>
         <View style={styles.modalContainer}>

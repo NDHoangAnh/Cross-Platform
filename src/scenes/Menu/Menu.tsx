@@ -3,8 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './Menu.style';
 
-function Menu({navigation, setIsLoggedIn}) {
-  const user = 1;
+function Menu({navigation, setIsLoggedIn, role, setRole}) {
   const handleNavigateTarget = () => {
     navigation.navigate('Target', {screen: 'TargetScreen'});
   };
@@ -12,11 +11,12 @@ function Menu({navigation, setIsLoggedIn}) {
   const handleLogout = async () => {
     await AsyncStorage.clear();
     setIsLoggedIn(false);
+    setRole(null);
   };
 
   return (
     <>
-      {user === 1 ? (
+      {role !== 'Admin' ? (
         <View style={styles.container}>
           <TouchableOpacity style={styles.item} onPress={handleLogout}>
             <Icon name="logout" style={styles.icon} />
@@ -48,10 +48,6 @@ function Menu({navigation, setIsLoggedIn}) {
           <TouchableOpacity style={styles.item}>
             <Icon name="human-edit" style={styles.icon} />
             <Text style={styles.textMenu}>Quản lý người dùng</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
-            <Icon name="google-classroom" style={styles.icon} />
-            <Text style={styles.textMenu}>Quản lý lớp học</Text>
           </TouchableOpacity>
         </View>
       )}

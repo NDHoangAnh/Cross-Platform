@@ -22,6 +22,7 @@ function Post({
   listPostForum,
   setListPostForum,
   handleDeletePost,
+  handleEditPost,
 }) {
   const initNumLike = like && like?.length;
   const [likeCount, setLikeCount] = useState(initNumLike);
@@ -43,8 +44,9 @@ function Post({
   const toggleModalApprove = () => {
     setIsShowModalApprove(!isShowModalApprove);
   };
+
   const toggleModalDecline = () => {
-    setIsShowModalDecline(!isShowModalApprove);
+    setIsShowModalDecline(!isShowModalDecline);
   };
 
   const day = convertDateToDay(createdAt);
@@ -113,7 +115,14 @@ function Post({
   return (
     <View style={styles.postContainer}>
       <View style={styles.userInfoContainer}>
-        <Image style={styles.avatar} source={{uri: avatar}} />
+        <Image
+          style={styles.avatar}
+          source={{
+            uri:
+              avatar ||
+              'https://cdn-icons-png.flaticon.com/512/3541/3541871.png',
+          }}
+        />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{user}</Text>
           <Text style={styles.createdAt}>{`${hour} ${day}`}</Text>
@@ -138,6 +147,7 @@ function Post({
         )}
         <Text style={styles.content}>{content}</Text>
       </View>
+
       {isApproved && (
         <View style={styles.actionsContainer}>
           <TouchableOpacity onPress={toggleLike} style={styles.actionContainer}>
@@ -179,13 +189,13 @@ function Post({
         </View>
       )}
 
-      {!isApproved && !isAdmin && (
+      {/* {!isApproved && !isAdmin && (
         <View style={styles.actionsContainer}>
           <Text style={styles.approveText}>
             The article is waiting for approval
           </Text>
         </View>
-      )}
+      )} */}
 
       {/* Modal */}
       <Modal
@@ -226,6 +236,7 @@ function Post({
           />
         </View>
       </Modal>
+
       {isShowModalApprove && (
         <Modal
           isVisible={isShowModalApprove}

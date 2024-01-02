@@ -1,4 +1,4 @@
-import {ScrollView} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import styles from './HomePage.style';
 import Post from '../../containers/Post/Post';
 import Navbar from '../../components/Navbar';
@@ -12,7 +12,6 @@ function AdminPostScreen({navigation}: AdminHomePageProps) {
 
   const fetchPosts = useCallback(async () => {
     await apis.admin.getListPost().then(res => {
-      console.log(res?.data);
       setPosts(res?.data);
     });
   }, [setPosts]);
@@ -25,24 +24,31 @@ function AdminPostScreen({navigation}: AdminHomePageProps) {
   }, [isRender, fetchPosts]);
 
   return (
-    <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+    <View style={{flex: 1}}>
       <Navbar />
-      {posts.map((post, index) => (
-        <Post
-          postId={post._id}
-          isApproved={post.isApproved}
-          user={post.senderName}
-          avatar={post.senderAvatar}
-          createdAt={post.createdAt}
-          content={post.content}
-          like={post.like}
-          comment={post.comment}
-          key={index}
-          image={post?.image}
-          render={() => setIsRender(true)}
-        />
-      ))}
-    </ScrollView>
+      <ScrollView style={styles.container} stickyHeaderIndices={[]}>
+        {posts.map((post, index) => (
+          <Post
+            postId={post._id}
+            isApproved={post.isApproved}
+            user={post.senderId.username}
+            avatar={post.senderId.avatar}
+            createdAt={post.createdAt}
+            content={post.content}
+            like={post.like}
+            comment={post.comment}
+            key={index}
+            image={post?.image}
+            render={() => setIsRender(true)}
+          />
+        ))}
+        {posts && posts.length === 0 && (
+          <View style={styles.notFoundContainer}>
+            <Text style={styles.notFoundPostText}>No any new post</Text>
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
