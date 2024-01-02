@@ -22,6 +22,7 @@ type CommentData = {
   username: string | null;
   avatar: string | null;
   createdAt: Date | null;
+  belongToUser: boolean | null;
 };
 
 function ListComments({route}) {
@@ -33,6 +34,7 @@ function ListComments({route}) {
 
   const handleGetListComments = async () => {
     try {
+      const user = await asyncData.getData();
       const data = await apis.comment.getListCommentOfPost(postId);
       if (data !== null && Array.isArray(data)) {
         const listCommentOfPost: CommentData[] = data.map(item => ({
@@ -41,6 +43,7 @@ function ListComments({route}) {
           username: item?.senderId?.username || null,
           avatar: item?.senderId?.avatar || null,
           createdAt: item?.createdAt || null,
+          belongToUser: item?.senderId?._id === user?.id || null,
         }));
 
         setComments(listCommentOfPost);
@@ -88,7 +91,7 @@ function ListComments({route}) {
         });
         setIdToEdit(null);
         await handleGetListComments();
-        setContent(''); // Reset the content after editing
+        setContent('');
       }
     } catch (error) {
       console.log(error);
@@ -124,6 +127,7 @@ function ListComments({route}) {
                     handleDeleteComment={handleDeleteComment}
                     setContent={setContent}
                     setIdToEdit={setIdToEdit}
+                    belongToUser={cmt.belongToUser}
                   />
                 ))
               ) : (

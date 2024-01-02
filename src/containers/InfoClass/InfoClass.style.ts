@@ -31,8 +31,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  column: {
+  columnTitle: {
     flex: 1,
+  },
+  columnContent: {
+    flex: 2,
   },
   studentItem: {
     flexDirection: 'row',

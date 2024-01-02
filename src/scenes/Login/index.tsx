@@ -17,7 +17,7 @@ import styles from './index.style';
 import api from '../../apis';
 import asyncData from '../../config/auth';
 
-const Login = ({navigation, route, setIsLoggedIn}) => {
+const Login = ({navigation, route, setIsLoggedIn, setRole}) => {
   const [loading, setLoading] = useState(false);
   const {verify} = route.params || 'none';
 
@@ -64,6 +64,7 @@ const Login = ({navigation, route, setIsLoggedIn}) => {
         await AsyncStorage.clear();
         await asyncData.addData(response?.data);
         setIsLoggedIn(true);
+        setRole(response?.data?.role);
       }
     } catch (error) {
       console.error(error);

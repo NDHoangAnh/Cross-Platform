@@ -7,10 +7,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     borderWidth: 0.5,
-    borderColor: '#87CEEB', // border color
-    backgroundColor: '#fff', // background color
+    borderColor: '#87CEEB',
+    backgroundColor: '#fff',
     margin: 5,
-    borderRadius: 10, // border radius
+    borderRadius: 10,
   },
   timeContainer: {
     flexDirection: 'column',
@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: 'gray', // text color
+    color: 'gray',
   },
   timeDivider: {
     fontSize: 12,
     marginVertical: 5,
-    color: 'gray', // text color
+    color: 'gray',
   },
   classInfo: {
     flexDirection: 'column',
@@ -42,12 +42,47 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#888',
   },
-  arrowContainer: {
+  iconContainer: {
     alignItems: 'flex-end',
   },
   arrowIcon: {
     fontSize: 20,
-    color: 'gray', // text color
+    color: 'gray',
+  },
+  deleteIcon: {
+    fontSize: 30,
+    color: 'red',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    padding: 40,
+    borderRadius: 20,
+  },
+  noButton: {
+    flex: 1,
+    marginRight: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'lightcoral',
+    borderWidth: 1,
+  },
+  yesButton: {
+    flex: 1,
+    marginLeft: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'lightblue',
+    borderWidth: 1,
+  },
+  blueText: {
+    color: 'blue',
+  },
+  redText: {
+    color: 'red',
   },
 });
 

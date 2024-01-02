@@ -1,8 +1,9 @@
 import {useState} from 'react';
-import {Image, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
-import {convertDateToDay, convertDateToHour} from '../../utils';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import styles from './Comment.style';
+import {convertDateToDay, convertDateToHour} from '../../utils';
 
 function Comment({
   user,
@@ -10,6 +11,7 @@ function Comment({
   content,
   createdAt,
   idComment,
+  belongToUser,
   handleDeleteComment,
   setContent,
   setIdToEdit,
@@ -43,12 +45,18 @@ function Comment({
           {'\t'} {day}
         </Text>
       </View>
-      <TouchableOpacity onPress={toggleModal}>
-        <Icon name="options" style={{fontSize: 20, color: 'black'}} />
-      </TouchableOpacity>
+      {belongToUser && (
+        <TouchableOpacity onPress={toggleModal}>
+          <Icon name="options" style={{fontSize: 20, color: 'black'}} />
+        </TouchableOpacity>
+      )}
 
       {/* Modal */}
-      <Modal isVisible={isShowModalComment} onBackdropPress={toggleModal}>
+      <Modal
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
+        isVisible={isShowModalComment}
+        onBackdropPress={toggleModal}>
         <View style={styles.modalButtonContainer}>
           <TouchableOpacity onPress={handleEdit} style={styles.editButton}>
             <Text style={[styles.blueText]}>Edit</Text>
@@ -62,67 +70,4 @@ function Comment({
   );
 }
 
-const styles = StyleSheet.create({
-  commentContainer: {
-    flexDirection: 'row',
-    padding: 10,
-    alignItems: 'center',
-    borderWidth: 0.2,
-    borderRadius: 8,
-    margin: 5,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  commentContent: {
-    flex: 1,
-  },
-  userName: {
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: 'black',
-  },
-  commentText: {
-    color: 'black',
-  },
-  createdAt: {
-    marginTop: 10,
-    color: 'gray',
-    fontSize: 10,
-  },
-  modalButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
-    padding: 40,
-    borderRadius: 20,
-  },
-  editButton: {
-    flex: 1,
-    marginRight: 5,
-    borderRadius: 8,
-    alignItems: 'center',
-    padding: 10,
-    borderColor: 'lightblue',
-    borderWidth: 1,
-  },
-  deleteButton: {
-    flex: 1,
-    marginLeft: 5,
-    borderRadius: 8,
-    alignItems: 'center',
-    padding: 10,
-    borderColor: 'lightcoral',
-    borderWidth: 1,
-  },
-  blueText: {
-    color: 'blue',
-  },
-  redText: {
-    color: 'red',
-  },
-});
 export default Comment;

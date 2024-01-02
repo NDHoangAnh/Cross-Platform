@@ -3,8 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './Menu.style';
 
-function Menu({navigation, setIsLoggedIn}) {
-  const user = 1;
+function Menu({navigation, setIsLoggedIn, role, setRole}) {
   const handleNavigateTarget = () => {
     navigation.navigate('Target', {screen: 'TargetScreen'});
   };
@@ -12,11 +11,12 @@ function Menu({navigation, setIsLoggedIn}) {
   const handleLogout = async () => {
     await AsyncStorage.clear();
     setIsLoggedIn(false);
+    setRole(null);
   };
 
   return (
     <>
-      {user === 1 ? (
+      {role === 'User' && (
         <View style={styles.container}>
           <TouchableOpacity style={styles.item} onPress={handleLogout}>
             <Icon name="logout" style={styles.icon} />
@@ -35,7 +35,8 @@ function Menu({navigation, setIsLoggedIn}) {
             <Text style={styles.textMenu}>Mục tiêu học tập</Text>
           </TouchableOpacity>
         </View>
-      ) : (
+      )}
+      {role === 'Admin' && (
         <View style={styles.container}>
           <TouchableOpacity style={styles.item} onPress={handleLogout}>
             <Icon name="logout" style={styles.icon} />
@@ -49,9 +50,17 @@ function Menu({navigation, setIsLoggedIn}) {
             <Icon name="human-edit" style={styles.icon} />
             <Text style={styles.textMenu}>Quản lý người dùng</Text>
           </TouchableOpacity>
+        </View>
+      )}
+      {role === 'Teacher' && (
+        <View style={styles.container}>
+          <TouchableOpacity style={styles.item} onPress={handleLogout}>
+            <Icon name="logout" style={styles.icon} />
+            <Text style={styles.textMenu}>Đăng xuất</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.item}>
-            <Icon name="google-classroom" style={styles.icon} />
-            <Text style={styles.textMenu}>Quản lý lớp học</Text>
+            <Icon name="book-open-outline" style={styles.icon} />
+            <Text style={styles.textMenu}>Bài viết của bạn</Text>
           </TouchableOpacity>
         </View>
       )}

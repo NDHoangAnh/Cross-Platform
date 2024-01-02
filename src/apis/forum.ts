@@ -1,6 +1,7 @@
 import axios from 'axios';
+import {configs} from '../config';
 
-const baseUrl = 'http://192.168.196.89:8089';
+const baseUrl = configs.baseUrl;
 
 const getPostOfForum = async () => {
   try {
@@ -13,8 +14,6 @@ const getPostOfForum = async () => {
 
 const getPostOfUser = async id => {
   try {
-    console.log(1);
-
     const result = await axios.get(`${baseUrl}/post/getPersonalPost/${id}`);
     return result.data;
   } catch (error) {
@@ -45,9 +44,9 @@ const deletPost = async id => {
   }
 };
 
-const editPost = async data => {
+const editPost = async (id, data) => {
   try {
-    const result = await axios.put(`${baseUrl}/post/edit`, {...data});
+    const result = await axios.put(`${baseUrl}/post/update/${id}`, data);
     return result.data;
   } catch (error) {
     console.log(error);

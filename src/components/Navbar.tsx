@@ -1,9 +1,8 @@
-import {View, TouchableOpacity, Text} from 'react-native';
+import {View, TouchableOpacity, Text,StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {StyleSheet} from 'react-native';
 type Props = {
   showBackButton?: boolean;
-  listAction: {
+  listAction?: {
     onPress: (e?: any) => void;
     name: string;
   }[];
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
     padding: 10,
     zIndex: 1,
     width: '100%',
-    position: 'relative'
+    position: 'relative',
   },
   backButton: {
     fontSize: 14,
@@ -71,11 +70,11 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   title: {
-    color: 'white'
-  }
+    color: 'white',
+  },
 });
 
 export default Navbar;

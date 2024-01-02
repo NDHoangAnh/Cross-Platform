@@ -11,9 +11,12 @@ import {launchImageLibrary, Asset} from 'react-native-image-picker';
 import Navbar from '../../components/Navbar';
 import styles from './AddPostScree.style';
 import Modal from 'react-native-modal';
-import {ForumProps} from '../../navigate';
+// import {ForumProps} from '../../navigate';
+import asyncData from '../../config/auth';
+import apis from '../../apis';
 
-const AddPostScreen = ({navigation}: ForumProps) => {
+const AddPostScreen = ({navigation, route}) => {
+  const {infoUser} = route.params;
   const [content, setContent] = useState('');
   const [selectedImage, setSelectedImage] = useState<null | Asset[]>(null);
   const [isShowModalAddPost, setIsShowModalAddPost] = useState(false);
@@ -22,14 +25,42 @@ const AddPostScreen = ({navigation}: ForumProps) => {
     setIsShowModalAddPost(!isShowModalAddPost);
   };
 
-  const addPost = () => {
-    navigation.navigate('ForumScreen');
+  const handleAddPost = async () => {
+    try {
+      if (content.trim() !== '') {
+        let data;
+        const user = await asyncData.getData();
+        if (selectedImage !== null) {
+          const result = await apis.cloudinary.uploadImage(selectedImage);
+          console.log(result);
+
+          data = {
+            senderId: user?.id,
+            content,
+            imageUrl: result,
+          };
+        } else {
+          data = {
+            senderId: user?.id,
+            content,
+          };
+        }
+
+        await apis.forum.addPost(data);
+        setContent('');
+        setSelectedImage(null);
+        navigation.navigate('ForumScreen');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const pickImage = () => {
     const options: any = {
       mediaType: 'photo',
       title: 'Select Image',
+      includeBase64: true,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -42,9 +73,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
       } else if (response.errorMessage) {
         console.log('ImagePicker Error:', response.errorMessage);
       } else {
-        // Set the selected image URI
         setSelectedImage(response.assets || null);
-        console.log(response.assets);
       }
     });
   };
@@ -55,17 +84,22 @@ const AddPostScreen = ({navigation}: ForumProps) => {
 
   return (
     <ScrollView style={{backgroundColor: 'white'}} stickyHeaderIndices={[0]}>
-      <Navbar listAction={[{onPress: toggleModalAddPost, name:'POST' }]} />
+      <Navbar listAction={[{onPress: toggleModalAddPost, name: 'POST'}]} />
       <View style={styles.container}>
-        {/* Header Section */}
         <View style={styles.header}>
-          <Image
-            source={{
-              uri: 'https://avatars.githubusercontent.com/u/74105921?v=4',
-            }}
-            style={styles.avatar}
-          />
-          <Text style={styles.username}>John Doe</Text>
+          {infoUser && (
+            <>
+              <Image
+                source={{
+                  uri:
+                    infoUser?.avatar ||
+                    'https://avatars.githubusercontent.com/u/74105921?v=4',
+                }}
+                style={styles.avatar}
+              />
+              <Text style={styles.username}>{infoUser?.username}</Text>
+            </>
+          )}
         </View>
 
         {/* Content Section */}
@@ -103,6 +137,8 @@ const AddPostScreen = ({navigation}: ForumProps) => {
 
         {isShowModalAddPost && (
           <Modal
+            backdropTransitionOutTiming={0}
+            hideModalContentWhileAnimating
             isVisible={isShowModalAddPost}
             onBackdropPress={toggleModalAddPost}>
             <View style={styles.modalContainer}>
@@ -113,7 +149,7 @@ const AddPostScreen = ({navigation}: ForumProps) => {
                 <TouchableOpacity onPress={toggleModalAddPost}>
                   <Text style={styles.disagreeAction}>No</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={addPost}>
+                <TouchableOpacity onPress={handleAddPost}>
                   <Text style={styles.agreeAction}>Yes</Text>
                 </TouchableOpacity>
               </View>
