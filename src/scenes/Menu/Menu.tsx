@@ -9,11 +9,11 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
   };
 
   const handleNavigateAdminUser = () => {
-    navigation.navigate('AdminUser', {screen: 'AdminUserScreen'});
+    navigation.navigate('User Management', {screen: 'AdminUserScreen'});
   };
 
   const handleNavigateAdminPost = () => {
-    navigation.navigate('Forum', {screen: 'AdminPostScreen'});
+    navigation.navigate('Forum Management', {screen: 'AdminPostScreen'});
   };
 
   const handleLogout = async () => {
