@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     justifyContent: 'center',
+    minHeight: 32
   },
   formLabel: {
     minWidth: 80,
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontWeight: '600',
+    paddingLeft: 90
   },
 });
 

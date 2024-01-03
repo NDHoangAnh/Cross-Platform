@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -91,7 +91,8 @@ const TargetHome = ({navigation}: Props) => {
     control,
     handleSubmit,
     formState: {errors},
-    // reset,
+    reset,
+    setValue
   } = useForm({
     defaultValues: {
       name: '',
@@ -169,6 +170,15 @@ const TargetHome = ({navigation}: Props) => {
       handleGetTargetAllTarget();
     }, [])
   );
+
+  useEffect(() => {
+    if (openModalEdit) {
+      setValue("name", currentTarget?.name)
+      setValue("description", currentTarget?.description)
+      setValue("realPoint", currentTarget?.real_point?.toString())
+      setValue("targetPoint", currentTarget?.target?.toString())
+    }
+  }, [openModalEdit]);
 
   return (
     <>
@@ -295,11 +305,12 @@ const TargetHome = ({navigation}: Props) => {
                       )}
                       name="name"
                     />
-                    {errors.name && (
-                      <Text style={styles.errorText}>This is required.</Text>
-                    )}
+
                   </View>
                 </View>
+                {errors.name && (
+                    <Text style={styles.errorText}>This is required.</Text>
+                )}
                 <View style={styles.formItem}>
                   <Text style={styles.formLabel}>Description</Text>
                   <View style={{flex: 1}}>
@@ -319,11 +330,12 @@ const TargetHome = ({navigation}: Props) => {
                       )}
                       name="description"
                     />
-                    {errors.description && (
-                      <Text style={styles.errorText}>This is required.</Text>
-                    )}
+
                   </View>
                 </View>
+                {errors.description && (
+                    <Text style={styles.errorText}>This is required.</Text>
+                )}
                 <View style={styles.formItem}>
                   <Text style={styles.formLabel}>Real Point</Text>
                   <View style={{flex: 1}}>
@@ -347,10 +359,11 @@ const TargetHome = ({navigation}: Props) => {
                       <Text style={styles.errorText}>This is required.</Text>
                     )}
                   </View>
-                  {errors.realPoint && (
-                    <Text style={styles.errorText}>This is required.</Text>
-                  )}
+
                 </View>
+                {errors.realPoint && (
+                    <Text style={styles.errorText}>This is required.</Text>
+                )}
                 <View style={styles.formItem}>
                   <Text style={styles.formLabel}>Target Point</Text>
                   <View style={{flex: 1}}>
@@ -370,11 +383,12 @@ const TargetHome = ({navigation}: Props) => {
                       )}
                       name="targetPoint"
                     />
-                    {errors.targetPoint && (
-                      <Text style={styles.errorText}>This is required.</Text>
-                    )}
+
                   </View>
                 </View>
+                {errors.targetPoint && (
+                    <Text style={styles.errorText}>This is required.</Text>
+                )}
               </View>
               <Pressable
                 onPress={handleSubmit(handleConfirmEditTarget)}
