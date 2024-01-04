@@ -10,12 +10,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumStackScreen from './src/scenes/Forum/index';
 import ProfileStackScreen from './src/scenes/ProfilePage';
 import TargetScreen from './src/scenes/Target';
-import AdminHomePageStackScreen from './src/scenes/AdminHomePage';
 import ScheduleStackScreen from './src/scenes/Schedule';
 import Menu from './src/scenes/Menu/Menu';
 import KlassStackScreen from './src/scenes/Klass';
 import LoadingScreen from './src/scenes/Loading';
 import asyncData from './src/config/auth';
+import AdminPostScreen from './src/scenes/AdminHomePage/AdminPostScreen';
+import AdminHomePage from './src/scenes/AdminHomePage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,17 +58,17 @@ export default function App() {
     <NavigationContainer>
       {isLoggedIn ? (
         <Tab.Navigator screenOptions={{headerShown: false}}>
-          <Tab.Screen
-            name="Home"
-            component={
-              role === 'Admin'
-                ? AdminHomePageStackScreen
-                : role === 'User'
-                ? ScheduleStackScreen
-                : KlassStackScreen
-            }
-          />
-          {role && role === 'User' && (
+          {role === 'Teacher' ? (
+            <Tab.Screen name="Home" component={KlassStackScreen} />
+          ) : (
+            <Tab.Screen name="Home" component={ScheduleStackScreen} />
+          )}
+          {role === 'Admin' ? (
+            <>
+              <Tab.Screen name="User Management" component={AdminHomePage} />
+              <Tab.Screen name="Forum Management" component={AdminPostScreen} />
+            </>
+          ) : (
             <>
               <Tab.Screen name="Target" component={TargetScreen} />
               <Tab.Screen name="Class" component={KlassStackScreen} />

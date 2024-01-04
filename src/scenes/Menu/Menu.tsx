@@ -8,6 +8,14 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
     navigation.navigate('Target', {screen: 'TargetScreen'});
   };
 
+  const handleNavigateAdminUser = () => {
+    navigation.navigate('User Management', {screen: 'AdminUserScreen'});
+  };
+
+  const handleNavigateAdminPost = () => {
+    navigation.navigate('Forum Management', {screen: 'AdminPostScreen'});
+  };
+
   const handleLogout = async () => {
     await AsyncStorage.clear();
     setIsLoggedIn(false);
@@ -42,11 +50,15 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
             <Icon name="logout" style={styles.icon} />
             <Text style={styles.textMenu}>Đăng xuất</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={handleNavigateAdminPost}>
             <Icon name="forum" style={styles.icon} />
             <Text style={styles.textMenu}>Quản lý diễn đàn</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={handleNavigateAdminUser}>
             <Icon name="human-edit" style={styles.icon} />
             <Text style={styles.textMenu}>Quản lý người dùng</Text>
           </TouchableOpacity>

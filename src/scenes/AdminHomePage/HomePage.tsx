@@ -26,10 +26,7 @@ function AdminHomePage({navigation}: AdminHomePageProps) {
 
   return (
     <ScrollView stickyHeaderIndices={[0]}>
-      <Navbar
-        showBackButton={false}
-        listAction={[{onPress: showScreenApprovePosts, name: 'Posts'}]}
-      />
+      <Navbar />
       {users &&
         users.length > 0 &&
         users.map((user, index) => (
