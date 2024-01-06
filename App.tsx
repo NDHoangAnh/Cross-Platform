@@ -58,17 +58,20 @@ export default function App() {
     <NavigationContainer>
       {isLoggedIn ? (
         <Tab.Navigator screenOptions={{headerShown: false}}>
-          {role === 'Teacher' ? (
-            <Tab.Screen name="Home" component={KlassStackScreen} />
-          ) : (
-            <Tab.Screen name="Home" component={ScheduleStackScreen} />
+          <Tab.Screen
+            name={role === 'Admin' ? 'User Management' : 'Home'}
+            component={
+              role === 'Admin'
+                ? AdminHomePage
+                : role === 'User'
+                ? ScheduleStackScreen
+                : KlassStackScreen
+            }
+          />
+          {role === 'Admin' && (
+            <Tab.Screen name="Forum Management" component={AdminPostScreen} />
           )}
-          {role === 'Admin' ? (
-            <>
-              <Tab.Screen name="User Management" component={AdminHomePage} />
-              <Tab.Screen name="Forum Management" component={AdminPostScreen} />
-            </>
-          ) : (
+          {role && role === 'User' && (
             <>
               <Tab.Screen name="Target" component={TargetScreen} />
               <Tab.Screen name="Class" component={KlassStackScreen} />

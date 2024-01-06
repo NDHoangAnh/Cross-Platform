@@ -140,7 +140,7 @@ const ForgotPassword = ({navigation}) => {
           )}
           <TouchableOpacity onPress={handleGoBack}>
             <Text style={styles.register}>
-              Remember your password?
+              Remember your password?{'\t'}{' '}
               <Text style={styles.link}>Login</Text>
             </Text>
           </TouchableOpacity>

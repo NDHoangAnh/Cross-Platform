@@ -48,6 +48,10 @@ const styles = StyleSheet.create({
   underlineStyleHighLighted: {
     borderColor: '#87CEFA',
   },
+  verifyText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

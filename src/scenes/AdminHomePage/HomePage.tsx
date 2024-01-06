@@ -1,4 +1,4 @@
-import {ScrollView} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useCallback, useEffect, useState} from 'react';
 import Navbar from '../../components/Navbar';
 import {AdminHomePageProps} from '../../navigate';
@@ -9,9 +9,9 @@ function AdminHomePage({navigation}: AdminHomePageProps) {
   const [users, setUsers] = useState([]);
   const [isRender, setIsRender] = useState(true);
 
-  const showScreenApprovePosts = () => {
-    navigation.navigate('HomePagePostScreen');
-  };
+  // const showScreenApprovePosts = () => {
+  //   navigation.navigate('HomePagePostScreen');
+  // };
 
   const fetchUsers = useCallback(async () => {
     await apis.admin.getUser().then(res => setUsers(res?.data));
@@ -25,21 +25,23 @@ function AdminHomePage({navigation}: AdminHomePageProps) {
   }, [isRender, fetchUsers]);
 
   return (
-    <ScrollView stickyHeaderIndices={[0]}>
+    <View style={{flex: 1}}>
       <Navbar />
-      {users &&
-        users.length > 0 &&
-        users.map((user, index) => (
-          <User
-            key={index}
-            userId={user?._id}
-            role={user?.role}
-            username={user?.username}
-            avatar={user?.avatar}
-            render={() => setIsRender(true)}
-          />
-        ))}
-    </ScrollView>
+      <ScrollView stickyHeaderIndices={[]}>
+        {users &&
+          users.length > 0 &&
+          users.map((user, index) => (
+            <User
+              key={index}
+              userId={user?._id}
+              role={user?.role}
+              username={user?.username}
+              avatar={user?.avatar}
+              render={() => setIsRender(true)}
+            />
+          ))}
+      </ScrollView>
+    </View>
   );
 }
 

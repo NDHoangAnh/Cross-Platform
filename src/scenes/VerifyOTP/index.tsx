@@ -42,7 +42,7 @@ const VerifyOTP = ({navigation, route}) => {
       <TouchableOpacity style={styles.button} onPress={handleGoBack}>
         <Text style={styles.buttonText}>&lt; Go back</Text>
       </TouchableOpacity>
-      <Text>Verify your account</Text>
+      <Text style={styles.verifyText}>Verify your account</Text>
       <OTPInputView
         pinCount={4}
         autoFocusOnLoad={false}

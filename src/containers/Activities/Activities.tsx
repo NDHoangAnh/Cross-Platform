@@ -98,13 +98,13 @@ function Activities({
           onPress={handleNavigateToAddScreen}
         />
       )}
-      <Modal
-        hideModalContentWhileAnimating
-        backdropTransitionOutTiming={0}
-        onBackdropPress={closeModal}
-        propagateSwipe={true}
-        isVisible={showModal}>
-        {activityToHandle && (
+      {activityToHandle && (
+        <Modal
+          hideModalContentWhileAnimating
+          backdropTransitionOutTiming={0}
+          onBackdropPress={closeModal}
+          propagateSwipe={true}
+          isVisible={showModal}>
           <View style={styles.modalContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -120,8 +120,8 @@ function Activities({
               <Text style={styles.redText}>Delete</Text>
             </TouchableOpacity>
           </View>
-        )}
-      </Modal>
+        </Modal>
+      )}
     </>
   );
 }
