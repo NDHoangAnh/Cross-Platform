@@ -151,7 +151,7 @@ function ListClass({navigation}: KlassProps) {
         <ActivityIndicator style={{flex: 1}} size="large" color="#0000ff" />
       ) : (
         <View style={{flex: 1}}>
-          <Navbar showBackButton={true} listAction={[]} />
+          <Navbar showBackButton={false} title="List Classes" listAction={[]} />
           <ScrollView style={{flex: 1}}>
             {listClassData.map((item, index) => (
               <Klass

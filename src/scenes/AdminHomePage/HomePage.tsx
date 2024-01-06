@@ -1,9 +1,9 @@
 import {ScrollView, View} from 'react-native';
 import {useCallback, useEffect, useState} from 'react';
+import Toast from 'react-native-toast-message';
 import Navbar from '../../components/Navbar';
 import User from './User';
 import apis from '../../apis';
-import Toast from 'react-native-toast-message';
 
 type UserData = {
   _id: number;
@@ -33,7 +33,7 @@ function AdminHomePage() {
 
   return (
     <View style={{flex: 1}}>
-      <Navbar showBackButton={false} />
+      <Navbar showBackButton={false} title="User Management" />
       <ScrollView stickyHeaderIndices={[]}>
         {users &&
           users.length > 0 &&

@@ -1,13 +1,16 @@
-import {View, TouchableOpacity, Text,StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 type Props = {
   showBackButton?: boolean;
   listAction?: {
     onPress: (e?: any) => void;
     name: string;
   }[];
-  title?: string
+  title?: string;
 };
+
 const Navbar = ({showBackButton = true, listAction, title}: Props) => {
   const navigation = useNavigation();
 
@@ -19,7 +22,8 @@ const Navbar = ({showBackButton = true, listAction, title}: Props) => {
     <View style={styles.navbar}>
       {showBackButton && (
         <TouchableOpacity onPress={handleGoBack}>
-          <Text style={styles.backButton}>Back</Text>
+          {/* <Text style={styles.backButton}>Back</Text> */}
+          <Icon style={styles.backButton} name="arrow-back-sharp" />
         </TouchableOpacity>
       )}
       <View style={styles.titleScreen}>
@@ -49,9 +53,10 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: '100%',
     position: 'relative',
+    minHeight: 30,
   },
   backButton: {
-    fontSize: 14,
+    fontSize: 20,
     color: 'white',
   },
   addButton: {
@@ -74,6 +79,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white',
+    fontSize: 16,
   },
 });
 

@@ -39,37 +39,39 @@ function AdminPostScreen() {
   }, [isRender, fetchPosts]);
 
   return (
-    <View style={{flex: 1}}>
-      <Navbar />
-      <ScrollView style={styles.container} stickyHeaderIndices={[]}>
-        {posts.map((post: PostData, index) => (
-          <Post
-            postId={post._id}
-            isApproved={post.isApproved}
-            user={post.senderId.username}
-            avatar={post.senderId.avatar}
-            createdAt={post.createdAt}
-            content={post.content}
-            like={post.like}
-            likedByUser={undefined}
-            key={index}
-            image={post?.image}
-            render={() => setIsRender(true)}
-            navigation={undefined}
-            belongToUser={undefined}
-            showScreenListComment={undefined}
-            listPostForum={undefined}
-            setListPostForum={undefined}
-            handleDeletePost={undefined}
-          />
-        ))}
-        {posts && posts.length === 0 && (
-          <View style={styles.notFoundContainer}>
-            <Text style={styles.notFoundPostText}>No any new post</Text>
-          </View>
-        )}
-      </ScrollView>
-    </View>
+    <>
+      <View style={{flex: 1}}>
+        <Navbar showBackButton={false} title="Forum Management" />
+        <ScrollView style={styles.container} stickyHeaderIndices={[]}>
+          {posts.map((post: PostData, index) => (
+            <Post
+              postId={post._id}
+              isApproved={post.isApproved}
+              user={post.senderId.username}
+              avatar={post.senderId.avatar}
+              createdAt={post.createdAt}
+              content={post.content}
+              like={post.like}
+              likedByUser={undefined}
+              key={index}
+              image={post?.image}
+              render={() => setIsRender(true)}
+              navigation={undefined}
+              belongToUser={undefined}
+              showScreenListComment={undefined}
+              listPostForum={undefined}
+              setListPostForum={undefined}
+              handleDeletePost={undefined}
+            />
+          ))}
+          {posts && posts.length === 0 && (
+            <View style={styles.notFoundContainer}>
+              <Text style={styles.notFoundPostText}>No any new post</Text>
+            </View>
+          )}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
