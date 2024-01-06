@@ -53,7 +53,7 @@ const Login = ({navigation, route, setIsLoggedIn, setRole}) => {
       setLoading(true);
 
       const response = await api.auth.login(data);
-      console.log(response)
+
       if (response?.data?.errMsg !== undefined) {
         Toast.show({
           type: 'error',

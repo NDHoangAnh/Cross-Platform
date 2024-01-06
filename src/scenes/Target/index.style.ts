@@ -20,10 +20,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: 'white',
   },
-  // container: {
-  //   height: '100%',
-  //   width: '100%',
-  // },
   nameTarget: {
     fontWeight: 'bold',
     color: 'black',
@@ -67,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     justifyContent: 'center',
-    minHeight: 32
+    minHeight: 32,
   },
   formLabel: {
     minWidth: 80,
@@ -131,7 +127,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontWeight: '600',
-    paddingLeft: 90
+    paddingLeft: 90,
   },
 });
 
