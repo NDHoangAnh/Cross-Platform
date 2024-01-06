@@ -125,6 +125,7 @@ function Forum({navigation}: ForumProps) {
                 content={post?.content}
                 isApproved={post?.isApproved}
                 like={post?.like}
+                likedByUser={post?.likedByUser}
                 key={index}
                 image={post?.image}
                 showScreenListComment={showScreenListComment}

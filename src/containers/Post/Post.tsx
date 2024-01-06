@@ -16,6 +16,7 @@ function Post({
   createdAt,
   content,
   like,
+  likedByUser,
   image,
   render,
   belongToUser,
@@ -27,7 +28,7 @@ function Post({
   const initNumLike = like && like?.length;
   const [likeCount, setLikeCount] = useState(initNumLike);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(likedByUser);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isImageModalVisible, setImageModalVisible] = useState(false);
   const [isShowModalApprove, setIsShowModalApprove] = useState(false);

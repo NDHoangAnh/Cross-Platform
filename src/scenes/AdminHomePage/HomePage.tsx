@@ -25,9 +25,9 @@ function AdminHomePage() {
     if (isRender) {
       fetchUsers();
       setIsRender(false);
-      if (message) {
-        Toast.show(message);
-      }
+    }
+    if (message) {
+      Toast.show(message);
     }
   }, [isRender, fetchUsers, message]);
 

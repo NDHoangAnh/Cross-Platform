@@ -51,6 +51,7 @@ function AdminPostScreen() {
             createdAt={post.createdAt}
             content={post.content}
             like={post.like}
+            likedByUser={undefined}
             key={index}
             image={post?.image}
             render={() => setIsRender(true)}
