@@ -246,45 +246,41 @@ function Post({
         </View>
       </Modal>
 
-      {isShowModalApprove && (
-        <Modal
-          isVisible={isShowModalApprove}
-          onBackdropPress={toggleModalApprove}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>
-              Are you sure to approve this post to forum?
-            </Text>
-            <View style={styles.modalAction}>
-              <TouchableOpacity onPress={toggleModalApprove}>
-                <Text style={styles.disagreeAction}>No</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={toggleApprove}>
-                <Text style={styles.agreeAction}>Yes</Text>
-              </TouchableOpacity>
-            </View>
+      <Modal
+        isVisible={isShowModalApprove}
+        onBackdropPress={toggleModalApprove}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>
+            Are you sure to approve this post to forum?
+          </Text>
+          <View style={styles.modalAction}>
+            <TouchableOpacity onPress={toggleModalApprove}>
+              <Text style={styles.disagreeAction}>No</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toggleApprove}>
+              <Text style={styles.agreeAction}>Yes</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
-      )}
+        </View>
+      </Modal>
 
-      {isShowModalDecline && (
-        <Modal
-          isVisible={isShowModalDecline}
-          onBackdropPress={toggleModalDecline}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>
-              Are you sure to decline this post to forum?
-            </Text>
-            <View style={styles.modalAction}>
-              <TouchableOpacity onPress={toggleModalDecline}>
-                <Text style={styles.disagreeAction}>No</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={toggleDeclines}>
-                <Text style={styles.agreeAction}>Yes</Text>
-              </TouchableOpacity>
-            </View>
+      <Modal
+        isVisible={isShowModalDecline}
+        onBackdropPress={toggleModalDecline}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>
+            Are you sure to decline this post to forum?
+          </Text>
+          <View style={styles.modalAction}>
+            <TouchableOpacity onPress={toggleModalDecline}>
+              <Text style={styles.disagreeAction}>No</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toggleDeclines}>
+              <Text style={styles.agreeAction}>Yes</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
-      )}
+        </View>
+      </Modal>
     </View>
   );
 }

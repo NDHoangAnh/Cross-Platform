@@ -118,6 +118,20 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
     color: 'black',
   },
+  modalAction: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 100,
+    marginTop: 20,
+  },
+  agreeAction: {
+    color: 'blue',
+    fontSize: 15,
+  },
+  disagreeAction: {
+    color: 'red',
+    fontSize: 15,
+  },
 });
 
 export default styles;

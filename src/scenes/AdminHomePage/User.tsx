@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import styles from './User.style';
 import api from '../../apis';
-import Toast from 'react-native-toast-message';
 import {useForm, Controller} from 'react-hook-form';
 
 interface UserProps {
@@ -13,11 +12,13 @@ interface UserProps {
   username: string;
   avatar: string;
   render: () => void;
+  setMessage: (a) => void;
 }
 
-function User({userId, role, username, render, avatar}: UserProps) {
+function User({userId, role, username, render, avatar, setMessage}: UserProps) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isChangeRoleModal, setIsChangeRoleModal] = useState(false);
+  const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [isChangePassModal, setIsChangePassModal] = useState(false);
 
   // additional modal
@@ -28,13 +29,13 @@ function User({userId, role, username, render, avatar}: UserProps) {
     });
     if (res?.status === 200) {
       render();
-      Toast.show({
+      setMessage({
         type: 'success',
         text1: 'Success',
         text2: 'Changed Role Successfully',
       });
     } else {
-      Toast.show({
+      setMessage({
         type: 'error',
         text1: 'Error',
         text2: `${res?.data?.errMsg}`,
@@ -58,7 +59,7 @@ function User({userId, role, username, render, avatar}: UserProps) {
 
   const deleteUser = async () => {
     await api.admin.deleteUser(userId);
-    setModalVisible(false);
+    setIsDeleteModal(false);
     render();
   };
 
@@ -69,14 +70,14 @@ function User({userId, role, username, render, avatar}: UserProps) {
     };
     const response = await api.admin.changePassword(params);
     if (response?.status === 200) {
-      Toast.show({
+      setMessage({
         type: 'success',
         text1: 'Success',
         text2: 'Change Password Successfully',
       });
       reset();
     } else {
-      Toast.show({
+      setMessage({
         type: 'error',
         text1: 'Error',
         text2: `${response?.data?.errMsg}`,
@@ -128,7 +129,12 @@ function User({userId, role, username, render, avatar}: UserProps) {
             style={styles.modalButton}>
             <Text style={styles.buttonText}>Change Password</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={deleteUser} style={styles.modalButton}>
+          <TouchableOpacity
+            onPress={() => {
+              setIsDeleteModal(true);
+              setModalVisible(false);
+            }}
+            style={styles.modalButton}>
             <Text style={styles.buttonText}>Delete</Text>
           </TouchableOpacity>
         </View>
@@ -216,7 +222,31 @@ function User({userId, role, username, render, avatar}: UserProps) {
           </TouchableOpacity>
         </View>
       </Modal>
-      <Toast />
+
+      <Modal
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
+        isVisible={isDeleteModal}
+        onBackdropPress={() => setIsChangeRoleModal(false)}>
+        <View style={styles.textbox}>
+          <Text style={styles.title}>Delete User</Text>
+          <Text>Are you sure you want to delete this user?</Text>
+          <View style={styles.modalAction}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsDeleteModal(false);
+              }}>
+              <Text style={styles.disagreeAction}>No</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                deleteUser();
+              }}>
+              <Text style={styles.agreeAction}>Yes</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

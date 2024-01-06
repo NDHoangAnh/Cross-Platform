@@ -2,12 +2,27 @@ import {ScrollView, Text, View} from 'react-native';
 import styles from './HomePage.style';
 import Post from '../../containers/Post/Post';
 import Navbar from '../../components/Navbar';
-import {AdminHomePageProps} from '../../navigate';
 import {useCallback, useEffect, useState} from 'react';
 import apis from '../../apis';
 
-function AdminPostScreen({navigation}: AdminHomePageProps) {
-  const [posts, setPosts] = useState([]);
+type PostData = {
+  _id: string | null;
+  image: string | null;
+  senderId: {
+    username: string;
+    avatar: string;
+  };
+  user: string | null;
+  avatar: string | null;
+  content: string | null;
+  isApproved: boolean | null;
+  like: [string] | null;
+  share: number;
+  createdAt: Date | null;
+};
+
+function AdminPostScreen() {
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [isRender, setIsRender] = useState(true);
 
   const fetchPosts = useCallback(async () => {
@@ -27,7 +42,7 @@ function AdminPostScreen({navigation}: AdminHomePageProps) {
     <View style={{flex: 1}}>
       <Navbar />
       <ScrollView style={styles.container} stickyHeaderIndices={[]}>
-        {posts.map((post, index) => (
+        {posts.map((post: PostData, index) => (
           <Post
             postId={post._id}
             isApproved={post.isApproved}
@@ -36,10 +51,15 @@ function AdminPostScreen({navigation}: AdminHomePageProps) {
             createdAt={post.createdAt}
             content={post.content}
             like={post.like}
-            comment={post.comment}
             key={index}
             image={post?.image}
             render={() => setIsRender(true)}
+            navigation={undefined}
+            belongToUser={undefined}
+            showScreenListComment={undefined}
+            listPostForum={undefined}
+            setListPostForum={undefined}
+            handleDeletePost={undefined}
           />
         ))}
         {posts && posts.length === 0 && (
