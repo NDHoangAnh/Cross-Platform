@@ -68,7 +68,9 @@ export default function EditScreen({navigation}): React.JSX.Element {
       if (!validate) {
         return;
       }
+      console.log('validate success');
       const user = await asyncData.getData();
+
       const body = {
         userId: user?.id,
         name: title,
@@ -84,7 +86,7 @@ export default function EditScreen({navigation}): React.JSX.Element {
           text2: result.errMsg ?? 'Failed to add',
         });
       } else {
-        navigation.navigate('HomeScreen',{item: Math.random()});
+        navigation.navigate('HomeScreen', {item: Math.random()});
         Toast.show({
           type: 'success',
           text1: 'Completed to add',
@@ -123,19 +125,8 @@ export default function EditScreen({navigation}): React.JSX.Element {
     if (startTime && endTime) {
       const start = parse(startTime, 'HH:mm - dd / MMMM / yyyy', new Date());
       const end = parse(endTime, 'HH:mm - dd / MMMM / yyyy', new Date());
-      let endTimeText = '';
       if (start > end) {
-        endTimeText = 'End time is greater than start time';
-      }
-      if (
-        start.getHours() > end.getHours() ||
-        (start.getHours() === end.getHours() &&
-          start.getMinutes() > end.getMinutes())
-      ) {
-        endTimeText = 'End time is greater than start time';
-      }
-      if (endTimeText !== '') {
-        error = {...error, endTime: endTimeText};
+        error = {...error, endTime: 'End time is greater than start time'};
       }
     }
 
