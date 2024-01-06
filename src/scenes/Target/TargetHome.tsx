@@ -130,18 +130,24 @@ const TargetHome = ({navigation}: Props) => {
       console.log(error);
     }
   };
-
   const handleEditTarget = () => {
     setOpenModalDetail(false);
     setOpenModalEdit(true);
   };
 
   const handleDelete = async () => {
-    await apis.target.deleteTarget(currentTarget.id);
+    await apis.target.deleteTarget(currentTarget?.id);
   };
 
   const handleConfirmEditTarget = async value => {
-    await apis.target.editTarget({...value});
+    try {
+      const data =  await apis.target.editTarget({
+        ...value,
+        targetId: currentTarget?.id
+      });
+    } catch (e) {
+      console.log(e)
+    }
   };
 
   const renderItemTarget = ({item}) => {
