@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Modal,
   Pressable,
   ScrollView,
@@ -14,8 +15,10 @@ import {useForm, Controller} from 'react-hook-form';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
 
-type Props = {};
-const CreateTarget = ({}: Props) => {
+type Props = {
+  navigation: any
+};
+const CreateTarget = ({navigation}: Props) => {
   const {
     control,
     handleSubmit,
@@ -31,8 +34,7 @@ const CreateTarget = ({}: Props) => {
     },
   });
 
-  const [realPoint, setRealPoint] = useState<string>('0');
-  const [targetPoint, setTargetPoint] = useState<string>('0');
+  const [loadingButtonSave, setLoadingButtonSave] = useState(false);
   const [openModalCreateChildTarget, setOpenModalCreateChildTarget] =
     useState<boolean>(false);
 
@@ -42,11 +44,16 @@ const CreateTarget = ({}: Props) => {
 
   const onSubmit = async value => {
     const currentUser = await asyncData.getData();
-
-    await apis.target.createTarget({
-      ...value,
+    const {listChild, ...rest} = value
+    setLoadingButtonSave(true)
+    const data = await apis.target.createTarget({
+      ...rest,
       userId: currentUser?.id,
     });
+    if (data) {
+      setLoadingButtonSave(false)
+      navigation.navigate('Target', {screen: 'TargetScreen'});
+    }
     reset();
   };
 
@@ -75,11 +82,11 @@ const CreateTarget = ({}: Props) => {
                 )}
                 name="name"
               />
-              {errors.name && (
-                <Text style={styles.errorText}>This is required.</Text>
-              )}
             </View>
           </View>
+          {errors.name && (
+              <Text style={styles.errorText}>This is required.</Text>
+          )}
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Description</Text>
             <View style={{flex: 1}}>
@@ -99,11 +106,11 @@ const CreateTarget = ({}: Props) => {
                 )}
                 name="description"
               />
-              {errors.description && (
-                <Text style={styles.errorText}>This is required.</Text>
-              )}
             </View>
           </View>
+          {errors.name && (
+              <Text style={styles.errorText}>This is required.</Text>
+          )}
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Real Point</Text>
             <View style={{flex: 1}}>
@@ -123,11 +130,11 @@ const CreateTarget = ({}: Props) => {
                 )}
                 name="realPoint"
               />
-              {errors.realPoint && (
-                <Text style={styles.errorText}>This is required.</Text>
-              )}
             </View>
           </View>
+          {errors.name && (
+              <Text style={styles.errorText}>This is required.</Text>
+          )}
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Target Point</Text>
             <View style={{flex: 1}}>
@@ -147,77 +154,23 @@ const CreateTarget = ({}: Props) => {
                 )}
                 name="targetPoint"
               />
-              {errors.targetPoint && (
-                <Text style={styles.errorText}>This is required.</Text>
-              )}
             </View>
           </View>
+          {errors.name && (
+              <Text style={styles.errorText}>This is required.</Text>
+          )}
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSubmit(onSubmit)}>
-          <Text style={styles.textBtn}>Create</Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+              disabled={loadingButtonSave}
+              style={styles.button}
+              onPress={handleSubmit(onSubmit)}>
+            <Text style={styles.textBtn}>Create</Text>
+          </TouchableOpacity>
+          <ActivityIndicator animating={loadingButtonSave} />
+        </View>
+
       </View>
-      <Modal
-        animationType="slide"
-        visible={openModalCreateChildTarget}
-        onRequestClose={() => {
-          setOpenModalCreateChildTarget(false);
-        }}>
-        <View style={styles.modal}>
-          <View
-            style={{
-              width: '100%',
-              paddingVertical: 15,
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontWeight: 'bold', fontSize: 20}}>
-              Create Child Target
-            </Text>
-          </View>
-          <Pressable
-            style={styles.buttonClose}
-            onPress={() => setOpenModalCreateChildTarget(false)}>
-            <Text>X</Text>
-          </Pressable>
-          <View style={styles.inputContainer}>
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>Name</Text>
-              <TextInput style={styles.input} value={''} placeholder="Name" />
-            </View>
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>Real Point</Text>
-              <TextInput
-                style={styles.input}
-                value={realPoint}
-                placeholder="Real Point"
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>Target Point</Text>
-              <TextInput
-                style={styles.input}
-                value={targetPoint}
-                placeholder="Target Point"
-                keyboardType="numeric"
-              />
-            </View>
-          </View>
-          <Pressable
-            onPress={handleSaveChild}
-            style={[styles.button, styles.buttonSaveChild]}>
-            <Text>Save</Text>
-          </Pressable>
-          {/*<Pressable*/}
-          {/*  style={[styles.button, styles.buttonClose]}*/}
-          {/*  onPress={() => setOpenModalCreateChildTarget(false)}>*/}
-          {/*  <Text>Hide Modal</Text>*/}
-          {/*</Pressable>*/}
-        </View>
-      </Modal>
     </ScrollView>
   );
 };

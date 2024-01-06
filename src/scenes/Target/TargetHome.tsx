@@ -1,4 +1,6 @@
-import {useCallback, useState} from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -25,61 +27,10 @@ type TargetType = {
   description?: string;
 };
 
-// const dumbData: TargetType[] = [
-//   {
-//     name: 'Thanh-1',
-//     target: 10,
-//     real_point: 5,
-//     description: 'description 1',
-//     childTarget: [
-//       {
-//         name: 'Thanh-child-1',
-//         target: 10,
-//         real_point: 6,
-//       },
-//       {
-//         name: 'Thanh-child-2',
-//         target: 10,
-//         real_point: 1,
-//       },
-//       {
-//         name: 'Thanh-child-3',
-//         target: 10,
-//         real_point: 2,
-//       },
-//     ],
-//   },
-//   {
-//     name: 'Thanh-2',
-//     target: 6,
-//     real_point: 1,
-//     description: 'description 2',
-//     childTarget: [
-//       {
-//         name: 'Thanh-child-1',
-//         target: 10,
-//         real_point: 6,
-//         description: 'description 2',
-//       },
-//       {
-//         name: 'Thanh-child-2',
-//         target: 10,
-//         real_point: 1,
-//         description: 'description 2',
-//       },
-//       {
-//         name: 'Thanh-child-3',
-//         target: 10,
-//         real_point: 2,
-//         description: 'description 2',
-//       },
-//     ],
-//   },
-// ];
-
 type Props = {
   navigation: NativeStackNavigationProp<any, 'TargetScreen', undefined>;
 };
+
 const TargetHome = ({navigation}: Props) => {
   const [listTarget, setListTarget] = useState<any>([]);
   const [currentTarget, setCurrentTarget] = useState<any>();
@@ -91,7 +42,8 @@ const TargetHome = ({navigation}: Props) => {
     control,
     handleSubmit,
     formState: {errors},
-    // reset,
+    reset,
+    setValue,
   } = useForm({
     defaultValues: {
       name: '',
@@ -116,7 +68,7 @@ const TargetHome = ({navigation}: Props) => {
       const data = await apis.target.getAllTargets({userId: user?.id});
       if (data !== null && Array.isArray(data)) {
         const listTargetOfUser: TargetType[] = data.map(item => ({
-          id: item?.id,
+          id: item?._id,
           description: item?.description || null,
           name: item?.name || null,
           target: item?.targetPoint || null,
@@ -129,18 +81,28 @@ const TargetHome = ({navigation}: Props) => {
       console.log(error);
     }
   };
-
   const handleEditTarget = () => {
     setOpenModalDetail(false);
     setOpenModalEdit(true);
   };
 
   const handleDelete = async () => {
-    await apis.target.deleteTarget(currentTarget.id);
+    await apis.target.deleteTarget(currentTarget?.id);
+    setOpenModalDetail(false);
+    handleGetTargetAllTarget();
   };
 
   const handleConfirmEditTarget = async value => {
-    await apis.target.editTarget({...value});
+    try {
+      await apis.target.editTarget({
+        ...value,
+        targetId: currentTarget?.id,
+      });
+      setOpenModalEdit(false);
+      handleGetTargetAllTarget();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const renderItemTarget = ({item}) => {
@@ -154,7 +116,11 @@ const TargetHome = ({navigation}: Props) => {
         </View>
         <View>
           <Text style={styles.label}>
-            Target: <Text style={styles.point}>{item.target}</Text>
+            Target:{' '}
+            <Text style={styles.point}>
+              {'  '}
+              {item.target}
+            </Text>
           </Text>
           <Text style={styles.label}>
             Current: <Text style={styles.point}>{item.real_point}</Text>
@@ -169,6 +135,15 @@ const TargetHome = ({navigation}: Props) => {
       handleGetTargetAllTarget();
     }, [])
   );
+
+  useEffect(() => {
+    if (openModalEdit) {
+      setValue('name', currentTarget?.name);
+      setValue('description', currentTarget?.description);
+      setValue('realPoint', currentTarget?.real_point?.toString());
+      setValue('targetPoint', currentTarget?.target?.toString());
+    }
+  }, [openModalEdit]);
 
   return (
     <>
@@ -295,11 +270,11 @@ const TargetHome = ({navigation}: Props) => {
                       )}
                       name="name"
                     />
-                    {errors.name && (
-                      <Text style={styles.errorText}>This is required.</Text>
-                    )}
                   </View>
                 </View>
+                {errors.name && (
+                  <Text style={styles.errorText}>This is required.</Text>
+                )}
                 <View style={styles.formItem}>
                   <Text style={styles.formLabel}>Description</Text>
                   <View style={{flex: 1}}>
@@ -319,11 +294,11 @@ const TargetHome = ({navigation}: Props) => {
                       )}
                       name="description"
                     />
-                    {errors.description && (
-                      <Text style={styles.errorText}>This is required.</Text>
-                    )}
                   </View>
                 </View>
+                {errors.description && (
+                  <Text style={styles.errorText}>This is required.</Text>
+                )}
                 <View style={styles.formItem}>
                   <Text style={styles.formLabel}>Real Point</Text>
                   <View style={{flex: 1}}>
@@ -347,10 +322,10 @@ const TargetHome = ({navigation}: Props) => {
                       <Text style={styles.errorText}>This is required.</Text>
                     )}
                   </View>
-                  {errors.realPoint && (
-                    <Text style={styles.errorText}>This is required.</Text>
-                  )}
                 </View>
+                {errors.realPoint && (
+                  <Text style={styles.errorText}>This is required.</Text>
+                )}
                 <View style={styles.formItem}>
                   <Text style={styles.formLabel}>Target Point</Text>
                   <View style={{flex: 1}}>
@@ -370,11 +345,11 @@ const TargetHome = ({navigation}: Props) => {
                       )}
                       name="targetPoint"
                     />
-                    {errors.targetPoint && (
-                      <Text style={styles.errorText}>This is required.</Text>
-                    )}
                   </View>
                 </View>
+                {errors.targetPoint && (
+                  <Text style={styles.errorText}>This is required.</Text>
+                )}
               </View>
               <Pressable
                 onPress={handleSubmit(handleConfirmEditTarget)}
