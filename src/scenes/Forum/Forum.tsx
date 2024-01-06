@@ -89,16 +89,6 @@ function Forum({navigation}: ForumProps) {
     navigation.navigate('ListCommentsScreen', {postId});
   };
 
-  // const showScreenEditPost = (postId, user, avatar, content, image) => {
-  //   navigation.navigate('EditPostScreen', {
-  //     postId,
-  //     user,
-  //     avatar,
-  //     content,
-  //     image,
-  //   });
-  // };
-
   useFocusEffect(
     useCallback(() => {
       handleGetForumPost();
@@ -125,6 +115,7 @@ function Forum({navigation}: ForumProps) {
                 content={post?.content}
                 isApproved={post?.isApproved}
                 like={post?.like}
+                likedByUser={post?.likedByUser}
                 key={index}
                 image={post?.image}
                 showScreenListComment={showScreenListComment}

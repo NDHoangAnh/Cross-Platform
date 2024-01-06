@@ -93,7 +93,7 @@ const AddPostScreen = ({navigation, route}) => {
                 source={{
                   uri:
                     infoUser?.avatar ||
-                    'https://avatars.githubusercontent.com/u/74105921?v=4',
+                    'https://cdn-icons-png.flaticon.com/512/3541/3541871.png',
                 }}
                 style={styles.avatar}
               />

@@ -16,7 +16,7 @@ import KlassStackScreen from './src/scenes/Klass';
 import LoadingScreen from './src/scenes/Loading';
 import asyncData from './src/config/auth';
 import AdminPostScreen from './src/scenes/AdminHomePage/AdminPostScreen';
-import AdminHomePage from './src/scenes/AdminHomePage';
+import AdminHomePage from './src/scenes/AdminHomePage/HomePage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

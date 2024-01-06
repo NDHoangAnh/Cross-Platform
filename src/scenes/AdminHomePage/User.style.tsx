@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     padding: 10,
-    marginBottom: 10,
+    margin: 5,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
@@ -117,6 +117,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: '5%',
     color: 'black',
+  },
+  modalAction: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 100,
+    marginTop: 20,
+  },
+  agreeAction: {
+    color: 'blue',
+    fontSize: 15,
+  },
+  disagreeAction: {
+    color: 'red',
+    fontSize: 15,
   },
 });
 
