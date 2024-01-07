@@ -18,6 +18,7 @@ import styles from './index.style';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
 import {useFocusEffect} from '@react-navigation/native';
+import Toast from "react-native-toast-message";
 
 type TargetType = {
   id: String;
@@ -87,9 +88,23 @@ const TargetHome = ({navigation}: Props) => {
   };
 
   const handleDelete = async () => {
-    await apis.target.deleteTarget(currentTarget?.id);
-    setOpenModalDetail(false);
-    handleGetTargetAllTarget();
+    try {
+      await apis.target.deleteTarget(currentTarget?.id);
+      setOpenModalDetail(false);
+      handleGetTargetAllTarget();
+      Toast.show({
+        type: 'success',
+        text1: 'Delete target',
+        text2: 'Delete success',
+      });
+    } catch (e) {
+      Toast.show({
+        type: 'error',
+        text1: 'Delete target',
+        text2: 'Delete fail',
+      });
+    }
+
   };
 
   const handleConfirmEditTarget = async value => {
@@ -99,9 +114,18 @@ const TargetHome = ({navigation}: Props) => {
         targetId: currentTarget?.id,
       });
       setOpenModalEdit(false);
+      Toast.show({
+        type: 'success',
+        text1: 'Edit target',
+        text2: 'Edit success',
+      });
       handleGetTargetAllTarget();
     } catch (e) {
-      console.log(e);
+      Toast.show({
+        type: 'error',
+        text1: 'Edit target',
+        text2: 'Edit fail',
+      });
     }
   };
 
@@ -363,6 +387,8 @@ const TargetHome = ({navigation}: Props) => {
           </Modal>
         </View>
       )}
+      <Toast />
+
     </>
   );
 };
