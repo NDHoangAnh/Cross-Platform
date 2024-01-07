@@ -175,7 +175,7 @@ const TargetHome = ({navigation}: Props) => {
                 <Text
                   style={{
                     fontWeight: 'bold',
-                    fontSize: 20,
+                    fontSize: 28,
                     textTransform: 'capitalize',
                     color: 'black',
                   }}>
@@ -217,12 +217,12 @@ const TargetHome = ({navigation}: Props) => {
                 <Pressable
                   onPress={handleEditTarget}
                   style={[styles.button, styles.buttonSaveChild]}>
-                  <Text>Edit</Text>
+                  <Text style={styles.textBtn}>Edit</Text>
                 </Pressable>
                 <Pressable
                   onPress={handleDelete}
-                  style={[styles.button, styles.buttonSaveChild]}>
-                  <Text>Delete</Text>
+                  style={[styles.deleteButton, styles.buttonSaveChild]}>
+                  <Text style={styles.textBtn}>Delete</Text>
                 </Pressable>
               </View>
             </View>
@@ -241,7 +241,8 @@ const TargetHome = ({navigation}: Props) => {
                   display: 'flex',
                   alignItems: 'center',
                 }}>
-                <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                <Text
+                  style={{fontWeight: 'bold', fontSize: 24, color: 'black'}}>
                   Edit Target
                 </Text>
               </View>
@@ -351,11 +352,13 @@ const TargetHome = ({navigation}: Props) => {
                   <Text style={styles.errorText}>This is required.</Text>
                 )}
               </View>
-              <Pressable
-                onPress={handleSubmit(handleConfirmEditTarget)}
-                style={[styles.button, styles.buttonSaveChild]}>
-                <Text>Save</Text>
-              </Pressable>
+              <View style={styles.modalFooter}>
+                <Pressable
+                  onPress={handleSubmit(handleConfirmEditTarget)}
+                  style={[styles.saveButton, styles.buttonSaveChild]}>
+                  <Text style={styles.textBtn}>Save</Text>
+                </Pressable>
+              </View>
             </View>
           </Modal>
         </View>

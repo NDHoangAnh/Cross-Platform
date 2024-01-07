@@ -16,7 +16,7 @@ import apis from '../../apis';
 import asyncData from '../../config/auth';
 
 type Props = {
-  navigation: any
+  navigation: any;
 };
 const CreateTarget = ({navigation}: Props) => {
   const {
@@ -44,14 +44,14 @@ const CreateTarget = ({navigation}: Props) => {
 
   const onSubmit = async value => {
     const currentUser = await asyncData.getData();
-    const {listChild, ...rest} = value
-    setLoadingButtonSave(true)
+    const {listChild, ...rest} = value;
+    setLoadingButtonSave(true);
     const data = await apis.target.createTarget({
       ...rest,
       userId: currentUser?.id,
     });
     if (data) {
-      setLoadingButtonSave(false)
+      setLoadingButtonSave(false);
       navigation.navigate('Target', {screen: 'TargetScreen'});
     }
     reset();
@@ -61,7 +61,9 @@ const CreateTarget = ({navigation}: Props) => {
     <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
       <Navbar listAction={[]} />
       <View style={styles.formCreateTargetContainer}>
-        <Text style={{fontWeight: '600', fontSize: 16}}>Create Target</Text>
+        <Text style={{fontWeight: '600', fontSize: 24, color: 'black'}}>
+          Create Target
+        </Text>
         <View style={styles.inputContainer}>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Name</Text>
@@ -85,7 +87,7 @@ const CreateTarget = ({navigation}: Props) => {
             </View>
           </View>
           {errors.name && (
-              <Text style={styles.errorText}>This is required.</Text>
+            <Text style={styles.errorText}>This is required.</Text>
           )}
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Description</Text>
@@ -109,7 +111,7 @@ const CreateTarget = ({navigation}: Props) => {
             </View>
           </View>
           {errors.name && (
-              <Text style={styles.errorText}>This is required.</Text>
+            <Text style={styles.errorText}>This is required.</Text>
           )}
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Real Point</Text>
@@ -133,7 +135,7 @@ const CreateTarget = ({navigation}: Props) => {
             </View>
           </View>
           {errors.name && (
-              <Text style={styles.errorText}>This is required.</Text>
+            <Text style={styles.errorText}>This is required.</Text>
           )}
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Target Point</Text>
@@ -157,19 +159,18 @@ const CreateTarget = ({navigation}: Props) => {
             </View>
           </View>
           {errors.name && (
-              <Text style={styles.errorText}>This is required.</Text>
+            <Text style={styles.errorText}>This is required.</Text>
           )}
         </View>
         <View>
           <TouchableOpacity
-              disabled={loadingButtonSave}
-              style={styles.button}
-              onPress={handleSubmit(onSubmit)}>
+            disabled={loadingButtonSave}
+            style={styles.button}
+            onPress={handleSubmit(onSubmit)}>
             <Text style={styles.textBtn}>Create</Text>
           </TouchableOpacity>
           <ActivityIndicator animating={loadingButtonSave} />
         </View>
-
       </View>
     </ScrollView>
   );
