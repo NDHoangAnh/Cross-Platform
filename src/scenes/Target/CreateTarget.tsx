@@ -15,10 +15,7 @@ import {useForm, Controller} from 'react-hook-form';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
 
-type Props = {
-  navigation: any;
-};
-const CreateTarget = ({navigation}: Props) => {
+const CreateTarget = ({navigation}) => {
   const {
     control,
     handleSubmit,

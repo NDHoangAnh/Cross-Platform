@@ -11,7 +11,6 @@ import {launchImageLibrary, Asset} from 'react-native-image-picker';
 import Navbar from '../../components/Navbar';
 import styles from './AddPostScree.style';
 import Modal from 'react-native-modal';
-// import {ForumProps} from '../../navigate';
 import asyncData from '../../config/auth';
 import apis from '../../apis';
 
@@ -143,7 +142,8 @@ const AddPostScreen = ({navigation, route}) => {
             onBackdropPress={toggleModalAddPost}>
             <View style={styles.modalContainer}>
               <Text style={styles.modalTitle}>
-                Are you sure to publish this post to forum?
+                Are you sure to publish this post to forum?{'\n'}You will need
+                to wait for admin to approve your post
               </Text>
               <View style={styles.modalAction}>
                 <TouchableOpacity onPress={toggleModalAddPost}>

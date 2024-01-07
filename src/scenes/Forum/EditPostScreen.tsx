@@ -8,11 +8,9 @@ import {
   ScrollView,
 } from 'react-native';
 import {launchImageLibrary, Asset} from 'react-native-image-picker';
+import Modal from 'react-native-modal';
 import Navbar from '../../components/Navbar';
 import styles from './EditPostScreen.style';
-import Modal from 'react-native-modal';
-// import {ForumProps} from '../../navigate';
-// import asyncData from '../../config/auth';
 import apis from '../../apis';
 
 const EditPostScreen = ({navigation, route}) => {
@@ -49,7 +47,7 @@ const EditPostScreen = ({navigation, route}) => {
         await apis.forum.editPost(postId, data);
         setContentUpdate('');
         setSelectedImage(null);
-        navigation.navigate('ForumScreen');
+        navigation.goBack();
       }
     } catch (error) {
       console.log(error);
@@ -91,7 +89,7 @@ const EditPostScreen = ({navigation, route}) => {
             source={{
               uri:
                 avatar ||
-                'https://avatars.githubusercontent.com/u/74105921?v=4',
+                'https://cdn-icons-png.flaticon.com/512/3541/3541871.png',
             }}
             style={styles.avatar}
           />

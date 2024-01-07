@@ -68,6 +68,37 @@ const styles = StyleSheet.create({
   moreOptionsContainer: {
     alignSelf: 'flex-end',
   },
+  modal: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    padding: 40,
+    borderRadius: 20,
+  },
+  editButton: {
+    flex: 1,
+    marginLeft: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'lightblue',
+    borderWidth: 1,
+  },
+  deleteButton: {
+    flex: 1,
+    marginRight: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'lightcoral',
+    borderWidth: 1,
+  },
+  blueText: {
+    color: 'blue',
+  },
+  redText: {
+    color: 'red',
+  },
   modalContainer: {
     justifyContent: 'center',
     alignItems: 'center',

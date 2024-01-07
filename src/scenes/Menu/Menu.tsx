@@ -16,6 +16,14 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
     navigation.navigate('Forum Management', {screen: 'AdminPostScreen'});
   };
 
+  const handleNavigateClass = () => {
+    navigation.navigate('Class', {screen: 'ListClass'});
+  };
+
+  const handleNavigateUserPost = () => {
+    navigation.navigate('My Post');
+  };
+
   const handleLogout = async () => {
     await AsyncStorage.clear();
     setIsLoggedIn(false);
@@ -30,11 +38,13 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
             <Icon name="logout" style={styles.icon} />
             <Text style={styles.textMenu}>Đăng xuất</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity style={styles.item} onPress={handleNavigateClass}>
             <Icon name="google-classroom" style={styles.icon} />
             <Text style={styles.textMenu}>Danh sách lớp học</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={handleNavigateUserPost}>
             <Icon name="book-open-outline" style={styles.icon} />
             <Text style={styles.textMenu}>Bài viết của bạn</Text>
           </TouchableOpacity>
@@ -70,7 +80,9 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
             <Icon name="logout" style={styles.icon} />
             <Text style={styles.textMenu}>Đăng xuất</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={handleNavigateUserPost}>
             <Icon name="book-open-outline" style={styles.icon} />
             <Text style={styles.textMenu}>Bài viết của bạn</Text>
           </TouchableOpacity>

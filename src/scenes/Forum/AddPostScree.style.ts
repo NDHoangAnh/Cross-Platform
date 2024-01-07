@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: 'black',
-    fontSize: 15,
+    fontSize: 14,
+    textAlign: 'center',
   },
   modalAction: {
     display: 'flex',

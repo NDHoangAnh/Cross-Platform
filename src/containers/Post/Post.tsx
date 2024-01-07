@@ -106,10 +106,6 @@ function Post({
     toggleModal();
   };
 
-  const handleReport = () => {
-    toggleModal();
-  };
-
   const toggleApprove = async () => {
     await apis.admin.approvePost(postId);
     setIsShowModalApprove(!isShowModalApprove);
@@ -199,29 +195,18 @@ function Post({
         </View>
       )}
 
-      {/* {!isApproved && !isAdmin && (
-        <View style={styles.actionsContainer}>
-          <Text style={styles.approveText}>
-            The article is waiting for approval
-          </Text>
-        </View>
-      )} */}
-
       {/* Modal */}
       <Modal
         backdropTransitionOutTiming={0}
         hideModalContentWhileAnimating
         isVisible={isModalVisible}
         onBackdropPress={toggleModal}>
-        <View style={styles.modalContainer}>
-          <TouchableOpacity onPress={handleEdit} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Edit</Text>
+        <View style={styles.modal}>
+          <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+            <Text style={styles.redText}>Delete</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleDelete} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleReport} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Report</Text>
+          <TouchableOpacity onPress={handleEdit} style={styles.editButton}>
+            <Text style={styles.blueText}>Edit</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -242,7 +227,7 @@ function Post({
           <Image
             resizeMode="contain"
             source={{uri: image}}
-            style={{width: '100%', height: '70%'}}
+            style={{width: '100%', height: '75%'}}
           />
         </View>
       </Modal>

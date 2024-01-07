@@ -21,6 +21,7 @@ import LoadingScreen from './src/scenes/Loading';
 import asyncData from './src/config/auth';
 import AdminPostScreen from './src/scenes/AdminHomePage/AdminPostScreen';
 import AdminHomePage from './src/scenes/AdminHomePage/HomePage';
+import MyPostScreen from './src/scenes/MyPost/MyPostScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -136,6 +137,19 @@ export default function App() {
             component={ForumStackScreen}
           />
           <Tab.Screen
+            name="My Post"
+            options={{
+              tabBarIcon: ({color = 'black', size}) => (
+                <MaterialCommunityIcons
+                  name="newspaper-variant-outline"
+                  color={color}
+                  size={size}
+                />
+              ),
+            }}
+            component={MyPostScreen}
+          />
+          <Tab.Screen
             name="Profile"
             options={{
               tabBarIcon: ({color = 'black', size}) => (
@@ -155,7 +169,7 @@ export default function App() {
               <Menu
                 setRole={setRole}
                 role={role}
-                {...props}
+                navigation={props.navigation}
                 setIsLoggedIn={setIsLoggedIn}
               />
             )}
