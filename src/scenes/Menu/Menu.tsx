@@ -34,58 +34,70 @@ function Menu({navigation, setIsLoggedIn, role, setRole}) {
     <>
       {role === 'User' && (
         <View style={styles.container}>
-          <TouchableOpacity style={styles.item} onPress={handleLogout}>
-            <Icon name="logout" style={styles.icon} />
-            <Text style={styles.textMenu}>Đăng xuất</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item} onPress={handleNavigateClass}>
-            <Icon name="google-classroom" style={styles.icon} />
-            <Text style={styles.textMenu}>Danh sách lớp học</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.item}
-            onPress={handleNavigateUserPost}>
-            <Icon name="book-open-outline" style={styles.icon} />
-            <Text style={styles.textMenu}>Bài viết của bạn</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item} onPress={handleNavigateTarget}>
-            <Icon name="target" style={styles.icon} />
-            <Text style={styles.textMenu}>Mục tiêu học tập</Text>
-          </TouchableOpacity>
+          <View style={styles.row}>
+            <TouchableOpacity style={styles.item} onPress={handleLogout}>
+              <Icon name="logout" style={styles.icon} />
+              <Text style={styles.textMenu}>Đăng xuất</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.item} onPress={handleNavigateClass}>
+              <Icon name="google-classroom" style={styles.icon} />
+              <Text style={styles.textMenu}>Danh sách lớp học</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={handleNavigateUserPost}>
+              <Icon name="book-open-outline" style={styles.icon} />
+              <Text style={styles.textMenu}>Bài viết của bạn</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={handleNavigateTarget}>
+              <Icon name="target" style={styles.icon} />
+              <Text style={styles.textMenu}>Mục tiêu học tập</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       {role === 'Admin' && (
         <View style={styles.container}>
-          <TouchableOpacity style={styles.item} onPress={handleLogout}>
-            <Icon name="logout" style={styles.icon} />
-            <Text style={styles.textMenu}>Đăng xuất</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.item}
-            onPress={handleNavigateAdminPost}>
-            <Icon name="forum" style={styles.icon} />
-            <Text style={styles.textMenu}>Quản lý diễn đàn</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.item}
-            onPress={handleNavigateAdminUser}>
-            <Icon name="human-edit" style={styles.icon} />
-            <Text style={styles.textMenu}>Quản lý người dùng</Text>
-          </TouchableOpacity>
+          <View style={styles.row}>
+            <TouchableOpacity style={styles.item} onPress={handleLogout}>
+              <Icon name="logout" style={styles.icon} />
+              <Text style={styles.textMenu}>Đăng xuất</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={handleNavigateAdminPost}>
+              <Icon name="forum" style={styles.icon} />
+              <Text style={styles.textMenu}>Quản lý diễn đàn</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={handleNavigateAdminUser}>
+              <Icon name="human-edit" style={styles.icon} />
+              <Text style={styles.textMenu}>Quản lý người dùng</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       {role === 'Teacher' && (
         <View style={styles.container}>
-          <TouchableOpacity style={styles.item} onPress={handleLogout}>
-            <Icon name="logout" style={styles.icon} />
-            <Text style={styles.textMenu}>Đăng xuất</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.item}
-            onPress={handleNavigateUserPost}>
-            <Icon name="book-open-outline" style={styles.icon} />
-            <Text style={styles.textMenu}>Bài viết của bạn</Text>
-          </TouchableOpacity>
+          <View style={styles.row}>
+            <TouchableOpacity style={styles.item} onPress={handleLogout}>
+              <Icon name="logout" style={styles.icon} />
+              <Text style={styles.textMenu}>Đăng xuất</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={handleNavigateUserPost}>
+              <Icon name="book-open-outline" style={styles.icon} />
+              <Text style={styles.textMenu}>Bài viết của bạn</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
     </>
