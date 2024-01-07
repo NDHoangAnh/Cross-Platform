@@ -1,13 +1,18 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    backgroundColor: 'whitesmoke',
+    justifyContent: 'center',
     padding: 10,
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginVertical: 5,
   },
   item: {
     width: '48%',
@@ -16,11 +21,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#87CEEB',
     borderRadius: 20,
-    marginVertical: 5,
+    borderColor: 'white',
+    borderWidth: 1,
     elevation: 4,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.75,
     shadowRadius: 3.84,
   },
   textMenu: {
