@@ -1,12 +1,12 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'whitesmoke',
   },
   itemTarget: {
-    minHeight: 32,
+    minHeight: 40,
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -16,16 +16,26 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 0.2,
     color: 'black',
-    borderRadius: 5,
+    borderRadius: 8,
+    elevation: 4,
     marginTop: 8,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   nameTarget: {
     fontWeight: 'bold',
     color: 'black',
+    fontSize: 20,
   },
   description: {
     color: 'black',
+    fontSize: 14,
   },
   label: {
     color: 'black',
@@ -57,10 +67,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   formItem: {
-    display: 'flex',
-    flexDirection: 'row',
     width: '100%',
-    alignItems: 'center',
     gap: 8,
     justifyContent: 'center',
     minHeight: 32,
@@ -73,19 +80,36 @@ const styles = StyleSheet.create({
   labelField: {
     fontWeight: '600',
     color: 'black',
+    fontSize: 18,
   },
   contentTarget: {
     color: 'black',
+    fontSize: 16,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#87CEEB',
     padding: 10,
     marginTop: 20,
-    width: 80,
+    width: 100,
+  },
+  saveButton: {
+    alignItems: 'center',
+    backgroundColor: '#87CEEB',
+    padding: 10,
+    marginTop: 20,
+    width: 100,
+  },
+  deleteButton: {
+    alignItems: 'center',
+    backgroundColor: '#FF0000',
+    padding: 10,
+    marginTop: 20,
+    width: 100,
   },
   textBtn: {
     color: 'white',
+    fontSize: 16,
   },
   modal: {
     padding: 16,
