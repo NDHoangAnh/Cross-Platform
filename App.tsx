@@ -1,12 +1,16 @@
+/* eslint-disable react/no-unstable-nested-components */
 import {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import {KeyboardAvoidingView, Platform} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import Login from './src/scenes/Login';
 import SignUp from './src/scenes/SignUp';
 import VerifyOTP from './src/scenes/VerifyOTP';
 import ForgotPassword from './src/scenes/ForgotPassword';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumStackScreen from './src/scenes/Forum/index';
 import ProfileStackScreen from './src/scenes/ProfilePage';
 import TargetScreen from './src/scenes/Target';
@@ -67,19 +71,86 @@ export default function App() {
                 ? ScheduleStackScreen
                 : KlassStackScreen
             }
+            options={{
+              tabBarIcon: ({color = 'black', size}) => (
+                <MaterialCommunityIcons name="home" color={color} size={size} />
+              ),
+            }}
           />
           {role === 'Admin' && (
-            <Tab.Screen name="Forum Management" component={AdminPostScreen} />
+            <Tab.Screen
+              name="Forum Management"
+              component={AdminPostScreen}
+              options={{
+                tabBarIcon: ({color = 'black', size}) => (
+                  <MaterialCommunityIcons
+                    name="post"
+                    color={color}
+                    size={size}
+                  />
+                ),
+              }}
+            />
           )}
           {role && role === 'User' && (
             <>
-              <Tab.Screen name="Target" component={TargetScreen} />
-              <Tab.Screen name="Class" component={KlassStackScreen} />
+              <Tab.Screen
+                name="Target"
+                options={{
+                  tabBarIcon: ({color = 'black', size}) => (
+                    <MaterialCommunityIcons
+                      name="target"
+                      color={color}
+                      size={size}
+                    />
+                  ),
+                }}
+                component={TargetScreen}
+              />
+              <Tab.Screen
+                name="Class"
+                options={{
+                  tabBarIcon: ({color = 'black', size}) => (
+                    <MaterialCommunityIcons
+                      name="google-classroom"
+                      color={color}
+                      size={size}
+                    />
+                  ),
+                }}
+                component={KlassStackScreen}
+              />
             </>
           )}
-          <Tab.Screen name="Forum" component={ForumStackScreen} />
-          <Tab.Screen name="Profile" component={ProfileStackScreen} />
-          <Tab.Screen name="Menu">
+          <Tab.Screen
+            name="Forum"
+            options={{
+              tabBarIcon: ({color = 'black', size}) => (
+                <MaterialCommunityIcons
+                  name="forum"
+                  color={color}
+                  size={size}
+                />
+              ),
+            }}
+            component={ForumStackScreen}
+          />
+          <Tab.Screen
+            name="Profile"
+            options={{
+              tabBarIcon: ({color = 'black', size}) => (
+                <AntDesign name="user" color={color} size={size} />
+              ),
+            }}
+            component={ProfileStackScreen}
+          />
+          <Tab.Screen
+            name="Menu"
+            options={{
+              tabBarIcon: ({color = 'black', size}) => (
+                <MaterialCommunityIcons name="menu" color={color} size={size} />
+              ),
+            }}>
             {props => (
               <Menu
                 setRole={setRole}
