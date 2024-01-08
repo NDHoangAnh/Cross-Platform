@@ -36,7 +36,13 @@ function Comment({
 
   return (
     <View style={styles.commentContainer}>
-      <Image source={{uri: avatar}} style={styles.avatar} />
+      <Image
+        source={{
+          uri:
+            avatar || 'https://cdn-icons-png.flaticon.com/512/3541/3541871.png',
+        }}
+        style={styles.avatar}
+      />
       <View style={styles.commentContent}>
         <Text style={styles.userName}>{user}</Text>
         <Text style={styles.commentText}>{content}</Text>

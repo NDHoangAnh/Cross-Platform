@@ -39,6 +39,14 @@ const styles = StyleSheet.create({
   btnEnrollText: {
     color: '#1877f2',
   },
+  noActContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noActivityText: {
+    color: 'black',
+  },
 });
 
 export default styles;

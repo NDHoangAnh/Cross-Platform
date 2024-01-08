@@ -23,10 +23,9 @@ import AdminPostScreen from './src/scenes/AdminHomePage/AdminPostScreen';
 import AdminHomePage from './src/scenes/AdminHomePage/HomePage';
 import MyPostScreen from './src/scenes/MyPost/MyPostScreen';
 
-const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
-
 export default function App() {
+  const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
   const [role, setRole] = useState<String | null>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,7 +92,7 @@ export default function App() {
               }}
             />
           )}
-          {role && role === 'User' && (
+          {role === 'User' && (
             <>
               <Tab.Screen
                 name="Target"

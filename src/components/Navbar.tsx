@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: '100%',
     position: 'relative',
-    minHeight: 30,
+    minHeight: 40,
   },
   backButton: {
     fontSize: 20,

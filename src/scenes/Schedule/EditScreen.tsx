@@ -194,7 +194,9 @@ export default function EditScreen({navigation, route}): React.JSX.Element {
         </View>
         <View style={styles.allDay}>
           <View style={styles.rowDate}>
-            <Text onPress={showStartPicker}>Start Time :</Text>
+            <Text style={styles.textDate} onPress={showStartPicker}>
+              Start Time:{' '}
+            </Text>
             <Text style={styles.textDate} onPress={showStartPicker}>
               {startTime}
             </Text>
@@ -208,7 +210,9 @@ export default function EditScreen({navigation, route}): React.JSX.Element {
             </Text>
           </View>
           <View style={styles.rowDate}>
-            <Text onPress={showEndPicker}>End Time :</Text>
+            <Text style={styles.textDate} onPress={showEndPicker}>
+              End Time:{' '}
+            </Text>
             <Text style={styles.textDate} onPress={showEndPicker}>
               {endTime}
             </Text>
@@ -219,14 +223,14 @@ export default function EditScreen({navigation, route}): React.JSX.Element {
           <DateTimePickerModal
             isVisible={isStartPickerVisible}
             mode="datetime"
-            date={parse(startTime, 'HH:mm - dd,MMMM,yyyy', new Date())}
+            date={parse(startTime, 'HH:mm - dd / MMMM / yyyy', new Date())}
             onConfirm={handleStartConfirm}
             onCancel={hideStartPicker}
           />
           <DateTimePickerModal
             isVisible={isEndPickerVisible}
             mode="datetime"
-            date={parse(endTime, 'HH:mm - dd,MMMM,yyyy', new Date())}
+            date={parse(endTime, 'HH:mm - dd / MMMM / yyyy', new Date())}
             onConfirm={handleEndConfirm}
             onCancel={hideEndPicker}
           />

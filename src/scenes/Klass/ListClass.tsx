@@ -152,32 +152,29 @@ function ListClass({navigation}: KlassProps) {
       ) : (
         <View style={{flex: 1}}>
           <Navbar showBackButton={false} title="List Classes" listAction={[]} />
-          <ScrollView style={{flex: 1}}>
-            {listClassData.map((item, index) => (
-              <Klass
-                key={index}
-                name={item?.name}
-                classId={item?.id}
-                startTime={item?.startTime}
-                endTime={item?.endTime}
-                handleShowClass={handleShowClass}
-                roleInClass={item?.roleInClass}
-                handleDeleteClass={handleDeleteClass}
-              />
-            ))}
-            {listClassData && listClassData.length === 0 && (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: 'black'}}>
-                  You have not enrolled any class
-                </Text>
-              </View>
-            )}
-          </ScrollView>
+          {listClassData && listClassData.length > 0 && (
+            <ScrollView style={{flex: 1}}>
+              {listClassData.map((item, index) => (
+                <Klass
+                  key={index}
+                  name={item?.name}
+                  classId={item?.id}
+                  startTime={item?.startTime}
+                  endTime={item?.endTime}
+                  handleShowClass={handleShowClass}
+                  roleInClass={item?.roleInClass}
+                  handleDeleteClass={handleDeleteClass}
+                />
+              ))}
+            </ScrollView>
+          )}
+          {listClassData && listClassData.length === 0 && (
+            <View style={styles.noActContainer}>
+              <Text style={styles.noActivityText}>
+                You have not enrolled any class
+              </Text>
+            </View>
+          )}
           {roleUser && roleUser === 'User' && (
             <FAB
               style={{

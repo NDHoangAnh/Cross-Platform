@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {Image, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
@@ -6,6 +6,7 @@ import styles from './Post.style';
 import apis from '../../apis';
 import asyncData from '../../config/auth';
 import {convertDateToDay, convertDateToHour} from '../../utils';
+import {useFocusEffect} from '@react-navigation/native';
 
 function Post({
   navigation,
@@ -34,13 +35,15 @@ function Post({
   const [isShowModalApprove, setIsShowModalApprove] = useState(false);
   const [isShowModalDecline, setIsShowModalDecline] = useState(false);
 
-  useEffect(() => {
-    const getData = async () => {
-      const user1 = await asyncData.getData();
-      setIsAdmin(user1?.role === 'Admin');
-    };
-    getData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        const user1 = await asyncData.getData();
+        setIsAdmin(user1?.role === 'Admin');
+      };
+      getData();
+    }, [])
+  );
 
   const toggleModalApprove = () => {
     setIsShowModalApprove(!isShowModalApprove);

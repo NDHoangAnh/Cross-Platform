@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   deleteIcon: {
-    fontSize: 30,
+    fontSize: 25,
     color: 'red',
   },
   modalButtonContainer: {
